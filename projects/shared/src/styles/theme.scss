@@ -1,0 +1,90 @@
+/* Shared global theme for all three example apps.
+ *
+ * Imported first in each app's `styles` array (see angular.json). Defines the
+ * NgBracket `--ngbr-*` design tokens (light + dark) plus the dashboard chart
+ * palette. Every pack component has inline `var(--ngbr-*, fallback)` defaults,
+ * but defining the base tokens here is what makes dark mode + theming work
+ * consistently across packs.
+ *
+ * Dark mode is toggled by ThemeService, which sets `data-theme="dark"` on
+ * <html> (see projects/shared/src/lib/theme.service.ts).
+ */
+
+/* Full forms token surface (optional — every token has an inline fallback). */
+@use '@ngbracket/forms/styles/tokens';
+/* CDK overlay styles — required by NgbrRowMenu, forms combobox/select/autocomplete. */
+@use '@angular/cdk/overlay-prebuilt.css';
+
+:root {
+  --ngbr-font: 'Hanken Grotesk', system-ui, sans-serif;
+
+  /* Light theme — the default. Toggled to dark via [data-theme='dark'] below. */
+  --ngbr-color-surface: #ffffff;
+  --ngbr-color-text: #1a1c1e;
+  --ngbr-color-text-muted: #44474a;
+  --ngbr-color-placeholder: #5b6675;
+  --ngbr-color-border: #c4c7c9;
+  --ngbr-color-border-hover: #94a3b8;
+  --ngbr-color-accent: #0e7490;
+  --ngbr-color-accent-contrast: #ffffff;
+  --ngbr-color-error: #b91c1c;
+  --ngbr-radius: 10px;
+
+  /* Page chrome used by the example app shells (not the packs). */
+  --app-bg: #f6f8f9;
+  --app-surface: #ffffff;
+
+  /* Dashboard chart palette — without these every series/slice falls back to
+     the same teal. Mid-tones chosen for AA on light and dark surfaces. */
+  --ngbr-chart-1: #0e7490; /* teal */
+  --ngbr-chart-2: #7c3aed; /* violet */
+  --ngbr-chart-3: #16a34a; /* green */
+  --ngbr-chart-4: #ea580c; /* orange */
+  --ngbr-chart-5: #db2777; /* pink */
+  --ngbr-chart-6: #2563eb; /* blue */
+}
+
+:root[data-theme='dark'] {
+  --ngbr-color-surface: #1e2022;
+  --ngbr-color-text: #e2e2e5;
+  --ngbr-color-text-muted: #c4c7c9;
+  --ngbr-color-placeholder: #8e9194;
+  --ngbr-color-border: #43474a;
+  --ngbr-color-border-hover: #5f6266;
+  --ngbr-color-accent: #22b8cf;
+  --ngbr-color-accent-contrast: #08272d;
+  --ngbr-color-error: #ffb4ab;
+
+  --app-bg: #16181a;
+  --app-surface: #1e2022;
+
+  /* Table specifics — without these the header/hover keep their light defaults. */
+  --ngbr-table-header-bg: #26292c;
+  --ngbr-table-row-hover-bg: #24272a;
+  --ngbr-table-row-selected-bg: #0e3038;
+  --ngbr-table-stripe-bg: #24272a;
+
+  /* Lift chart hues slightly for dark surfaces. */
+  --ngbr-chart-1: #22b8cf;
+  --ngbr-chart-2: #a78bfa;
+  --ngbr-chart-3: #4ade80;
+  --ngbr-chart-4: #fb923c;
+  --ngbr-chart-5: #f472b6;
+  --ngbr-chart-6: #60a5fa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ngbr-font);
+  background: var(--app-bg);
+  color: var(--ngbr-color-text);
+}
