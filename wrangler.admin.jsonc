@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ngbr-example-admin",
+  "compatibility_date": "2026-06-14",
+  // Static-assets Worker (no server code). Angular's application builder emits
+  // to dist/<app>/browser; single-page-application fallback serves index.html
+  // so client-side routes / deep links resolve.
+  "assets": {
+    "directory": "dist/admin/browser",
+    "not_found_handling": "single-page-application",
+  },
+  // Custom domain on the ngbracket.com zone (Cloudflare manages DNS + cert).
+  "routes": [{ "pattern": "admin.ngbracket.com", "custom_domain": true }],
+}

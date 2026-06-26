@@ -71,6 +71,28 @@ npm run build            # builds all three apps
 npm run build:admin      # or one at a time
 ```
 
+## Deploy (Cloudflare)
+
+Each app deploys as a static-assets Cloudflare Worker (SPA fallback) to its own
+subdomain:
+
+| App | URL |
+| --- | --- |
+| admin | https://admin.ngbracket.com |
+| storefront | https://storefront.ngbracket.com |
+| booking | https://booking.ngbracket.com |
+
+Config lives in `wrangler.<app>.jsonc`. With Cloudflare credentials in the
+environment (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`):
+
+```bash
+npm run deploy            # build + deploy all three
+npm run deploy:admin      # or one at a time
+```
+
+(Builds use the already-installed packages, so deploying doesn't need the
+`NGBRACKET_TOKEN`.)
+
 ## Licence
 
 MIT — see [LICENSE](./LICENSE). The `@ngbracket/*` packages themselves are

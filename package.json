@@ -11,6 +11,10 @@
     "build:admin": "ng build admin",
     "build:storefront": "ng build storefront",
     "build:booking": "ng build booking",
+    "deploy:admin": "ng build admin && wrangler deploy -c wrangler.admin.jsonc",
+    "deploy:storefront": "ng build storefront && wrangler deploy -c wrangler.storefront.jsonc",
+    "deploy:booking": "ng build booking && wrangler deploy -c wrangler.booking.jsonc",
+    "deploy": "npm run deploy:admin && npm run deploy:storefront && npm run deploy:booking",
     "test": "ng test"
   },
   "private": true,
@@ -42,6 +46,7 @@
     "ng-packagr": "^22.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "wrangler": "^4.0.0"
   }
 }

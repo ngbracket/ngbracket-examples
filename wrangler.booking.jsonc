@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ngbr-example-booking",
+  "compatibility_date": "2026-06-14",
+  "assets": {
+    "directory": "dist/booking/browser",
+    "not_found_handling": "single-page-application",
+  },
+  "routes": [{ "pattern": "booking.ngbracket.com", "custom_domain": true }],
+}
