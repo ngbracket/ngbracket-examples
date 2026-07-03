@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgbrMonthView, NgbrWeekView, NgbrAgenda } from '@ngbracket/scheduler';
-import type { NgbrCalendarEvent } from '@ngbracket/scheduler';
+import type { NgbrCalendarEvent, NgbrEventDraft, NgbrEventEdit } from '@ngbracket/scheduler';
 
 import { APPOINTMENTS } from '../data/booking-data';
 
@@ -30,6 +30,13 @@ type View = 'month' | 'week' | 'agenda';
       </div>
     </div>
 
+    @if (view() !== 'agenda') {
+      <p class="hint">
+        Drag an appointment to move it, drag its edge to resize, or drag empty time to add one —
+        or use the keyboard: focus an appointment, arrows to move, Shift+arrows to resize/stretch.
+      </p>
+    }
+
     @if (selected(); as ev) {
       <p class="sel" role="status">Selected: <strong>{{ ev.title }}</strong> — {{ ev.start.toLocaleString() }}</p>
     }
@@ -37,13 +44,28 @@ type View = 'month' | 'week' | 'agenda';
     <div class="view">
       @switch (view()) {
         @case ('month') {
-          <ngbr-month-view [events]="events" (eventClick)="selected.set($event)" />
+          <ngbr-month-view
+            [events]="events()"
+            [editable]="true"
+            (eventClick)="selected.set($event)"
+            (rangeCreate)="create($event)"
+            (eventChange)="update($event)"
+            (eventResize)="update($event)"
+          />
         }
         @case ('week') {
-          <ngbr-week-view [events]="events" [scrollToHour]="8" (eventClick)="selected.set($event)" />
+          <ngbr-week-view
+            [events]="events()"
+            [editable]="true"
+            [scrollToHour]="8"
+            (eventClick)="selected.set($event)"
+            (rangeCreate)="create($event)"
+            (eventChange)="update($event)"
+            (eventResize)="update($event)"
+          />
         }
         @case ('agenda') {
-          <ngbr-agenda [events]="events" (eventClick)="selected.set($event)" />
+          <ngbr-agenda [events]="events()" (eventClick)="selected.set($event)" />
         }
       }
     </div>
@@ -89,12 +111,38 @@ type View = 'month' | 'week' | 'agenda';
         margin: 0 0 14px;
         color: var(--ngbr-color-accent);
       }
+      .hint {
+        margin: 0 0 12px;
+        font-size: 0.875rem;
+        color: var(--ngbr-color-text-muted);
+      }
     `,
   ],
 })
 export class Calendar {
   protected readonly views: View[] = ['month', 'week', 'agenda'];
   protected readonly view = signal<View>('month');
-  protected readonly events = APPOINTMENTS;
+  protected readonly events = signal<NgbrCalendarEvent[]>([...APPOINTMENTS]);
   protected readonly selected = signal<NgbrCalendarEvent | null>(null);
+
+  /** Drag across empty time / days → add an appointment, then select it. */
+  protected create(draft: NgbrEventDraft): void {
+    const ev: NgbrCalendarEvent = {
+      id: crypto.randomUUID(),
+      title: 'New appointment',
+      start: draft.start,
+      end: draft.end,
+      allDay: draft.allDay,
+      color: '#0e7490',
+    };
+    this.events.update((list) => [...list, ev]);
+    this.selected.set(ev);
+  }
+
+  /** Drag / keyboard move or resize → write the new time back. */
+  protected update(edit: NgbrEventEdit): void {
+    this.events.update((list) =>
+      list.map((ev) => (ev.id === edit.id ? { ...ev, start: edit.start, end: edit.end } : ev)),
+    );
+  }
 }
