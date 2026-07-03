@@ -34,4 +34,6 @@ export const APPOINTMENTS: NgbrCalendarEvent[] = [
   { id: 'a5', title: 'Haircut — Noah', start: at(1, 13, 0), end: at(1, 13, 30), color: '#0e7490' },
   { id: 'a6', title: 'Colour — Mia', start: at(2, 9, 0), end: at(2, 10, 30), color: '#7c3aed', meta: 'Chair 1' },
   { id: 'a7', title: 'Team meeting', start: at(3, 9, 0), end: at(3, 9, 30), color: '#db2777', meta: 'All staff' },
+  // A multi-day booking → renders as a spanning bar (month) / per-day segments (week).
+  { id: 'a8', title: 'Stylist training (offsite)', start: at(4, 9, 0), end: at(6, 17, 0), color: '#64748b', meta: 'Senior team' },
 ];
