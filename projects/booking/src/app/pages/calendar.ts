@@ -4,6 +4,7 @@ import { NgbrMonthView, NgbrWeekView, NgbrAgenda } from '@ngbracket/scheduler';
 import type { NgbrCalendarEvent, NgbrEventDraft, NgbrEventEdit } from '@ngbracket/scheduler';
 
 import { APPOINTMENTS } from '../data/booking-data';
+import { EventEditor } from './event-editor';
 
 type View = 'month' | 'week' | 'agenda';
 
@@ -11,7 +12,7 @@ type View = 'month' | 'week' | 'agenda';
 @Component({
   selector: 'booking-calendar',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgbrMonthView, NgbrWeekView, NgbrAgenda, TitleCasePipe],
+  imports: [NgbrMonthView, NgbrWeekView, NgbrAgenda, TitleCasePipe, EventEditor],
   template: `
     <div class="head">
       <h1>Diary</h1>
@@ -32,8 +33,9 @@ type View = 'month' | 'week' | 'agenda';
 
     @if (view() !== 'agenda') {
       <p class="hint">
-        Drag an appointment to move it, drag its edge to resize, or drag empty time to add one —
-        or use the keyboard: focus an appointment, arrows to move, Shift+arrows to resize/stretch.
+        Click an appointment to edit its details, drag it to move, drag its edge to resize, or drag
+        empty time to add one — or use the keyboard: focus an appointment, arrows to move,
+        Shift+arrows to resize/stretch, Enter to edit.
       </p>
     }
 
@@ -47,7 +49,7 @@ type View = 'month' | 'week' | 'agenda';
           <ngbr-month-view
             [events]="events()"
             [editable]="true"
-            (eventClick)="selected.set($event)"
+            (eventClick)="open($event)"
             (rangeCreate)="create($event)"
             (eventChange)="update($event)"
             (eventResize)="update($event)"
@@ -58,17 +60,24 @@ type View = 'month' | 'week' | 'agenda';
             [events]="events()"
             [editable]="true"
             [scrollToHour]="8"
-            (eventClick)="selected.set($event)"
+            (eventClick)="open($event)"
             (rangeCreate)="create($event)"
             (eventChange)="update($event)"
             (eventResize)="update($event)"
           />
         }
         @case ('agenda') {
-          <ngbr-agenda [events]="events()" (eventClick)="selected.set($event)" />
+          <ngbr-agenda [events]="events()" (eventClick)="open($event)" />
         }
       }
     </div>
+
+    <booking-event-editor
+      [event]="editing()"
+      (save)="save($event)"
+      (remove)="removeEvent($event)"
+      (cancel)="editing.set(null)"
+    />
   `,
   styles: [
     `
@@ -124,8 +133,16 @@ export class Calendar {
   protected readonly view = signal<View>('month');
   protected readonly events = signal<NgbrCalendarEvent[]>([...APPOINTMENTS]);
   protected readonly selected = signal<NgbrCalendarEvent | null>(null);
+  /** The appointment open in the edit dialog (null = closed). */
+  protected readonly editing = signal<NgbrCalendarEvent | null>(null);
 
-  /** Drag across empty time / days → add an appointment, then select it. */
+  /** Click / Enter on an appointment → open the edit dialog. */
+  protected open(ev: NgbrCalendarEvent): void {
+    this.selected.set(ev);
+    this.editing.set(ev);
+  }
+
+  /** Drag across empty time / days → add an appointment, then open it to fill in details. */
   protected create(draft: NgbrEventDraft): void {
     const ev: NgbrCalendarEvent = {
       id: crypto.randomUUID(),
@@ -137,6 +154,7 @@ export class Calendar {
     };
     this.events.update((list) => [...list, ev]);
     this.selected.set(ev);
+    this.editing.set(ev);
   }
 
   /** Drag / keyboard move or resize → write the new time back. */
@@ -144,5 +162,19 @@ export class Calendar {
     this.events.update((list) =>
       list.map((ev) => (ev.id === edit.id ? { ...ev, start: edit.start, end: edit.end } : ev)),
     );
+  }
+
+  /** Dialog save → replace the edited appointment and close. */
+  protected save(edited: NgbrCalendarEvent): void {
+    this.events.update((list) => list.map((ev) => (ev.id === edited.id ? edited : ev)));
+    this.selected.set(edited);
+    this.editing.set(null);
+  }
+
+  /** Dialog delete → drop the appointment and close. */
+  protected removeEvent(id: string): void {
+    this.events.update((list) => list.filter((ev) => ev.id !== id));
+    this.selected.set(null);
+    this.editing.set(null);
   }
 }

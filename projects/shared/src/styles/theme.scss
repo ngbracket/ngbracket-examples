@@ -28,6 +28,11 @@
   --ngbr-color-accent: #0e7490;
   --ngbr-color-accent-contrast: #ffffff;
   --ngbr-color-error: #b91c1c;
+  /* Semantic status colours (AA as text on the light surface). Packs reference
+     these; the dark block re-tones them to lighter shades for the dark surface. */
+  --ngbr-color-success: #15803d;
+  --ngbr-color-warning: #b45309;
+  --ngbr-color-danger: #b91c1c;
   --ngbr-radius: 10px;
 
   /* Page chrome used by the example app shells (not the packs). */
@@ -54,6 +59,10 @@
   --ngbr-color-accent: #22b8cf;
   --ngbr-color-accent-contrast: #08272d;
   --ngbr-color-error: #ffb4ab;
+  /* Lighter status tones — AA as text on the dark surface. */
+  --ngbr-color-success: #6ee7a8;
+  --ngbr-color-warning: #f0b76a;
+  --ngbr-color-danger: #ffb4ab;
 
   --app-bg: #16181a;
   --app-surface: #1e2022;
