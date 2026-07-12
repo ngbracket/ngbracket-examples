@@ -1,5 +1,7 @@
 # NgBracket Examples
 
+> 🚀 **New to NgBracket?** Accessible-by-default Angular component packs — get early access + 50% off during pre-launch at [ngbracket.com/waitlist](https://ngbracket.com/waitlist?utm_source=github&utm_medium=readme&utm_campaign=prelaunch&utm_content=examples).
+
 Three close-to-real-world Angular applications that consume the **published
 [NgBracket](https://ngbracket.com) component packs** straight from the private
 registry. They exist to (1) prove the packages work in real apps, and (2) give you
