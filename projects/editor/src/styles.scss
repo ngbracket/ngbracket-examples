@@ -1,0 +1,22 @@
+/* CDK overlay styles — required for the context menu (@ngbracket/navigation). */
+@import '@angular/cdk/overlay-prebuilt.css';
+
+/* App-specific background (shared theme.scss provides the --ngbr-* tokens). */
+:root {
+  --app-bg: #f6f8f9;
+}
+
+:root[data-theme='dark'] {
+  --app-bg: #14161a;
+}
+
+html,
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}

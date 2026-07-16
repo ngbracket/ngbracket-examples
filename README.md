@@ -83,6 +83,7 @@ subdomain:
 | admin | https://admin.ngbracket.com |
 | storefront | https://storefront.ngbracket.com |
 | booking | https://booking.ngbracket.com |
+| editor | https://editor.ngbracket.com |
 
 Config lives in `wrangler.<app>.jsonc`. With Cloudflare credentials in the
 environment (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`):
