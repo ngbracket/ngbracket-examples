@@ -4,7 +4,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { NgbrAppShell, NgbrSidebarNav, NgbrTopbar } from '@ngbracket/dashboard';
 import type { NgbrNavSection } from '@ngbracket/dashboard';
-import { ThemeToggle } from 'shared';
+import { SkipLink, ThemeToggle } from 'shared';
 
 import { AuthState } from '../auth-state';
 
@@ -31,8 +31,9 @@ const HEADINGS: Record<string, string> = {
 @Component({
   selector: 'admin-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, NgbrAppShell, NgbrSidebarNav, NgbrTopbar, ThemeToggle],
+  imports: [RouterOutlet, NgbrAppShell, NgbrSidebarNav, NgbrTopbar, ThemeToggle, SkipLink],
   template: `
+    <app-skip-link />
     <ngbr-app-shell [(drawerOpen)]="drawerOpen" [(collapsed)]="collapsed" style="--ngbr-shell-min-height: 100dvh;">
       <strong ngbrBrand>Helm</strong>
 
@@ -51,7 +52,7 @@ const HEADINGS: Record<string, string> = {
         </div>
       </ngbr-topbar>
 
-      <div class="page">
+      <div id="main-content" tabindex="-1" class="page">
         <router-outlet />
       </div>
     </ngbr-app-shell>

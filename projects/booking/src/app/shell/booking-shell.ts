@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
-import { ThemeToggle } from 'shared';
+import { SkipLink, ThemeToggle } from 'shared';
 
 import { AuthState } from '../auth-state';
 
@@ -8,8 +8,9 @@ import { AuthState } from '../auth-state';
 @Component({
   selector: 'booking-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, ThemeToggle],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, ThemeToggle, SkipLink],
   template: `
+    <app-skip-link />
     <header class="top">
       <a class="brand" routerLink="/book">Trim &amp; Co.</a>
       <nav class="nav" aria-label="Primary">
@@ -23,7 +24,7 @@ import { AuthState } from '../auth-state';
       </div>
     </header>
 
-    <main class="content">
+    <main id="main-content" tabindex="-1" class="content">
       <router-outlet />
     </main>
   `,

@@ -6,3 +6,4 @@
 export { ThemeService } from './lib/theme.service';
 export type { Theme } from './lib/theme.service';
 export { ThemeToggle } from './lib/theme-toggle';
+export { SkipLink } from './lib/skip-link';

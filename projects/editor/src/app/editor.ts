@@ -9,7 +9,7 @@ import {
   type NgbrFormatCommand,
   type NgbrTopMenu,
 } from '@ngbracket/navigation';
-import { ThemeToggle } from 'shared';
+import { SkipLink, ThemeToggle } from 'shared';
 
 /** execCommand names for each formatting command / menu action. */
 const COMMANDS: Record<string, string> = {
@@ -45,8 +45,10 @@ const COMMANDS: Record<string, string> = {
     NgbrMenuItem,
     NgbrMenuSeparator,
     ThemeToggle,
+    SkipLink,
   ],
   template: `
+    <app-skip-link />
     <header class="chrome">
       <div class="brand"><span class="brand__mark" aria-hidden="true">◇</span> NgBracket Editor</div>
       <app-theme-toggle />
@@ -58,7 +60,7 @@ const COMMANDS: Record<string, string> = {
       <ngbr-format-toolbar [(value)]="active" (command)="run($event)" />
     </div>
 
-    <main class="canvas">
+    <main id="main-content" tabindex="-1" class="canvas">
       <div
         #doc
         class="doc"

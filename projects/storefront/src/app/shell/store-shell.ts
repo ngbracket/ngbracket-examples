@@ -8,7 +8,7 @@ import {
 import type { NgbrNavLink, NgbrFooterColumn } from '@ngbracket/marketing';
 import { NgbrCartStore, NgbrMiniCart, NgbrCartDrawer } from '@ngbracket/commerce';
 import type { NgbrCartQtyChange } from '@ngbracket/commerce';
-import { ThemeToggle } from 'shared';
+import { SkipLink, ThemeToggle } from 'shared';
 
 const NAV: NgbrNavLink[] = [
   { label: 'Shop', href: '/shop' },
@@ -35,8 +35,10 @@ const FOOTER_COLS: NgbrFooterColumn[] = [
     NgbrMiniCart,
     NgbrCartDrawer,
     ThemeToggle,
+    SkipLink,
   ],
   template: `
+    <app-skip-link />
     <ngbr-announcement-bar (dismissed)="bannerGone.set(true)">
       Free UK delivery on orders over £40 — <a href="/shop">shop now</a>.
     </ngbr-announcement-bar>
@@ -60,7 +62,7 @@ const FOOTER_COLS: NgbrFooterColumn[] = [
       (checkout)="checkout()"
     />
 
-    <main class="store-main">
+    <main id="main-content" tabindex="-1" class="store-main">
       <router-outlet />
     </main>
 
