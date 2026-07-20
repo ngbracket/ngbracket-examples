@@ -1,0 +1,18 @@
+/* App-global styles. Design tokens (--ngbr-color-*) come from the shared
+ * theme.scss (added first in angular.json styles), so both light + dark work. */
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ngbr-font, system-ui, sans-serif);
+  color: var(--ngbr-color-text);
+  background: var(--app-bg, var(--ngbr-color-surface));
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ngbr-color-accent);
+  outline-offset: 2px;
+}

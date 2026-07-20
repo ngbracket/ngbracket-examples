@@ -14,6 +14,8 @@ All data is **hardcoded** — there's no backend or API to run.
 | **admin** | 4301 | dashboard · data-table · forms · auth | A SaaS back-office: KPI dashboard, customers table, settings forms |
 | **storefront** | 4302 | marketing · commerce · auth · forms | A DTC shop: marketing landing page, product catalogue, cart & checkout |
 | **booking** | 4303 | scheduler · forms · auth | An appointments app: booking wizard, calendar views, availability |
+| **editor** | 4304 | navigation | A document editor showcasing the navigation toolbar & menus |
+| **kb** | 4305 | navigation · structure · editor · forms | Almanac, a knowledge base: article tree, rich-text/markdown editors, editable grid, Signal Form (`formRoot` + `submit`) |
 
 Built with Angular 22 (standalone, zoneless, signals).
 
@@ -37,6 +39,8 @@ npm install
 npm run start:admin       # http://localhost:4301
 npm run start:storefront  # http://localhost:4302
 npm run start:booking     # http://localhost:4303
+npm run start:editor      # http://localhost:4304
+npm run start:kb          # http://localhost:4305
 ```
 
 The committed [`.npmrc`](./.npmrc) only references `${NGBRACKET_TOKEN}` — **no token
@@ -84,6 +88,7 @@ subdomain:
 | storefront | https://storefront.ngbracket.com |
 | booking | https://booking.ngbracket.com |
 | editor | https://editor.ngbracket.com |
+| kb | https://kb.ngbracket.com |
 
 Config lives in `wrangler.<app>.jsonc`. With Cloudflare credentials in the
 environment (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`):
