@@ -1,0 +1,29 @@
+/* @ngbracket/overlays global styles — the panel, scrim, toast, drawer, tooltip
+ * and popover live in the CDK overlay container, so their styling is global. */
+@use '@ngbracket/overlays/styles/overlays';
+
+/* CDK overlay styles — required by every CDK-hosted overlay. */
+@import '@angular/cdk/overlay-prebuilt.css';
+
+/* App-specific background (shared theme.scss provides the --ngbr-* tokens). */
+:root {
+  --app-bg: #f6f8f9;
+}
+
+:root[data-theme='dark'] {
+  --app-bg: #14161a;
+  /* The pack ships no dark on-danger colour; white would fail on the light
+     dark-mode danger fill (#ffb4ab). Dark maroon reads at ~9:1. */
+  --ngbr-color-danger-contrast: #3d0a09;
+}
+
+html,
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}

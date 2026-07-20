@@ -51,7 +51,10 @@
                 "input": "projects/admin/public"
               }
             ],
-            "styles": ["projects/shared/src/styles/theme.scss", "projects/admin/src/styles.scss"]
+            "styles": [
+              "projects/shared/src/styles/theme.scss",
+              "projects/admin/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -139,7 +142,10 @@
                 "input": "projects/storefront/public"
               }
             ],
-            "styles": ["projects/shared/src/styles/theme.scss", "projects/storefront/src/styles.scss"]
+            "styles": [
+              "projects/shared/src/styles/theme.scss",
+              "projects/storefront/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -227,7 +233,10 @@
                 "input": "projects/booking/public"
               }
             ],
-            "styles": ["projects/shared/src/styles/theme.scss", "projects/booking/src/styles.scss"]
+            "styles": [
+              "projects/shared/src/styles/theme.scss",
+              "projects/booking/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -273,7 +282,10 @@
     "editor": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": { "style": "scss", "skipTests": true }
+        "@schematics/angular:component": {
+          "style": "scss",
+          "skipTests": true
+        }
       },
       "root": "projects/editor",
       "sourceRoot": "projects/editor/src",
@@ -285,27 +297,123 @@
             "browser": "projects/editor/src/main.ts",
             "tsConfig": "projects/editor/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [{ "glob": "**/*", "input": "projects/editor/public" }],
-            "styles": ["projects/shared/src/styles/theme.scss", "projects/editor/src/styles.scss"]
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/editor/public"
+              }
+            ],
+            "styles": [
+              "projects/shared/src/styles/theme.scss",
+              "projects/editor/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
-                { "type": "initial", "maximumWarning": "500kB", "maximumError": "1MB" },
-                { "type": "anyComponentStyle", "maximumWarning": "4kB", "maximumError": "8kB" }
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
               ],
               "outputHashing": "all"
             },
-            "development": { "optimization": false, "extractLicenses": false, "sourceMap": true }
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-          "options": { "port": 4304 },
+          "options": {
+            "port": 4304
+          },
           "configurations": {
-            "production": { "buildTarget": "editor:build:production" },
-            "development": { "buildTarget": "editor:build:development" }
+            "production": {
+              "buildTarget": "editor:build:production"
+            },
+            "development": {
+              "buildTarget": "editor:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    },
+    "overlays": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss",
+          "skipTests": true
+        }
+      },
+      "root": "projects/overlays",
+      "sourceRoot": "projects/overlays/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/overlays/src/main.ts",
+            "tsConfig": "projects/overlays/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/overlays/public"
+              }
+            ],
+            "styles": [
+              "projects/shared/src/styles/theme.scss",
+              "projects/overlays/src/styles.scss"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 4306
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "overlays:build:production"
+            },
+            "development": {
+              "buildTarget": "overlays:build:development"
+            }
           },
           "defaultConfiguration": "development"
         }
@@ -314,7 +422,10 @@
     "kb": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": { "style": "scss", "skipTests": true }
+        "@schematics/angular:component": {
+          "style": "scss",
+          "skipTests": true
+        }
       },
       "root": "projects/kb",
       "sourceRoot": "projects/kb/src",
@@ -326,27 +437,53 @@
             "browser": "projects/kb/src/main.ts",
             "tsConfig": "projects/kb/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [{ "glob": "**/*", "input": "projects/kb/public" }],
-            "styles": ["projects/shared/src/styles/theme.scss", "projects/kb/src/styles.scss"]
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/kb/public"
+              }
+            ],
+            "styles": [
+              "projects/shared/src/styles/theme.scss",
+              "projects/kb/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
-                { "type": "initial", "maximumWarning": "500kB", "maximumError": "1.5MB" },
-                { "type": "anyComponentStyle", "maximumWarning": "6kB", "maximumError": "12kB" }
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1.5MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kB",
+                  "maximumError": "12kB"
+                }
               ],
               "outputHashing": "all"
             },
-            "development": { "optimization": false, "extractLicenses": false, "sourceMap": true }
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-          "options": { "port": 4305 },
+          "options": {
+            "port": 4305
+          },
           "configurations": {
-            "production": { "buildTarget": "kb:build:production" },
-            "development": { "buildTarget": "kb:build:development" }
+            "production": {
+              "buildTarget": "kb:build:production"
+            },
+            "development": {
+              "buildTarget": "kb:build:development"
+            }
           },
           "defaultConfiguration": "development"
         }
