@@ -36,6 +36,9 @@
       "path": "./projects/booking/tsconfig.app.json"
     },
     {
+      "path": "./projects/kb/tsconfig.app.json"
+    },
+    {
       "path": "./projects/shared/tsconfig.lib.json"
     },
     {
