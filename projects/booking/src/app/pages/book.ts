@@ -3,6 +3,15 @@ import { form, required, email, FormField } from '@angular/forms/signals';
 import { NgbrMiniCalendar, NgbrTimeSlots } from '@ngbracket/scheduler';
 import type { NgbrCalendarValue } from '@ngbracket/scheduler';
 import { NgbrFormField, NgbrInput } from '@ngbracket/forms';
+import {
+  NgbrButton,
+  NgbrMenu,
+  NgbrMenuOption,
+  NgbrMenuPanel,
+  NgbrMenuDivider,
+  NgbrSplitButton,
+  NgbrSplitButtonPrimary,
+} from '@ngbracket/buttons';
 
 import { SERVICES, type Service } from '../data/booking-data';
 
@@ -12,7 +21,20 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
 @Component({
   selector: 'booking-book',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgbrMiniCalendar, NgbrTimeSlots, NgbrFormField, NgbrInput, FormField],
+  imports: [
+    NgbrMiniCalendar,
+    NgbrTimeSlots,
+    NgbrFormField,
+    NgbrInput,
+    FormField,
+    NgbrButton,
+    NgbrMenu,
+    NgbrMenuOption,
+    NgbrMenuPanel,
+    NgbrMenuDivider,
+    NgbrSplitButton,
+    NgbrSplitButtonPrimary,
+  ],
   template: `
     <h1>Book an appointment</h1>
 
@@ -89,7 +111,16 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
         @if (step() < 3) {
           <button type="button" class="btn btn--primary" [disabled]="!canContinue()" (click)="next()">Continue</button>
         } @else {
-          <button type="button" class="btn btn--primary" (click)="confirm()">Confirm booking</button>
+          <ngbr-split-button ariaLabel="Confirm booking options" (action)="confirm()">
+            <button ngbrButton ngbrSplitButtonPrimary>Confirm booking</button>
+            <ng-template ngbrMenu>
+              <ngbr-menu-panel ariaLabel="Confirm booking options">
+                <button ngbrMenuOption (select)="confirmAndNotify()">Confirm &amp; notify</button>
+                <ngbr-menu-divider />
+                <button ngbrMenuOption danger (select)="cancelBooking()">Cancel booking</button>
+              </ngbr-menu-panel>
+            </ng-template>
+          </ngbr-split-button>
         }
       </div>
     }
@@ -269,6 +300,18 @@ export class Book {
       this.f.email().errors().length === 0 &&
       this.f.phone().errors().length === 0;
     if (ok) this.step.set(4);
+  }
+
+  /** Confirm and (demo) fire off a notification. */
+  protected confirmAndNotify(): void {
+    this.confirm();
+    if (this.step() === 4) console.info('[booking] Notification sent to', this.model().email);
+  }
+
+  /** Abandon the in-progress booking. */
+  protected cancelBooking(): void {
+    console.info('[booking] Booking cancelled');
+    this.reset();
   }
 
   protected reset(): void {
