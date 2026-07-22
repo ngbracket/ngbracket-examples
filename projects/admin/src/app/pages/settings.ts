@@ -9,6 +9,15 @@ import {
   NgbrErrorSummary,
 } from '@ngbracket/forms';
 import type { NgbrSelectOption, NgbrFieldError } from '@ngbracket/forms';
+import {
+  NgbrButton,
+  NgbrMenu,
+  NgbrMenuOption,
+  NgbrMenuPanel,
+  NgbrMenuDivider,
+  NgbrSplitButton,
+  NgbrSplitButtonPrimary,
+} from '@ngbracket/buttons';
 
 const PLANS: NgbrSelectOption[] = [
   { value: 'starter', label: 'Starter' },
@@ -30,6 +39,13 @@ const PLANS: NgbrSelectOption[] = [
     NgbrSwitch,
     NgbrErrorSummary,
     FormField,
+    NgbrButton,
+    NgbrMenu,
+    NgbrMenuOption,
+    NgbrMenuPanel,
+    NgbrMenuDivider,
+    NgbrSplitButton,
+    NgbrSplitButtonPrimary,
   ],
   template: `
     <ngbr-page-header heading="Settings" subtitle="Manage your workspace profile" />
@@ -56,7 +72,17 @@ const PLANS: NgbrSelectOption[] = [
 
         <ngbr-switch [(checked)]="notify">Email me about product updates</ngbr-switch>
 
-        <button type="submit" class="save-btn">Save changes</button>
+        <ngbr-split-button ariaLabel="Save options">
+          <button ngbrButton type="submit" ngbrSplitButtonPrimary>Save changes</button>
+          <ng-template ngbrMenu>
+            <ngbr-menu-panel ariaLabel="Save options">
+              <button ngbrMenuOption (select)="saveAndClose()">Save &amp; close</button>
+              <button ngbrMenuOption (select)="saveAsDraft()">Save as draft</button>
+              <ngbr-menu-divider />
+              <button ngbrMenuOption danger (select)="delete()">Delete workspace</button>
+            </ngbr-menu-panel>
+          </ng-template>
+        </ngbr-split-button>
       </form>
     </ngbr-card>
   `,
@@ -72,20 +98,8 @@ const PLANS: NgbrSelectOption[] = [
         gap: 1rem;
         margin-top: 1rem;
       }
-      .save-btn {
+      ngbr-split-button {
         align-self: flex-start;
-        padding: 0.6rem 1.2rem;
-        font: inherit;
-        font-weight: 600;
-        color: var(--ngbr-color-accent-contrast, #fff);
-        background: var(--ngbr-color-accent);
-        border: 0;
-        border-radius: var(--ngbr-radius);
-        cursor: pointer;
-      }
-      .save-btn:focus-visible {
-        outline: 2px solid var(--ngbr-color-accent);
-        outline-offset: 2px;
       }
       .saved {
         margin: 0 0 0.5rem;
@@ -123,5 +137,19 @@ export class Settings {
     event.preventDefault();
     this.submitted.set(true);
     this.saved.set(this.errorList().length === 0);
+  }
+
+  /** Extra Save-menu actions — validate as a save would, then log the intent. */
+  protected saveAndClose(): void {
+    this.submitted.set(true);
+    this.saved.set(this.errorList().length === 0);
+    if (this.saved()) console.info('[admin] Save & close');
+  }
+  protected saveAsDraft(): void {
+    console.info('[admin] Save as draft');
+    this.saved.set(true);
+  }
+  protected delete(): void {
+    console.info('[admin] Delete workspace');
   }
 }

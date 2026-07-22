@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
 import {
   NgbrAppMenubar,
   NgbrContextMenu,
@@ -10,6 +10,8 @@ import {
   type NgbrTopMenu,
 } from '@ngbracket/navigation';
 import { SkipLink, ThemeToggle } from 'shared';
+
+import { PublishButton } from './publish-button';
 
 /** execCommand names for each formatting command / menu action. */
 const COMMANDS: Record<string, string> = {
@@ -44,6 +46,7 @@ const COMMANDS: Record<string, string> = {
     NgbrMenu,
     NgbrMenuItem,
     NgbrMenuSeparator,
+    PublishButton,
     ThemeToggle,
     SkipLink,
   ],
@@ -51,7 +54,15 @@ const COMMANDS: Record<string, string> = {
     <app-skip-link />
     <header class="chrome">
       <div class="brand"><span class="brand__mark" aria-hidden="true">◇</span> NgBracket Editor</div>
-      <app-theme-toggle />
+      <div class="chrome__actions">
+        <app-publish-button
+          (publish)="publish()"
+          (schedule)="schedule()"
+          (saveDraft)="saveDraft()"
+          (discard)="discard()"
+        />
+        <app-theme-toggle />
+      </div>
     </header>
 
     <ngbr-app-menubar [menus]="menus" aria-label="Editor" (action)="onAction($event)" />
@@ -112,6 +123,11 @@ const COMMANDS: Record<string, string> = {
         align-items: center;
         gap: 8px;
         font-weight: 700;
+      }
+      .chrome__actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
       }
       .brand__mark {
         color: var(--ngbr-color-accent, #0e7490);
@@ -205,6 +221,20 @@ export class Editor {
     },
     { label: 'Help', items: [{ label: 'About NgBracket Editor', value: 'about' }] },
   ];
+
+  /** Publish split-button actions — demo surface, so these log their intent. */
+  protected publish(): void {
+    console.info('[editor] Publish document');
+  }
+  protected schedule(): void {
+    console.info('[editor] Schedule publish…');
+  }
+  protected saveDraft(): void {
+    console.info('[editor] Save draft');
+  }
+  protected discard(): void {
+    console.info('[editor] Discard changes');
+  }
 
   /** A toolbar command. */
   protected run(cmd: NgbrFormatCommand): void {

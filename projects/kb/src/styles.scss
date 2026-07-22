@@ -1,8 +1,18 @@
 /* App-global styles. Design tokens (--ngbr-color-*) come from the shared
  * theme.scss (added first in angular.json styles), so both light + dark work. */
 
+/* @ngbracket/buttons — variant/size/state styling + menu-button dropdown.
+ * (CDK overlay-prebuilt.css is already imported by the shared theme.scss.) */
+@use '@ngbracket/buttons/styles/buttons';
+
 :root {
   color-scheme: light dark;
+}
+
+:root[data-theme='dark'] {
+  /* The buttons pack ships no dark on-danger colour; white fails on the light
+     dark-mode danger fill (#ffb4ab). Dark maroon reads at ~9:1. */
+  --ngbr-color-danger-contrast: #3d0a09;
 }
 
 body {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   NgbrProductGallery,
   NgbrPriceTag,
@@ -9,6 +9,14 @@ import {
   NgbrRatingSummary,
   NgbrCartStore,
 } from '@ngbracket/commerce';
+import {
+  NgbrButton,
+  NgbrMenu,
+  NgbrMenuOption,
+  NgbrMenuPanel,
+  NgbrSplitButton,
+  NgbrSplitButtonPrimary,
+} from '@ngbracket/buttons';
 
 import { productById, REVIEWS } from '../data/shop-data';
 
@@ -24,6 +32,12 @@ import { productById, REVIEWS } from '../data/shop-data';
     NgbrQuantityStepper,
     NgbrReviewList,
     NgbrRatingSummary,
+    NgbrButton,
+    NgbrMenu,
+    NgbrMenuOption,
+    NgbrMenuPanel,
+    NgbrSplitButton,
+    NgbrSplitButtonPrimary,
   ],
   template: `
     @if (product(); as p) {
@@ -41,10 +55,21 @@ import { productById, REVIEWS } from '../data/shop-data';
 
             <div class="pd__buy">
               <ngbr-quantity-stepper [(value)]="qty" [minQty]="1" [maxQty]="9" />
-              <button type="button" class="add" (click)="add()">Add to cart</button>
+              <ngbr-split-button ariaLabel="Add to cart options" (action)="add()">
+                <button ngbrButton ngbrSplitButtonPrimary>Add to cart</button>
+                <ng-template ngbrMenu>
+                  <ngbr-menu-panel ariaLabel="Add to cart options">
+                    <button ngbrMenuOption (select)="addAndCheckout()">Add &amp; checkout</button>
+                    <button ngbrMenuOption (select)="saveForLater()">Save for later</button>
+                  </ngbr-menu-panel>
+                </ng-template>
+              </ngbr-split-button>
             </div>
             @if (added()) {
               <p class="added" role="status">Added {{ qty() }} × {{ p.title }} to your cart.</p>
+            }
+            @if (savedForLater()) {
+              <p class="added" role="status">Saved {{ p.title }} for later.</p>
             }
           </div>
         </div>
@@ -91,20 +116,6 @@ import { productById, REVIEWS } from '../data/shop-data';
         gap: 14px;
         margin-top: 20px;
       }
-      .add {
-        padding: 11px 22px;
-        font: inherit;
-        font-weight: 600;
-        color: var(--ngbr-color-accent-contrast, #fff);
-        background: var(--ngbr-color-accent);
-        border: 0;
-        border-radius: var(--ngbr-radius);
-        cursor: pointer;
-      }
-      .add:focus-visible {
-        outline: 2px solid var(--ngbr-color-accent);
-        outline-offset: 2px;
-      }
       .added {
         margin-top: 12px;
         color: var(--ngbr-color-accent);
@@ -132,10 +143,12 @@ export class Product {
   readonly id = input.required<string>();
 
   private readonly store = inject(NgbrCartStore);
+  private readonly router = inject(Router);
   protected readonly product = computed(() => productById(this.id()));
   protected readonly reviews = REVIEWS;
   protected readonly qty = signal(1);
   protected readonly added = signal(false);
+  protected readonly savedForLater = signal(false);
 
   protected add(): void {
     const p = this.product();
@@ -149,5 +162,18 @@ export class Product {
       image: p.image,
     });
     this.added.set(true);
+    this.savedForLater.set(false);
+  }
+
+  /** Add to cart, then take the shopper straight to checkout. */
+  protected addAndCheckout(): void {
+    this.add();
+    void this.router.navigate(['/checkout']);
+  }
+
+  /** No wishlist store in this demo — just acknowledge the intent. */
+  protected saveForLater(): void {
+    this.savedForLater.set(true);
+    this.added.set(false);
   }
 }

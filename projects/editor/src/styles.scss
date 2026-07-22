@@ -1,4 +1,8 @@
-/* CDK overlay styles — required for the context menu (@ngbracket/navigation). */
+/* @ngbracket/buttons — variant/size/state styling + split-button menu. */
+@use '@ngbracket/buttons/styles/buttons';
+
+/* CDK overlay styles — required for the context menu (@ngbracket/navigation)
+ * and the buttons split-button menu. */
 @import '@angular/cdk/overlay-prebuilt.css';
 
 /* App-specific background (shared theme.scss provides the --ngbr-* tokens). */
@@ -8,6 +12,9 @@
 
 :root[data-theme='dark'] {
   --app-bg: #14161a;
+  /* The buttons pack ships no dark on-danger colour; white fails on the
+     light dark-mode danger fill. Dark maroon reads at ~9:1. */
+  --ngbr-color-danger-contrast: #3d0a09;
 }
 
 html,

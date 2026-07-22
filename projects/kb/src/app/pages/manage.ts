@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router } from '@angular/router';
 import { NgbrGrid } from '@ngbracket/structure';
 import type { NgbrGridColumn, NgbrGridRow } from '@ngbracket/structure';
-import { NgbrToolbar, NgbrToolbarButton, NgbrToolbarSeparator } from '@ngbracket/navigation';
+import { NgbrToolbar, NgbrToolbarButton } from '@ngbracket/navigation';
+import { NgbrMenu, NgbrMenuButton, NgbrMenuOption, NgbrMenuPanel } from '@ngbracket/buttons';
 
 import { KbStore } from '../data/kb-store';
 
@@ -10,15 +11,32 @@ import { KbStore } from '../data/kb-store';
 @Component({
   selector: 'kb-manage',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgbrGrid, NgbrToolbar, NgbrToolbarButton, NgbrToolbarSeparator],
+  imports: [
+    NgbrGrid,
+    NgbrToolbar,
+    NgbrToolbarButton,
+    NgbrMenu,
+    NgbrMenuButton,
+    NgbrMenuOption,
+    NgbrMenuPanel,
+  ],
   template: `
     <div class="head">
       <h1>Manage articles</h1>
-      <ngbr-toolbar aria-label="Article actions">
-        <button ngbrToolbarButton value="new" (click)="newArticle()">＋ New</button>
-        <ngbr-toolbar-separator />
-        <button ngbrToolbarButton value="export" (click)="exportCsv()">⬇ Export CSV</button>
-      </ngbr-toolbar>
+      <div class="head__actions">
+        <ngbr-menu-button variant="primary" ariaLabel="New">
+          New
+          <ng-template ngbrMenu>
+            <ngbr-menu-panel ariaLabel="New">
+              <button ngbrMenuOption (select)="newArticle()">New article</button>
+              <button ngbrMenuOption (select)="newCategory()">New category</button>
+            </ngbr-menu-panel>
+          </ng-template>
+        </ngbr-menu-button>
+        <ngbr-toolbar aria-label="Article actions">
+          <button ngbrToolbarButton value="export" (click)="exportCsv()">⬇ Export CSV</button>
+        </ngbr-toolbar>
+      </div>
     </div>
 
     <p class="hint">Double-click a Title or Status cell to edit inline.</p>
@@ -38,6 +56,11 @@ import { KbStore } from '../data/kb-store';
         justify-content: space-between;
         gap: 16px;
         flex-wrap: wrap;
+      }
+      .head__actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
       }
       h1 {
         font-size: clamp(1.4rem, 3vw, 1.9rem);
@@ -86,6 +109,11 @@ export class Manage {
 
   protected newArticle(): void {
     void this.router.navigate(['/articles/new']);
+  }
+
+  /** No category-authoring route in this demo — acknowledge the intent. */
+  protected newCategory(): void {
+    console.info('[kb] New category');
   }
 
   protected exportCsv(): void {
