@@ -1,5 +1,5 @@
 /* Hardcoded data for the Admin Console. No API — everything lives here. */
-import type { NgbrChartSeries, NgbrChartDatum } from '@ngbracket/dashboard';
+import type { NgbrChartSeries, NgbrChartDatum } from '@ngbracket/charts';
 
 export interface Customer {
   id: string;
