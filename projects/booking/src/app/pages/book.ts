@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Injector,
+  signal,
+  viewChild,
+  viewChildren,
+} from '@angular/core';
 import { form, required, email, FormField } from '@angular/forms/signals';
 import { NgbrMiniCalendar, NgbrTimeSlots } from '@ngbracket/scheduler';
 import type { NgbrCalendarValue } from '@ngbracket/scheduler';
@@ -46,18 +57,20 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
       }
     </ol>
 
-    <section class="panel">
+    <section #panel class="panel" tabindex="-1" [attr.aria-label]="stepAriaLabel()">
       @switch (step()) {
         @case (0) {
           <h2>Choose a service</h2>
-          <div class="services" role="radiogroup" aria-label="Service">
+          <div class="services" role="radiogroup" aria-label="Service" (keydown)="onServiceKeydown($event)">
             @for (s of services; track s.id) {
               <button
+                #serviceBtn
                 type="button"
                 role="radio"
                 class="service"
                 [class.is-sel]="service()?.id === s.id"
                 [attr.aria-checked]="service()?.id === s.id"
+                [attr.tabindex]="serviceTabindex(s)"
                 (click)="service.set(s)"
               >
                 <span class="service__name">{{ s.name }}</span>
@@ -188,6 +201,9 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
         gap: 4px;
         text-align: start;
         padding: 14px;
+        /* Themed text so the card name keeps AA contrast in dark mode (a bare
+           <button> otherwise inherits the user-agent text colour). */
+        color: var(--ngbr-color-text);
         background: var(--ngbr-color-surface);
         border: 1px solid var(--ngbr-color-border);
         border-radius: 12px;
@@ -253,6 +269,12 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
   ],
 })
 export class Book {
+  private readonly injector = inject(Injector);
+  /** The step panel — focused on each step change so keyboard focus is never lost. */
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  /** Service radio buttons (step 0) for roving-tabindex focus management. */
+  private readonly serviceBtns = viewChildren<ElementRef<HTMLButtonElement>>('serviceBtn');
+
   protected readonly stepLabels = STEP_LABELS;
   protected readonly services = SERVICES;
   protected readonly taken = ['10:30', '13:00', '15:30'];
@@ -273,6 +295,51 @@ export class Book {
 
   protected readonly dateLabel = computed(() => this.date()?.toLocaleDateString() ?? '—');
 
+  /** Accessible name for the step panel — announces the new step on focus. */
+  protected readonly stepAriaLabel = computed(
+    () => `Step ${this.step() + 1} of ${this.stepLabels.length}: ${this.stepLabels[this.step()]}`,
+  );
+
+  /** Roving tabindex: only the checked radio (or the first, when none) is tabbable. */
+  protected serviceTabindex(s: Service): number {
+    const active = this.service() ?? this.services[0];
+    return s.id === active?.id ? 0 : -1;
+  }
+
+  /** ARIA radio-group keyboard model: arrows/Home/End move focus and select. */
+  protected onServiceKeydown(event: KeyboardEvent): void {
+    const n = this.services.length;
+    const current = this.services.findIndex((s) => s.id === (this.service() ?? this.services[0])?.id);
+    let i = current < 0 ? 0 : current;
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        i = (i + 1) % n;
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        i = (i - 1 + n) % n;
+        break;
+      case 'Home':
+        i = 0;
+        break;
+      case 'End':
+        i = n - 1;
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+    this.service.set(this.services[i]);
+    this.serviceBtns()[i]?.nativeElement.focus();
+  }
+
+  /** Move focus to the step panel after the view updates — keeps keyboard users
+   *  anchored to the new step instead of dropping focus to <body>. */
+  private focusPanel(): void {
+    afterNextRender(() => this.panel()?.nativeElement.focus(), { injector: this.injector });
+  }
+
   protected readonly canContinue = computed(() => {
     switch (this.step()) {
       case 0:
@@ -287,10 +354,14 @@ export class Book {
   });
 
   protected next(): void {
-    if (this.canContinue()) this.step.update((s) => s + 1);
+    if (this.canContinue()) {
+      this.step.update((s) => s + 1);
+      this.focusPanel();
+    }
   }
   protected back(): void {
     this.step.update((s) => Math.max(0, s - 1));
+    this.focusPanel();
   }
 
   protected confirm(): void {
@@ -299,7 +370,10 @@ export class Book {
       this.f.name().errors().length === 0 &&
       this.f.email().errors().length === 0 &&
       this.f.phone().errors().length === 0;
-    if (ok) this.step.set(4);
+    if (ok) {
+      this.step.set(4);
+      this.focusPanel();
+    }
   }
 
   /** Confirm and (demo) fire off a notification. */
@@ -321,5 +395,6 @@ export class Book {
     this.model.set({ name: '', email: '', phone: '' });
     this.tried.set(false);
     this.step.set(0);
+    this.focusPanel();
   }
 }

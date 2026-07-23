@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { NgbrPageHeader } from '@ngbracket/dashboard';
 import { NgbrDataTable, NgbrCellDef } from '@ngbracket/data-table';
 import type { NgbrColumnDef } from '@ngbracket/data-table';
@@ -13,14 +13,22 @@ import { CUSTOMERS, type Customer } from '../data/admin-data';
   template: `
     <ngbr-page-header heading="Customers" subtitle="{{ customers.length }} accounts" />
 
+    @if (selected(); as c) {
+      <p class="sel" role="status">
+        Selected: <strong>{{ c.name }}</strong> — {{ c.plan }}, {{ c.status }}
+      </p>
+    }
+
     <ngbr-data-table
       [data]="customers"
       [columns]="columns"
       [pageSize]="8"
       [searchable]="true"
       [showExport]="true"
+      [navigableRows]="true"
+      (rowActivate)="selected.set($event)"
       exportFilename="customers.csv"
-      caption="Customers — search, sort, page and export to CSV"
+      caption="Customers — arrow keys to move between rows, Enter to select; search, sort, page and export to CSV"
     >
       <ng-template ngbrCellDef="status" [ngbrCellDefData]="customers" let-row>
         <span class="status" [attr.data-status]="row.status">{{ row.status }}</span>
@@ -33,6 +41,11 @@ import { CUSTOMERS, type Customer } from '../data/admin-data';
   `,
   styles: [
     `
+      .sel {
+        margin: 0 0 14px;
+        color: var(--ngbr-color-accent);
+      }
+
       /* Themed text (AA in light + dark); a leading dot carries the status hue,
          and the text label means colour is never the only signal. */
       .status {
@@ -70,6 +83,8 @@ import { CUSTOMERS, type Customer } from '../data/admin-data';
 })
 export class Customers {
   protected readonly customers = CUSTOMERS;
+  /** The row the keyboard user last activated (Enter / click) — shown as a status. */
+  protected readonly selected = signal<Customer | null>(null);
   protected readonly columns: NgbrColumnDef<Customer>[] = [
     { key: 'name', header: 'Name', sortable: true },
     { key: 'email', header: 'Email' },

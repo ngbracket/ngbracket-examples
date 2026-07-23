@@ -34,8 +34,9 @@ type View = 'month' | 'week' | 'agenda';
     @if (view() !== 'agenda') {
       <p class="hint">
         Click an appointment to edit its details, drag it to move, drag its edge to resize, or drag
-        empty time to add one — or use the keyboard: focus an appointment, arrows to move,
-        Shift+arrows to resize/stretch, Enter to edit.
+        empty time to add one. Keyboard: Tab to an appointment then arrows to move, Shift+arrows to
+        resize/stretch, Enter to edit — or Tab to a day ({{ view() === 'month' ? 'the date number' : 'the “add” button' }})
+        and press Enter to add a new appointment.
       </p>
     }
 
@@ -50,6 +51,7 @@ type View = 'month' | 'week' | 'agenda';
             [events]="events()"
             [editable]="true"
             (eventClick)="open($event)"
+            (dayClick)="createOnDay($event)"
             (rangeCreate)="create($event)"
             (eventChange)="update($event)"
             (eventResize)="update($event)"
@@ -140,6 +142,16 @@ export class Calendar {
   protected open(ev: NgbrCalendarEvent): void {
     this.selected.set(ev);
     this.editing.set(ev);
+  }
+
+  /** Keyboard/day activation in month view → add a default 1-hour appointment at
+   *  9am on that day, then open it to fill in details. */
+  protected createOnDay(day: Date): void {
+    const start = new Date(day);
+    start.setHours(9, 0, 0, 0);
+    const end = new Date(start);
+    end.setHours(10, 0, 0, 0);
+    this.create({ start, end, allDay: false });
   }
 
   /** Drag across empty time / days → add an appointment, then open it to fill in details. */

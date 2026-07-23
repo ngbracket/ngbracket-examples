@@ -5,10 +5,10 @@ import {
   NgbrStatCard,
   NgbrSparkline,
   NgbrCard,
-  NgbrLineChart,
-  NgbrBarChart,
-  NgbrDonutChart,
 } from '@ngbracket/dashboard';
+// Interactive, keyboard-navigable charts (arrow keys across data points +
+// live-region announcements) — the dashboard pack's own charts are static.
+import { NgbrLineChart, NgbrBarChart, NgbrDonutChart } from '@ngbracket/charts';
 
 import {
   KPIS,
@@ -48,20 +48,32 @@ import {
 
     <div class="charts">
       <ngbr-card heading="Revenue by month">
-        <ngbr-line-chart [series]="revenueSeries" [categories]="months" [area]="true" unit="k" />
+        <ngbr-line-chart
+          ariaLabel="Revenue by month"
+          summary="Monthly recurring revenue in £k, split into new, expansion and churned, January to June."
+          [series]="revenueSeries"
+          [categories]="months"
+          [area]="true"
+          unit="k"
+        />
       </ngbr-card>
 
       <ngbr-card heading="Sign-ups by quarter">
-        <ngbr-bar-chart [series]="signupBars" [categories]="quarters" [stacked]="true" />
+        <ngbr-bar-chart
+          ariaLabel="Sign-ups by quarter"
+          summary="New sign-ups per quarter, stacked by self-serve and sales-led channels."
+          [series]="signupBars"
+          [categories]="quarters"
+          mode="stacked"
+        />
       </ngbr-card>
 
       <ngbr-card heading="Customers by plan">
-        <ngbr-donut-chart [data]="planBreakdown">
-          <div ngbrDonutCenter>
-            <strong style="font-size: 1.3rem;">1,204</strong>
-            <span style="font-size: 0.8rem; color: var(--ngbr-color-text-muted);">customers</span>
-          </div>
-        </ngbr-donut-chart>
+        <ngbr-donut-chart
+          ariaLabel="Customers by plan"
+          summary="1,204 customers split across the Starter, Pro, Team and Enterprise plans."
+          [data]="planBreakdown"
+        />
       </ngbr-card>
     </div>
   `,
