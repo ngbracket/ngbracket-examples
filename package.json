@@ -41,6 +41,7 @@
     "@ngbracket/auth": "1.0.0",
     "@ngbracket/buttons": "0.3.0",
     "@ngbracket/charts": "1.0.0",
+    "@ngbracket/command": "0.1.0",
     "@ngbracket/commerce": "1.0.0",
     "@ngbracket/dashboard": "1.0.0",
     "@ngbracket/data-table": "1.0.1",
