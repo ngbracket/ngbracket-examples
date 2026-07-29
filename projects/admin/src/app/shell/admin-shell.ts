@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { NgbrAppShell, NgbrSidebarNav, NgbrTopbar } from '@ngbracket/dashboard';
 import type { NgbrNavSection } from '@ngbracket/dashboard';
+import { NgbrCommandPalette, NgbrCommandRegistry } from '@ngbracket/command';
 import { SkipLink, ThemeToggle } from 'shared';
 
 import { AuthState } from '../auth-state';
@@ -46,6 +47,15 @@ const HEADINGS: Record<string, string> = {
 
       <ngbr-topbar ngbrTopbar [heading]="heading()">
         <div ngbrTopbarEnd class="topbar-end">
+          <button
+            type="button"
+            class="cmdk"
+            (click)="palette.open()"
+            aria-label="Open command palette (Command or Ctrl K)"
+            title="Command palette (⌘K)"
+          >
+            <span aria-hidden="true">⌘K</span>
+          </button>
           <app-theme-toggle />
           <span class="who">{{ auth.user() }}</span>
           <button type="button" class="signout" (click)="signOut()">Sign out</button>
@@ -63,6 +73,24 @@ const HEADINGS: Record<string, string> = {
         display: flex;
         align-items: center;
         gap: 12px;
+      }
+      .cmdk {
+        padding: 6px 10px;
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--ngbr-color-text-muted);
+        background: var(--ngbr-color-surface);
+        border: 1px solid var(--ngbr-color-border);
+        border-radius: var(--ngbr-radius);
+        cursor: pointer;
+      }
+      .cmdk:hover {
+        color: var(--ngbr-color-text);
+      }
+      .cmdk:focus-visible {
+        outline: 2px solid var(--ngbr-color-accent);
+        outline-offset: 2px;
       }
       .who {
         font-size: 0.85rem;
@@ -95,6 +123,10 @@ const HEADINGS: Record<string, string> = {
 export class AdminShell {
   protected readonly auth = inject(AuthState);
   private readonly router = inject(Router);
+  // Dogfood @ngbracket/command: the shell registers the app's commands and the
+  // ⌘K palette (opener wired app-wide via provideNgbrCommandHotkey in app.config).
+  protected readonly palette = inject(NgbrCommandPalette);
+  private readonly registry = inject(NgbrCommandRegistry);
 
   protected readonly nav = ADMIN_NAV;
   protected readonly drawerOpen = signal(false);
@@ -114,6 +146,15 @@ export class AdminShell {
         this.heading.set(HEADINGS[id] ?? 'Helm');
         this.drawerOpen.set(false);
       });
+
+    // Register this app's commands; clean up if the shell is ever torn down.
+    const off = this.registry.register([
+      { id: 'go-overview', label: 'Go to Overview', keywords: ['dashboard', 'home'], run: () => this.go('overview') },
+      { id: 'go-customers', label: 'Go to Customers', keywords: ['users', 'people'], run: () => this.go('customers') },
+      { id: 'go-settings', label: 'Go to Settings', keywords: ['preferences', 'account'], run: () => this.go('settings') },
+      { id: 'sign-out', label: 'Sign out', keywords: ['logout', 'log out'], run: () => this.signOut() },
+    ]);
+    inject(DestroyRef).onDestroy(off);
   }
 
   protected go(id: string): void {
