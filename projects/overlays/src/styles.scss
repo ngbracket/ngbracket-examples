@@ -20,10 +20,5 @@
 html,
 body {
   margin: 0;
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
+  font-family: var(--ngbr-font, system-ui, sans-serif);
 }
