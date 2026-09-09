@@ -1,6 +1,9 @@
 {
   "name": "ngbracket-examples",
   "version": "0.0.0",
+  "contributors": [
+    "Lara Sanz"
+  ],
   "engines": {
     "node": "^22.22.3 || ^24.19.0 || >=26.0.0"
   },
