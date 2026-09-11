@@ -52,7 +52,7 @@
     "@ngbracket/charts": "1.0.0",
     "@ngbracket/command": "0.1.0",
     "@ngbracket/commerce": "1.0.0",
-    "@ngbracket/dashboard": "1.0.0",
+    "@ngbracket/dashboard": "1.1.0",
     "@ngbracket/data-table": "1.0.1",
     "@ngbracket/editor": "0.1.1",
     "@ngbracket/forms": "1.0.0",
