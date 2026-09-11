@@ -47,7 +47,7 @@ import {
     </ngbr-widget-grid>
 
     <div class="charts">
-      <ngbr-card heading="Revenue by month">
+      <ngbr-card heading="Revenue by month" [headingLevel]="2">
         <ngbr-line-chart
           ariaLabel="Revenue by month"
           summary="Monthly recurring revenue in £k, split into new, expansion and churned, January to June."
@@ -58,7 +58,7 @@ import {
         />
       </ngbr-card>
 
-      <ngbr-card heading="Sign-ups by quarter">
+      <ngbr-card heading="Sign-ups by quarter" [headingLevel]="2">
         <ngbr-bar-chart
           ariaLabel="Sign-ups by quarter"
           summary="New sign-ups per quarter, stacked by self-serve and sales-led channels."
@@ -68,7 +68,7 @@ import {
         />
       </ngbr-card>
 
-      <ngbr-card heading="Customers by plan">
+      <ngbr-card heading="Customers by plan" [headingLevel]="2">
         <ngbr-donut-chart
           ariaLabel="Customers by plan"
           summary="1,204 customers split across the Starter, Pro, Team and Enterprise plans."

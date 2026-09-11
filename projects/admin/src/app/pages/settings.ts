@@ -50,7 +50,7 @@ const PLANS: NgbrSelectOption[] = [
   template: `
     <ngbr-page-header heading="Settings" subtitle="Manage your workspace profile" />
 
-    <ngbr-card heading="Company profile">
+    <ngbr-card heading="Company profile" [headingLevel]="2">
       @if (saved()) {
         <p class="saved" role="status">Settings saved ✓</p>
       }
