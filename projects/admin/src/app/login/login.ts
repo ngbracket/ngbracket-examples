@@ -13,20 +13,22 @@ import { AuthState } from '../auth-state';
   imports: [NgbrLoginForm, NgbrAuthDivider, NgbrProviderButton, ThemeToggle],
   template: `
     <div class="login">
-      <div class="login__top">
+      <header class="login__top">
         <strong class="login__brand">Helm</strong>
         <app-theme-toggle />
-      </div>
-      <h1 class="login__title">Sign in to your workspace</h1>
-      <p class="login__hint">Demo only — any email and password will sign you in.</p>
-      <ngbr-login-form (submit)="onSubmit($event)">
-        <a ngbrAuthAside href="javascript:void(0)">Forgot password?</a>
-        <div ngbrAuthExtra>
-          <ngbr-auth-divider label="or continue with" />
-          <ngbr-provider-button provider="google" (selected)="onProvider($event)" />
-          <ngbr-provider-button provider="github" (selected)="onProvider($event)" />
-        </div>
-      </ngbr-login-form>
+      </header>
+      <main class="login__main">
+        <h1 class="login__title">Sign in to your workspace</h1>
+        <p class="login__hint">Demo only — any email and password will sign you in.</p>
+        <ngbr-login-form (submit)="onSubmit($event)">
+          <a ngbrAuthAside href="javascript:void(0)">Forgot password?</a>
+          <div ngbrAuthExtra>
+            <ngbr-auth-divider label="or continue with" />
+            <ngbr-provider-button provider="google" (selected)="onProvider($event)" />
+            <ngbr-provider-button provider="github" (selected)="onProvider($event)" />
+          </div>
+        </ngbr-login-form>
+      </main>
     </div>
   `,
   styles: [
