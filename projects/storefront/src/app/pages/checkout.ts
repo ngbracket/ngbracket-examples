@@ -32,7 +32,8 @@ const SHIPPING = 4.99;
       <h1>Checkout</h1>
 
       @if (store.count() === 0 && !placed()) {
-        <p class="empty">Your cart is empty. <a routerLink="/shop">Continue shopping</a>.</p>
+        <h2 class="empty">Your cart is empty</h2>
+        <a class="btn" routerLink="/shop">Continue shopping</a>
       } @else if (placed()) {
         <div class="done" role="status">
           <h2>Thank you! 🎉</h2>

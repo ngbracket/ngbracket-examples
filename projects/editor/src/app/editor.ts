@@ -52,24 +52,26 @@ const COMMANDS: Record<string, string> = {
   ],
   template: `
     <app-skip-link />
-    <header class="chrome">
-      <div class="brand"><span class="brand__mark" aria-hidden="true">◇</span> NgBracket Editor</div>
-      <div class="chrome__actions">
-        <app-publish-button
-          (publish)="publish()"
-          (schedule)="schedule()"
-          (saveDraft)="saveDraft()"
-          (discard)="discard()"
-        />
-        <app-theme-toggle />
+    <header class="editor-chrome">
+      <div class="chrome">
+        <div class="brand"><span class="brand__mark" aria-hidden="true">◇</span> NgBracket Editor</div>
+        <div class="chrome__actions">
+          <app-publish-button
+            (publish)="publish()"
+            (schedule)="schedule()"
+            (saveDraft)="saveDraft()"
+            (discard)="discard()"
+          />
+          <app-theme-toggle />
+        </div>
+      </div>
+
+      <ngbr-app-menubar [menus]="menus" aria-label="Editor" (action)="onAction($event)" />
+
+      <div class="toolbar">
+        <ngbr-format-toolbar [(value)]="active" (command)="run($event)" />
       </div>
     </header>
-
-    <ngbr-app-menubar [menus]="menus" aria-label="Editor" (action)="onAction($event)" />
-
-    <div class="toolbar">
-      <ngbr-format-toolbar [(value)]="active" (command)="run($event)" />
-    </div>
 
     <main id="main-content" tabindex="-1" class="canvas">
       <div

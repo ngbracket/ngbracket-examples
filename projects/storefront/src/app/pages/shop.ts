@@ -19,7 +19,7 @@ import { PRODUCTS } from '../data/shop-data';
 
       <div class="grid">
         @for (product of products; track product.id) {
-          <ngbr-product-card [product]="product" (select)="open($event)" (addToCart)="add($event)" />
+          <ngbr-product-card [product]="product" [headingLevel]="2" (select)="open($event)" (addToCart)="add($event)" />
         }
       </div>
     </div>

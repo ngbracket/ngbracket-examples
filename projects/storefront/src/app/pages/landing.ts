@@ -83,7 +83,7 @@ const FAQS: NgbrFaqItem[] = [
     </ngbr-hero>
 
     <section class="section">
-      <ngbr-feature-grid [features]="features" [columns]="3" />
+      <ngbr-feature-grid [features]="features" [columns]="3" [headingLevel]="2" />
     </section>
 
     <section class="section section--tint">
