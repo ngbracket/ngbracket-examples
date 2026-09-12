@@ -135,6 +135,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/storefront/src/main.ts",
+            "allowedCommonJsDependencies": ["axe-core"],
             "tsConfig": "projects/storefront/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -226,6 +227,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/booking/src/main.ts",
+            "allowedCommonJsDependencies": ["axe-core"],
             "tsConfig": "projects/booking/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -296,6 +298,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/editor/src/main.ts",
+            "allowedCommonJsDependencies": ["axe-core"],
             "tsConfig": "projects/editor/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -366,6 +369,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/overlays/src/main.ts",
+            "allowedCommonJsDependencies": ["axe-core"],
             "tsConfig": "projects/overlays/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -436,6 +440,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/kb/src/main.ts",
+            "allowedCommonJsDependencies": ["axe-core"],
             "tsConfig": "projects/kb/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
