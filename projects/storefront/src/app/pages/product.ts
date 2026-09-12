@@ -83,7 +83,7 @@ import { productById, REVIEWS } from '../data/shop-data';
         </section>
       </div>
     } @else {
-      <p class="missing">Product not found. <a routerLink="/shop">Back to shop</a>.</p>
+      <p class="missing">Product not found. <a class="back" routerLink="/shop">Back to shop</a>.</p>
     }
   `,
   styles: [
@@ -96,7 +96,8 @@ import { productById, REVIEWS } from '../data/shop-data';
       .back {
         display: inline-block;
         margin-bottom: 20px;
-        color: var(--ngbr-color-accent);
+        color: var(--ngbr-color-text);
+        text-decoration: underline;
       }
       .pd__top {
         display: grid;

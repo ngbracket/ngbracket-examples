@@ -13,15 +13,17 @@ import { AuthState } from '../auth-state';
   imports: [NgbrLoginForm, ThemeToggle],
   template: `
     <div class="signin">
-      <div class="signin__top">
+      <header class="signin__top">
         <strong class="brand">Trim &amp; Co.</strong>
         <app-theme-toggle />
-      </div>
-      <h1>Book your appointment</h1>
-      <p class="hint">Sign in to manage bookings. Demo only — any details work.</p>
-      <ngbr-login-form (submit)="onSubmit($event)">
-        <a ngbrAuthAside href="javascript:void(0)">Forgot password?</a>
-      </ngbr-login-form>
+      </header>
+      <main class="signin__main">
+        <h1>Book your appointment</h1>
+        <p class="hint">Sign in to manage bookings. Demo only — any details work.</p>
+        <ngbr-login-form (submit)="onSubmit($event)">
+          <a ngbrAuthAside href="javascript:void(0)">Forgot password?</a>
+        </ngbr-login-form>
+      </main>
     </div>
   `,
   styles: [

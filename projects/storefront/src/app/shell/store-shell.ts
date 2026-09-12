@@ -43,16 +43,11 @@ const FOOTER_COLS: NgbrFooterColumn[] = [
       Free UK delivery on orders over £40 — <a href="/shop">shop now</a>.
     </ngbr-announcement-bar>
 
-    <div class="header-row">
-      <ngbr-marketing-header [links]="nav" ctaLabel="Sign in" ctaHref="/signin" brandHref="/">
-        <span ngbrBrand>Aurora</span>
-      </ngbr-marketing-header>
-
-      <div class="cart-fab">
-        <app-theme-toggle />
-        <ngbr-mini-cart [count]="store.count()" (open)="cartOpen.set(true)" />
-      </div>
-    </div>
+    <ngbr-marketing-header [links]="nav" ctaLabel="Sign in" ctaHref="/signin" brandHref="/">
+      <span ngbrBrand>Aurora</span>
+      <app-theme-toggle ngbrHeaderActions />
+      <ngbr-mini-cart ngbrHeaderActions [count]="store.count()" (open)="cartOpen.set(true)" />
+    </ngbr-marketing-header>
 
     <ngbr-cart-drawer
       [(open)]="cartOpen"
@@ -66,7 +61,7 @@ const FOOTER_COLS: NgbrFooterColumn[] = [
       <router-outlet />
     </main>
 
-    <ngbr-footer [columns]="footerCols" copyright="© 2026 Aurora Goods Ltd.">
+    <ngbr-footer [columns]="footerCols" [headingLevel]="2" copyright="© 2026 Aurora Goods Ltd.">
       <div ngbrFooterBrand class="foot-brand">Aurora</div>
       <a ngbrFooterLegal href="#">Privacy</a>
     </ngbr-footer>
@@ -75,33 +70,6 @@ const FOOTER_COLS: NgbrFooterColumn[] = [
     `
       :host {
         display: block;
-      }
-      /* The header + the theme toggle / mini-cart form one sticky unit, so the
-         controls live in the toolbar from load and stay with it on scroll. The
-         marketing header's own sticky is neutralised; .header-row is the sticky. */
-      .header-row {
-        position: sticky;
-        top: 0;
-        z-index: 40;
-      }
-      :host ::ng-deep .header-row > ngbr-marketing-header {
-        position: static !important;
-      }
-      .cart-fab {
-        position: absolute;
-        top: 9px;
-        right: clamp(16px, 2vw, 28px);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      /* Reserve room on the right of the header so its CTA / mobile menu button
-         don't collide with the floating controls. Only needed until the header
-         is centred well clear of the corner on very wide screens. */
-      @media (max-width: 1360px) {
-        :host ::ng-deep .ngbr-mh__bar {
-          padding-right: 128px;
-        }
       }
       .store-main {
         min-height: 60vh;
