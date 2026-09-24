@@ -42,6 +42,45 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <!-- MODERATE (yellow): content outside any landmark → axe rule region -->
       <p>moderate · region — nothing here is wrapped in a main landmark</p>
     </div>
+
+    <hr />
+
+    <h2>Keyboard layer — M1 + M2</h2>
+    <p>
+      <strong>Tab through the controls below.</strong> The overlay numbers each
+      tab stop and draws the path between them; the panel in the bottom-right
+      corner shows the focused control's computed role, accessible name and
+      states (a <em>computed approximation</em>, not a screen reader). The
+      broken controls also raise <code>ngbr/*</code> findings in the console.
+    </p>
+
+    <div class="kbd">
+      <!-- ngbr/unreachable-control: an ARIA role, but no tabindex → keyboard can't reach it -->
+      <div role="button" class="fake-btn">
+        role="button", no tabindex — the keyboard can't reach me
+        (ngbr/unreachable-control)
+      </div>
+
+      <!-- ngbr/click-without-key: focusable + (click) but no keyboard handler -->
+      <div tabindex="0" class="fake-btn" (click)="onFakeClick()">
+        tabindex="0" + (click), no key handler — Enter/Space won't fire it
+        (ngbr/click-without-key)
+      </div>
+
+      <!-- Positive tabindex hijacks the order → warning badge in the tab-order overlay -->
+      <button type="button" tabindex="3">
+        positive tabindex="3" — hijacks the tab order
+      </button>
+
+      <!-- Healthy controls: good targets for the accessibility-tree preview -->
+      <button type="button" aria-expanded="false" aria-haspopup="menu">
+        Menu — try me for expanded / has-popup states
+      </button>
+      <label class="chk">
+        <input type="checkbox" checked /> Subscribe — a checkbox in the checked
+        state
+      </label>
+    </div>
   `,
   styles: [
     `
@@ -72,7 +111,33 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         color: #bcbcbc;
         background: #fff;
       }
+      hr {
+        margin: 40px 0;
+        border: 0;
+        border-top: 1px solid #ddd;
+      }
+      .kbd {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .fake-btn {
+        padding: 8px 14px;
+        border: 1px solid #c9a227;
+        border-radius: 6px;
+        background: #fffdf3;
+        cursor: pointer;
+      }
+      .chk {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
     `,
   ],
 })
-export class A11yDemo {}
+export class A11yDemo {
+  /** Empty on purpose: the point is a (click) with no keyboard handler. */
+  onFakeClick(): void {}
+}
