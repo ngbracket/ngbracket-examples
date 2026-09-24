@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 /**
  * DEV-ONLY accessibility showcase: one deliberate violation per axe impact
@@ -81,6 +81,33 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         state
       </label>
     </div>
+
+    <hr />
+
+    <h2>Focus trap — M3</h2>
+    <p>
+      <strong>Open the dialog, then Tab.</strong> It's marked
+      <code>aria-modal="true"</code> but the page behind it isn't made
+      <code>inert</code>, so focus walks straight out of it — raising
+      <code>ngbr/modal-focus-not-contained</code>. Close it and the finding goes
+      away.
+    </p>
+
+    <button type="button" (click)="dialogOpen.set(true)">Open broken dialog</button>
+
+    @if (dialogOpen()) {
+      <!-- ngbr/modal-focus-not-contained: aria-modal, but the background is still tabbable -->
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="broken-dialog-title"
+        class="dialog"
+      >
+        <h3 id="broken-dialog-title">Broken modal dialog</h3>
+        <p>aria-modal="true", no inert background — Tab escapes to the page.</p>
+        <button type="button" (click)="dialogOpen.set(false)">Close</button>
+      </div>
+    }
   `,
   styles: [
     `
@@ -134,10 +161,22 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         align-items: center;
         gap: 8px;
       }
+      .dialog {
+        margin-top: 16px;
+        padding: 16px 20px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        background: #fff;
+        color: #1a1a1a;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
+      }
     `,
   ],
 })
 export class A11yDemo {
+  /** Toggles the deliberately uncontained modal in the focus-trap section. */
+  readonly dialogOpen = signal(false);
+
   /** Empty on purpose: the point is a (click) with no keyboard handler. */
   onFakeClick(): void {}
 }
