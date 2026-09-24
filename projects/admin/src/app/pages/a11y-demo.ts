@@ -108,6 +108,27 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
         <button type="button" (click)="dialogOpen.set(false)">Close</button>
       </div>
     }
+
+    <hr />
+
+    <h2>Keyboard trap — M3 (report-mode)</h2>
+    <p>
+      <strong>Tab into these fields.</strong> Tab on the second one sends focus back
+      to the first, so Tab alone never gets out (Shift+Tab does). This one needs real
+      key presses, so it's found by report-mode, not the overlay:
+      <code>npx ngbr-a11y-report --base http://localhost:4200 --route /a11y-demo --focus-traps</code>
+      raises <code>ngbr/focus-trap</code>.
+    </p>
+
+    <!-- ngbr/focus-trap: Tab on the last field is intercepted and sent back to the first -->
+    <div class="trap">
+      <input #trapFirst aria-label="Trapped field one" placeholder="Trapped field one" />
+      <input
+        aria-label="Trapped field two"
+        placeholder="Trapped field two"
+        (keydown.tab)="$event.preventDefault(); trapFirst.focus()"
+      />
+    </div>
   `,
   styles: [
     `
@@ -169,6 +190,13 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
         background: #fff;
         color: #1a1a1a;
         box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
+      }
+      .trap {
+        display: flex;
+        gap: 12px;
+        padding: 12px;
+        border: 2px dashed #c9a227;
+        border-radius: 8px;
       }
     `,
   ],
