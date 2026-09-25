@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 /**
- * DEV-ONLY accessibility showcase: one deliberate violation per axe impact
+ * DEV-ONLY accessibility showcase, also the public devtools demo
+ * (a11y-demo.ngbracket.com, a development build). One deliberate violation per axe impact
  * level, so `provideA11yDevtools({ overlay: true })` renders every severity
  * colour (critical = red, serious = orange, moderate = yellow, minor = blue)
  * and the console reporter groups them under this component.
@@ -12,12 +14,40 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 @Component({
   selector: 'admin-a11y-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink],
   template: `
-    <h1>a11y-devtools — severity showcase</h1>
+    <h1>&#64;ngbracket/a11y-devtools demo</h1>
     <p>
-      Each block trips a different axe rule so the overlay shows every severity
-      colour. Open the console for the grouped, component-attributed report.
+      This is a development build of the Helm admin example with
+      <a href="https://ngbracket.com/tools/a11y-devtools">&#64;ngbracket/a11y-devtools</a>
+      running, as it would while you build your own app. Every problem on this page
+      is there on purpose.
     </p>
+    <ul class="howto">
+      <li>
+        <strong>The boxes</strong> mark each issue, coloured by severity and labelled
+        with the Angular component that rendered it.
+      </li>
+      <li>
+        <strong>The a11y pill</strong> (bottom left) switches the devtools on and off,
+        as does Alt+Shift+A. Its <strong>⋯</strong> menu chooses what's drawn,
+        filters by severity and downloads an HTML report.
+      </li>
+      <li>
+        <strong>Press Tab</strong> to walk the tab order; the panel in the bottom right
+        shows each control's computed role, name and state.
+      </li>
+      <li>
+        <strong>Open the browser console</strong> for the same issues grouped by
+        component.
+      </li>
+    </ul>
+    <p>
+      <a routerLink="/login">Continue to the app</a> (sign in with any email and
+      password) to see it on real pages. The report covers every page you visit.
+    </p>
+
+    <h2>One issue per severity</h2>
 
     <div class="demo">
       <!-- CRITICAL (red): image with no alt text → axe rule image-alt -->
@@ -45,13 +75,13 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
     <hr />
 
-    <h2>Keyboard layer — M1 + M2</h2>
+    <h2>Keyboard</h2>
     <p>
       <strong>Tab through the controls below.</strong> The overlay numbers each
       tab stop and draws the path between them; the panel in the bottom-right
       corner shows the focused control's computed role, accessible name and
       states (a <em>computed approximation</em>, not a screen reader). The
-      broken controls also raise <code>ngbr/*</code> findings in the console.
+      broken controls also raise <code>ngbr/*</code> keyboard findings.
     </p>
 
     <div class="kbd">
@@ -84,7 +114,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
     <hr />
 
-    <h2>Focus trap — M3</h2>
+    <h2>A modal that doesn't keep focus in</h2>
     <p>
       <strong>Open the dialog, then Tab.</strong> It's marked
       <code>aria-modal="true"</code> but the page behind it isn't made
@@ -111,11 +141,32 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
     <hr />
 
-    <h2>Keyboard trap — M3 (report-mode)</h2>
+    <h2>Issues inside a modal dialog</h2>
+    <p>
+      Modal dialogs, including Angular Material ones, open in the browser's top
+      layer. The overlay and the pill stay on top of them, so issues inside a modal
+      are marked too.
+    </p>
+    <button type="button" (click)="openModal()">Open modal dialog</button>
+    <dialog #modal class="modal" aria-labelledby="modal-title">
+      <h3 id="modal-title">Modal dialog</h3>
+      <!-- CRITICAL: an image with no alt text, inside the modal -->
+      <img
+        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+        width="120"
+        height="60"
+      />
+      <p>The image above has no alt text.</p>
+      <button type="button" (click)="modal.close()">Close</button>
+    </dialog>
+
+    <hr />
+
+    <h2>A keyboard trap (found by report mode)</h2>
     <p>
       <strong>Tab into these fields.</strong> Tab on the second one sends focus back
       to the first, so Tab alone never gets out (Shift+Tab does). This one needs real
-      key presses, so it's found by report-mode, not the overlay:
+      key presses, so it's found by report mode, not the overlay:
       <code>npx ngbr-a11y-report --base http://localhost:4200 --route /a11y-demo --focus-traps</code>
       raises <code>ngbr/focus-trap</code>.
     </p>
@@ -191,6 +242,28 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
         color: #1a1a1a;
         box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
       }
+      /* Inherit the theme's text colour (works light and dark); the underline marks the link. */
+      a {
+        color: inherit;
+        text-decoration: underline;
+      }
+      .howto {
+        padding-left: 20px;
+        font-size: 14px;
+      }
+      .howto li {
+        margin: 6px 0;
+      }
+      .modal {
+        padding: 16px 20px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        background: #fff;
+        color: #1a1a1a;
+      }
+      .modal img {
+        margin: 8px 0;
+      }
       .trap {
         display: flex;
         gap: 12px;
@@ -204,6 +277,13 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 export class A11yDemo {
   /** Toggles the deliberately uncontained modal in the focus-trap section. */
   readonly dialogOpen = signal(false);
+
+  private readonly modal = viewChild.required<ElementRef<HTMLDialogElement>>('modal');
+
+  /** Opens the native modal dialog (top layer) to show the overlay drawing over it. */
+  openModal(): void {
+    this.modal().nativeElement.showModal();
+  }
 
   /** Empty on purpose: the point is a (click) with no keyboard handler. */
   onFakeClick(): void {}

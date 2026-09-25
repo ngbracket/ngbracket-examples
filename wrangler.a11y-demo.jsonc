@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ngbr-example-a11y-demo",
+  "compatibility_date": "2026-06-14",
+  // The admin example as a DEVELOPMENT build (ng build admin -c development), so
+  // @ngbracket/a11y-devtools runs: it's a no-op in production builds, and the
+  // component names come from Angular's dev-mode debug API. Also registers the
+  // dev-only /a11y-demo showcase route.
+  "assets": {
+    "directory": "dist/admin-dev/browser",
+    "not_found_handling": "single-page-application",
+  },
+  "routes": [{ "pattern": "a11y-demo.ngbracket.com", "custom_domain": true }],
+}

@@ -89,6 +89,7 @@ subdomain:
 | booking | https://booking.ngbracket.com |
 | editor | https://editor.ngbracket.com |
 | kb | https://kb.ngbracket.com |
+| a11y-demo (admin, development build with a11y-devtools) | https://a11y-demo.ngbracket.com/a11y-demo |
 
 Config lives in `wrangler.<app>.jsonc`. With Cloudflare credentials in the
 environment (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`):
