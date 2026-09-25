@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 /**
  * DEV-ONLY accessibility showcase, also the public devtools demo
@@ -14,7 +14,6 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'admin-a11y-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
   template: `
     <h1>&#64;ngbracket/a11y-devtools demo</h1>
     <p>
@@ -43,7 +42,7 @@ import { RouterLink } from '@angular/router';
       </li>
     </ul>
     <p>
-      <a routerLink="/login">Continue to the app</a> (sign in with any email and
+      <a href="/login" (click)="continueToApp($event)">Continue to the app</a> (sign in with any email and
       password) to see it on real pages. The report covers every page you visit.
     </p>
 
@@ -277,6 +276,19 @@ import { RouterLink } from '@angular/router';
 export class A11yDemo {
   /** Toggles the deliberately uncontained modal in the focus-trap section. */
   readonly dialogOpen = signal(false);
+
+  private readonly router = inject(Router);
+
+  /**
+   * In-app navigation, so the devtools' report keeps the pages visited so far.
+   * Router rather than RouterLink: the directive would add ~5 KB to the
+   * production main bundle for a page that only exists in dev builds.
+   */
+  continueToApp(event: MouseEvent): void {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0) return; // new tab etc.
+    event.preventDefault();
+    void this.router.navigateByUrl('/login');
+  }
 
   private readonly modal = viewChild.required<ElementRef<HTMLDialogElement>>('modal');
 
