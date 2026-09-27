@@ -56,7 +56,7 @@
     "@ngbracket/commerce": "1.1.0",
     "@ngbracket/dashboard": "1.1.0",
     "@ngbracket/data-table": "1.0.1",
-    "@ngbracket/editor": "0.1.1",
+    "@ngbracket/editor": "0.1.3",
     "@ngbracket/forms": "1.0.0",
     "@ngbracket/marketing": "1.2.0",
     "@ngbracket/navigation": "0.1.2",
