@@ -60,7 +60,7 @@
     "@ngbracket/forms": "1.0.0",
     "@ngbracket/marketing": "1.2.0",
     "@ngbracket/navigation": "0.1.2",
-    "@ngbracket/overlays": "0.1.0",
+    "@ngbracket/overlays": "0.1.1",
     "@ngbracket/scheduler": "1.0.0",
     "@ngbracket/structure": "0.1.0",
     "rxjs": "~7.8.0",
