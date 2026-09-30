@@ -61,7 +61,7 @@
     "@ngbracket/marketing": "1.4.0",
     "@ngbracket/navigation": "0.2.0",
     "@ngbracket/overlays": "0.2.0",
-    "@ngbracket/scheduler": "1.2.0",
+    "@ngbracket/scheduler": "1.3.0",
     "@ngbracket/structure": "0.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
