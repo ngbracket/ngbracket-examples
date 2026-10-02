@@ -47,7 +47,7 @@ const SHIPPING = 4.99;
           <div class="co__main">
             @switch (step()) {
               @case (0) {
-                <ngbr-order-review [items]="store.items()" [shipping]="shipping" />
+                <ngbr-order-review [items]="store.items()" [shipping]="shipping" [headingLevel]="2" />
               }
               @case (1) {
                 <h2>Shipping address</h2>
