@@ -52,7 +52,7 @@ import { Router } from '@angular/router';
       <!-- CRITICAL (red): image with no alt text → axe rule image-alt -->
       <figure>
         <img
-          src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Crect x='1' y='1' width='118' height='78' rx='6' fill='%23e8eef6' stroke='%23526079' stroke-width='2'/%3E%3Ccircle cx='88' cy='24' r='9' fill='%23d9a400'/%3E%3Cpath d='M8 70 L42 30 L64 56 L78 42 L112 70 Z' fill='%233f6f4a'/%3E%3C/svg%3E"
           width="120"
           height="80"
         />
@@ -151,9 +151,9 @@ import { Router } from '@angular/router';
       <h3 id="modal-title">Modal dialog</h3>
       <!-- CRITICAL: an image with no alt text, inside the modal -->
       <img
-        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Crect x='1' y='1' width='118' height='78' rx='6' fill='%23e8eef6' stroke='%23526079' stroke-width='2'/%3E%3Ccircle cx='88' cy='24' r='9' fill='%23d9a400'/%3E%3Cpath d='M8 70 L42 30 L64 56 L78 42 L112 70 Z' fill='%233f6f4a'/%3E%3C/svg%3E"
         width="120"
-        height="60"
+        height="80"
       />
       <p>The image above has no alt text.</p>
       <button type="button" (click)="modal.close()">Close</button>
