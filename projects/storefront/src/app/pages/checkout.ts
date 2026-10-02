@@ -47,7 +47,7 @@ const SHIPPING = 4.99;
           <div class="co__main">
             @switch (step()) {
               @case (0) {
-                <ngbr-order-review [items]="store.items()" [shipping]="shipping" />
+                <ngbr-order-review [items]="store.items()" [shipping]="shipping" [headingLevel]="2" />
               }
               @case (1) {
                 <h2>Shipping address</h2>
@@ -59,12 +59,12 @@ const SHIPPING = 4.99;
                 }
               }
               @case (2) {
-                <ngbr-payment-shell heading="Payment" note="Demo only — no card is charged.">
+                <ngbr-payment-shell heading="Payment" [headingLevel]="2" note="Demo only — no card is charged.">
                   <div class="fakecard">Card details would go here (your PSP element).</div>
                 </ngbr-payment-shell>
               }
               @case (3) {
-                <ngbr-order-review [items]="store.items()" [address]="address()" [shipping]="shipping" />
+                <ngbr-order-review [items]="store.items()" [address]="address()" [shipping]="shipping" [headingLevel]="2" />
               }
             }
 

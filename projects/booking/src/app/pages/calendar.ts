@@ -69,7 +69,7 @@ type View = 'month' | 'week' | 'agenda';
           />
         }
         @case ('agenda') {
-          <ngbr-agenda [events]="events()" (eventClick)="open($event)" />
+          <ngbr-agenda [events]="events()" [headingLevel]="2" (eventClick)="open($event)" />
         }
       }
     </div>
