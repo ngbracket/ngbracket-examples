@@ -21,22 +21,18 @@ import { TICKET_COLUMNS, TICKETS, ticket, type Ticket } from '../data/admin-data
       subtitle="{{ tickets().length }} support tickets by status"
     />
 
-    <p class="hint" id="tickets-hint">
+    <p class="hint">
       Focus a ticket and press Space to pick it up, the arrow keys to move it and Space to put
       it down (Escape cancels) — or use its Move menu
       (<span aria-hidden="true">⋯ </span>Shift+F10), or drag it. Enter opens a ticket. Reorder
       columns from their handle<span aria-hidden="true"> ⠿</span>.
     </p>
 
-    @if (opened(); as t) {
-      <p class="sel" role="status">
-        Opened <strong>{{ t.id }}</strong>: {{ t.subject }} — {{ t.customer }}
-      </p>
-    }
+    <!-- Always present (only its text changes), so the first message is announced. -->
+    <p class="sel" role="status">{{ status() }}</p>
 
     <ngbr-board
       label="Support tickets"
-      aria-describedby="tickets-hint"
       [headingLevel]="2"
       allowAdd
       reorderableColumns
@@ -67,6 +63,9 @@ import { TICKET_COLUMNS, TICKETS, ticket, type Ticket } from '../data/admin-data
       .sel {
         margin: 0 0 14px;
         color: var(--ngbr-color-accent);
+      }
+      .sel:empty {
+        margin: 0;
       }
       .id {
         display: block;
@@ -119,12 +118,13 @@ import { TICKET_COLUMNS, TICKETS, ticket, type Ticket } from '../data/admin-data
 export class Tickets {
   protected readonly columns = signal(TICKET_COLUMNS);
   protected readonly tickets = signal<Ticket[]>(TICKETS);
-  /** The ticket last activated (Enter / click), shown as a status. */
-  protected readonly opened = signal<Ticket | null>(null);
+  /** The last outcome (a ticket opened or added), announced via role=status. */
+  protected readonly status = signal('');
   private nextId = 1040 + TICKETS.length;
 
   protected open(id: string): void {
-    this.opened.set(this.tickets().find((t) => t.id === id) ?? null);
+    const t = this.tickets().find((x) => x.id === id);
+    if (t) this.status.set(`Opened ${t.id}: ${t.subject} — ${t.customer}`);
   }
 
   /**
@@ -144,12 +144,21 @@ export class Tickets {
     });
   }
 
+  /**
+   * "Add a card": the board shows the button in every column, so the WIP limit
+   * that keyboard, pointer and Move-menu moves respect is checked here.
+   */
   protected addTicket(columnId: string): void {
+    const col = this.columns().find((c) => c.id === columnId);
+    if (!col) return;
+    const count = this.tickets().filter((t) => t.columnId === columnId).length;
+    if (col.wipLimit != null && count >= col.wipLimit) {
+      this.status.set(`${col.title} is at its limit of ${col.wipLimit}. Ticket not added.`);
+      return;
+    }
     const id = `TCK-${this.nextId++}`;
-    this.tickets.update((tickets) => [
-      ...tickets,
-      ticket(id, columnId, 'New ticket', 'Normal', 'Unassigned'),
-    ]);
+    this.tickets.update((tickets) => [...tickets, ticket(id, columnId, 'New ticket', 'Normal', 'Unassigned')]);
+    this.status.set(`Added ${id} to ${col.title}.`);
   }
 
   protected moveColumn(move: NgbrColumnMove): void {

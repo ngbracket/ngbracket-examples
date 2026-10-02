@@ -82,7 +82,7 @@ export interface TicketColumn {
 export type Ticket = {
   id: string;
   columnId: string;
-  /** The board's accessible name for the card: subject, priority, customer. */
+  /** The board's accessible name for the card: id, subject, priority, customer. */
   title: string;
   subject: string;
   customer: string;
@@ -108,7 +108,10 @@ const TICKET_ROWS: [string, string, TicketPriority, string][] = [
   ['resolved', 'Upgrade to the Team plan', 'Low', CUSTOMERS[13].name],
 ];
 
-/** Build a ticket; its board name carries what the card shows. */
+/**
+ * Build a ticket. The board names a card by its `title` alone, so the title
+ * carries what the card shows, starting with its visible id.
+ */
 export function ticket(
   id: string,
   columnId: string,
@@ -116,7 +119,14 @@ export function ticket(
   priority: TicketPriority,
   customer: string,
 ): Ticket {
-  return { id, columnId, subject, priority, customer, title: `${subject}, ${priority} priority, ${customer}` };
+  return {
+    id,
+    columnId,
+    subject,
+    priority,
+    customer,
+    title: `${id}: ${subject}, ${priority} priority, ${customer}`,
+  };
 }
 
 export const TICKETS: Ticket[] = TICKET_ROWS.map(([columnId, subject, priority, customer], i) =>

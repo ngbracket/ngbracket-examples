@@ -6,7 +6,7 @@
  *   3. exercises the specific keyboard interactions that were fixed and asserts them.
  *
  * Serve the built apps first (static, SPA boots at /), then:
- *   node scripts/a11y-examples.mjs admin   http://localhost:4310
+ *   node scripts/a11y-examples.mjs admin   http://localhost:4310   (overview, customers, tickets)
  *   node scripts/a11y-examples.mjs booking http://localhost:4311
  *
  * Exit code 1 on any axe violation or failed keyboard assertion.
@@ -98,6 +98,57 @@ if (app === 'admin') {
   await page.waitForTimeout(100);
   const status = await page.locator('p.sel[role="status"]').count();
   record('customers: Enter activates the row (status announced)', status > 0);
+
+  // Tickets: the @ngbracket/board work board (keyboard move, Move menu, WIP).
+  await page.locator('ngbr-nav-item').filter({ hasText: 'Tickets' }).first().click();
+  await page.getByRole('heading', { name: 'Tickets', level: 1 }).waitFor();
+  await axeSweep('tickets');
+  const key = async (...keys) => {
+    for (const k of keys) {
+      await page.keyboard.press(k);
+      await page.waitForTimeout(150);
+    }
+  };
+  const focused = () =>
+    page.evaluate(() => ({
+      id: document.activeElement?.getAttribute('data-card-id'),
+      name: document.activeElement?.getAttribute('aria-label') ?? '',
+    }));
+  const columnOf = (id) =>
+    page.evaluate(
+      (cardId) => document.querySelector(`[data-card-id="${cardId}"]`)?.closest('.ngbr-board__column')
+        ?.querySelector('.ngbr-board__col-title')?.textContent,
+      id,
+    );
+  await page.locator('[data-card-id="TCK-1040"]').focus();
+  await key('Space', 'ArrowRight', 'Space');
+  record('tickets: Space / → / Space moves a card to the next column', (await columnOf('TCK-1040')) === 'In progress');
+  let f = await focused();
+  record('tickets: focus stays on the moved card', f.id === 'TCK-1040', f.name);
+  await key('Shift+F10');
+  const items = await page.getByRole('menuitem').allTextContents();
+  record('tickets: Shift+F10 opens the Move menu', items.some((t) => t.includes('Move to Resolved')), items.map((t) => t.trim()).join(' | '));
+  await page.getByRole('menuitem', { name: 'Move to Resolved' }).focus();
+  await key('Enter');
+  f = await focused();
+  record('tickets: a menu move focuses the card, named for the move', f.id === 'TCK-1040' && f.name.includes('moved to Resolved'), f.name);
+  await key('Enter');
+  const opened = (await page.locator('p.sel[role="status"]').textContent())?.trim() ?? '';
+  record('tickets: Enter opens the ticket (status)', opened.startsWith('Opened TCK-1040'), opened);
+  // In progress is 2/3: one add fits, the next is refused at the WIP limit.
+  const addToInProgress = page.getByRole('button', { name: 'Add a card to In progress' });
+  await addToInProgress.click();
+  await page.waitForTimeout(150); // the new card renders and moves the button down
+  await addToInProgress.click();
+  await page.waitForTimeout(150);
+  const wip = (await page.locator('p.sel[role="status"]').textContent())?.trim() ?? '';
+  const inProgress = await page.evaluate(() => {
+    const col = Array.from(document.querySelectorAll('.ngbr-board__column')).find(
+      (c) => c.querySelector('.ngbr-board__col-title')?.textContent === 'In progress',
+    );
+    return col?.querySelectorAll('[data-card-id]').length;
+  });
+  record('tickets: Add a card respects the WIP limit', inProgress === 3 && wip.includes('at its limit'), `${inProgress} cards; "${wip}"`);
 }
 
 if (app === 'booking') {
