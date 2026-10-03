@@ -77,8 +77,9 @@ import { Router } from '@angular/router';
     <p>
       Tab through the controls below. The overlay numbers each tab stop and draws
       the path between them. The Focus preview card shows the focused control's
-      role, accessible name and states. It's computed from the page, so treat it as
-      an approximation of what a screen reader announces. The broken controls also
+      role, accessible name and states. It's a computed approximation of what
+      assistive tech gets from the page, and isn't the output of any screen reader.
+      The broken controls also
       raise <code>ngbr/*</code> keyboard findings.
     </p>
 
