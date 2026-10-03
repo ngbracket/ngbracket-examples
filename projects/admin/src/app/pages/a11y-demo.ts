@@ -24,8 +24,8 @@ import { Router } from '@angular/router';
     </p>
     <ul class="howto">
       <li>
-        <strong>The boxes</strong> mark each issue, coloured by severity and labelled
-        with the Angular component that rendered it.
+        Boxes mark each issue, coloured by severity and labelled with the Angular
+        component that rendered it.
       </li>
       <li>
         <strong>The a11y pill</strong> (bottom left) switches the devtools on and off,
@@ -33,12 +33,11 @@ import { Router } from '@angular/router';
         filters by severity and downloads an HTML report.
       </li>
       <li>
-        <strong>Press Tab</strong> to walk the tab order; the panel in the bottom right
-        shows each control's computed role, name and state.
+        Press Tab to walk the tab order. The <strong>Focus preview</strong> card in the
+        bottom right shows each control's computed role, name and state.
       </li>
       <li>
-        <strong>Open the browser console</strong> for the same issues grouped by
-        component.
+        The browser console lists the same issues grouped by component.
       </li>
     </ul>
     <p>
@@ -56,58 +55,57 @@ import { Router } from '@angular/router';
           width="120"
           height="80"
         />
-        <figcaption>critical · image-alt — image has no alt text</figcaption>
+        <figcaption>critical · image-alt: the image has no alt text</figcaption>
       </figure>
 
       <!-- SERIOUS (orange): low-contrast text → axe rule color-contrast -->
       <p class="low-contrast">
-        serious · color-contrast — this text fails the minimum contrast ratio
+        serious · color-contrast: this text fails the minimum contrast ratio
       </p>
 
       <!-- MINOR (blue): empty heading → axe rule empty-heading -->
       <h2></h2>
-      <p>minor · empty-heading — the empty &lt;h2&gt; above has no text</p>
+      <p>minor · empty-heading: the &lt;h2&gt; above has no text</p>
 
       <!-- MODERATE (yellow): content outside any landmark → axe rule region -->
-      <p>moderate · region — nothing here is wrapped in a main landmark</p>
+      <p>moderate · region: nothing here is inside a main landmark</p>
     </div>
 
     <hr />
 
     <h2>Keyboard</h2>
     <p>
-      <strong>Tab through the controls below.</strong> The overlay numbers each
-      tab stop and draws the path between them; the panel in the bottom-right
-      corner shows the focused control's computed role, accessible name and
-      states (a <em>computed approximation</em>, not a screen reader). The
-      broken controls also raise <code>ngbr/*</code> keyboard findings.
+      Tab through the controls below. The overlay numbers each tab stop and draws
+      the path between them. The Focus preview card shows the focused control's
+      role, accessible name and states. It's computed from the page, so treat it as
+      an approximation of what a screen reader announces. The broken controls also
+      raise <code>ngbr/*</code> keyboard findings.
     </p>
 
     <div class="kbd">
       <!-- ngbr/unreachable-control: an ARIA role, but no tabindex → keyboard can't reach it -->
       <div role="button" class="fake-btn">
-        role="button", no tabindex — the keyboard can't reach me
+        role="button", no tabindex: the keyboard can't reach me
         (ngbr/unreachable-control)
       </div>
 
       <!-- ngbr/click-without-key: focusable + (click) but no keyboard handler -->
       <div tabindex="0" class="fake-btn" (click)="onFakeClick()">
-        tabindex="0" + (click), no key handler — Enter/Space won't fire it
+        tabindex="0" + (click), no key handler: Enter and Space do nothing
         (ngbr/click-without-key)
       </div>
 
       <!-- Positive tabindex hijacks the order → warning badge in the tab-order overlay -->
       <button type="button" tabindex="3">
-        positive tabindex="3" — hijacks the tab order
+        positive tabindex="3": jumps ahead in the tab order
       </button>
 
-      <!-- Healthy controls: good targets for the accessibility-tree preview -->
+      <!-- Healthy controls: good targets for the Focus preview -->
       <button type="button" aria-expanded="false" aria-haspopup="menu">
-        Menu — try me for expanded / has-popup states
+        Menu: shows the expanded and has-popup states
       </button>
       <label class="chk">
-        <input type="checkbox" checked /> Subscribe — a checkbox in the checked
-        state
+        <input type="checkbox" checked /> Subscribe (a checked checkbox)
       </label>
     </div>
 
@@ -115,11 +113,10 @@ import { Router } from '@angular/router';
 
     <h2>A modal that doesn't keep focus in</h2>
     <p>
-      <strong>Open the dialog, then Tab.</strong> It's marked
-      <code>aria-modal="true"</code> but the page behind it isn't made
-      <code>inert</code>, so focus walks straight out of it — raising
-      <code>ngbr/modal-focus-not-contained</code>. Close it and the finding goes
-      away.
+      Open the dialog, then press Tab. It's marked <code>aria-modal="true"</code>,
+      but the page behind it isn't <code>inert</code>, so Tab moves focus out of
+      the dialog. That raises <code>ngbr/modal-focus-not-contained</code>, which
+      goes away when you close it.
     </p>
 
     <button type="button" (click)="dialogOpen.set(true)">Open broken dialog</button>
@@ -133,7 +130,7 @@ import { Router } from '@angular/router';
         class="dialog"
       >
         <h3 id="broken-dialog-title">Broken modal dialog</h3>
-        <p>aria-modal="true", no inert background — Tab escapes to the page.</p>
+        <p>aria-modal="true" without an inert background, so Tab leaves the dialog.</p>
         <button type="button" (click)="dialogOpen.set(false)">Close</button>
       </div>
     }
@@ -163,9 +160,9 @@ import { Router } from '@angular/router';
 
     <h2>A keyboard trap (found by report mode)</h2>
     <p>
-      <strong>Tab into these fields.</strong> Tab on the second one sends focus back
-      to the first, so Tab alone never gets out (Shift+Tab does). This one needs real
-      key presses, so it's found by report mode, not the overlay:
+      Tab into these fields. Tab on the second one sends focus back to the first, so
+      Tab alone can't get out (Shift+Tab can). Finding this takes real key presses,
+      so report mode finds it and the overlay doesn't:
       <code>npx ngbr-a11y-report --base http://localhost:4200 --route /a11y-demo --focus-traps</code>
       raises <code>ngbr/focus-trap</code>.
     </p>
