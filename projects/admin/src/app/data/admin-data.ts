@@ -68,3 +68,67 @@ export const CUSTOMERS: Customer[] = Array.from({ length: 24 }, (_, i) => {
     joined: `2025-${month}-${day}`,
   };
 });
+
+/* ── Support tickets (the work board) ─────────────────────────────────────── */
+export type TicketPriority = 'Urgent' | 'High' | 'Normal' | 'Low';
+
+export interface TicketColumn {
+  id: string;
+  title: string;
+  wipLimit?: number;
+}
+
+/** A type alias (not an interface) so it fits the board's open-ended card type. */
+export type Ticket = {
+  id: string;
+  columnId: string;
+  /** The board's accessible name for the card: id, subject, priority, customer. */
+  title: string;
+  subject: string;
+  customer: string;
+  priority: TicketPriority;
+};
+
+export const TICKET_COLUMNS: TicketColumn[] = [
+  { id: 'new', title: 'New' },
+  { id: 'open', title: 'In progress', wipLimit: 3 },
+  { id: 'waiting', title: 'Waiting on customer' },
+  { id: 'resolved', title: 'Resolved' },
+];
+
+const TICKET_ROWS: [string, string, TicketPriority, string][] = [
+  ['new', 'Invoices won’t export to CSV', 'High', CUSTOMERS[0].name],
+  ['new', 'Add a second admin seat', 'Normal', CUSTOMERS[3].name],
+  ['new', 'SSO login loops back to sign-in', 'Urgent', CUSTOMERS[5].name],
+  ['open', 'Webhook retries look duplicated', 'High', CUSTOMERS[7].name],
+  ['open', 'Change billing email', 'Low', CUSTOMERS[2].name],
+  ['waiting', 'Refund for a double charge', 'High', CUSTOMERS[9].name],
+  ['waiting', 'Data export for an audit', 'Normal', CUSTOMERS[11].name],
+  ['resolved', 'Password reset email not arriving', 'Normal', CUSTOMERS[4].name],
+  ['resolved', 'Upgrade to the Team plan', 'Low', CUSTOMERS[13].name],
+];
+
+/**
+ * Build a ticket. The board names a card by its `title` alone, so the title
+ * carries what the card shows, starting with its visible id.
+ */
+export function ticket(
+  id: string,
+  columnId: string,
+  subject: string,
+  priority: TicketPriority,
+  customer: string,
+): Ticket {
+  return {
+    id,
+    columnId,
+    subject,
+    priority,
+    customer,
+    title: `${id}: ${subject}, ${priority} priority, ${customer}`,
+  };
+}
+
+export const TICKETS: Ticket[] = TICKET_ROWS.map(([columnId, subject, priority, customer], i) =>
+  ticket(`TCK-${1040 + i}`, columnId, subject, priority, customer),
+);

@@ -14,6 +14,7 @@ const ADMIN_NAV: NgbrNavSection[] = [
     items: [
       { id: 'overview', label: 'Overview', icon: '◧' },
       { id: 'customers', label: 'Customers', icon: '☺' },
+      { id: 'tickets', label: 'Tickets', icon: '▦' },
     ],
   },
   {
@@ -25,6 +26,7 @@ const ADMIN_NAV: NgbrNavSection[] = [
 const HEADINGS: Record<string, string> = {
   overview: 'Overview',
   customers: 'Customers',
+  tickets: 'Tickets',
   settings: 'Settings',
 };
 
@@ -151,6 +153,7 @@ export class AdminShell {
     const off = this.registry.register([
       { id: 'go-overview', label: 'Go to Overview', keywords: ['dashboard', 'home'], run: () => this.go('overview') },
       { id: 'go-customers', label: 'Go to Customers', keywords: ['users', 'people'], run: () => this.go('customers') },
+      { id: 'go-tickets', label: 'Go to Tickets', keywords: ['support', 'board', 'kanban'], run: () => this.go('tickets') },
       { id: 'go-settings', label: 'Go to Settings', keywords: ['preferences', 'account'], run: () => this.go('settings') },
       { id: 'sign-out', label: 'Sign out', keywords: ['logout', 'log out'], run: () => this.signOut() },
     ]);

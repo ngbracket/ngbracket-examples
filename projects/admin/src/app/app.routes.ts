@@ -26,6 +26,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'overview' },
       { path: 'overview', loadComponent: () => import('./pages/overview').then((m) => m.Overview) },
       { path: 'customers', loadComponent: () => import('./pages/customers').then((m) => m.Customers) },
+      { path: 'tickets', loadComponent: () => import('./pages/tickets').then((m) => m.Tickets) },
       { path: 'settings', loadComponent: () => import('./pages/settings').then((m) => m.Settings) },
     ],
   },

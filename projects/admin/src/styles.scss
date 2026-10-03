@@ -3,6 +3,8 @@
 /* @ngbracket/buttons — variant/size/state styling + split-button menu.
  * (CDK overlay-prebuilt.css is already imported by the shared theme.scss.) */
 @use '@ngbracket/buttons/styles/buttons';
+/* @ngbracket/board — the Tickets work board (columns, cards, Move menu). */
+@use '@ngbracket/board/styles/board';
 
 :root[data-theme='dark'] {
   /* The buttons pack ships no dark on-danger colour; white fails on the light
