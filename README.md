@@ -11,7 +11,7 @@ All data is **hardcoded** — there's no backend or API to run.
 
 | App | Port | Packs showcased | What it is |
 | --- | --- | --- | --- |
-| **admin** | 4301 | dashboard · data-table · board · forms · auth | A SaaS back-office: KPI dashboard, customers table, support-ticket work board, settings forms |
+| **admin** | 4301 | dashboard · data-table · board · forms · guide · auth | A SaaS back-office: KPI dashboard with a product tour, customers table, support-ticket work board, settings forms |
 | **storefront** | 4302 | marketing · commerce · auth · forms | A DTC shop: marketing landing page, product catalogue, cart & checkout |
 | **booking** | 4303 | scheduler · forms · auth | An appointments app: booking wizard, calendar views, availability |
 | **editor** | 4304 | navigation | A document editor showcasing the navigation toolbar & menus |

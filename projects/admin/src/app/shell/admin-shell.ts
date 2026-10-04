@@ -52,6 +52,7 @@ const HEADINGS: Record<string, string> = {
           <button
             type="button"
             class="cmdk"
+            id="command-palette-button"
             (click)="palette.open()"
             aria-label="Open command palette (Command or Ctrl K)"
             title="Command palette (⌘K)"

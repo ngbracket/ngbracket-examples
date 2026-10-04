@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   NgbrPageHeader,
@@ -47,13 +47,15 @@ import {
       </div>
     </ngbr-page-header>
 
-    <ngbr-checklist
-      class="getting-started"
-      label="Get started"
-      [headingLevel]="2"
-      [items]="onboarding.items()"
-      (itemActivate)="openTask($event)"
-    />
+    @if (!onboarding.allDone()) {
+      <ngbr-checklist
+        class="getting-started"
+        label="Get started"
+        [headingLevel]="2"
+        [items]="onboarding.items()"
+        (itemActivate)="openTask($event)"
+      />
+    }
 
     <ngbr-widget-grid id="kpis" [minColWidth]="220">
       @for (kpi of kpis; track kpi.label) {
@@ -65,7 +67,12 @@ import {
 
     <div class="charts">
       <ngbr-card id="revenue" heading="Revenue by month" [headingLevel]="2">
-        <ngbr-beacon class="chart-beacon" label="What's new: read the chart with the keyboard" (activated)="showChartTip()" />
+        <ngbr-beacon
+          class="chart-beacon"
+          label="What's new: read the chart with the keyboard"
+          [pulsing]="!onboarding.tipSeen()"
+          (activated)="showChartTip()"
+        />
         <ngbr-line-chart
           ariaLabel="Revenue by month"
           summary="Monthly recurring revenue in £k, split into new, expansion and churned, January to June."
@@ -147,6 +154,14 @@ export class Overview {
   private readonly router = inject(Router);
   protected readonly onboarding = inject(OnboardingState);
 
+  constructor() {
+    // A tour step can lead off the page (the search step's target opens the
+    // palette). End the tour with the page so the next one isn't left inert.
+    inject(DestroyRef).onDestroy(() => {
+      if (this.tour.active()) this.tour.skip();
+    });
+  }
+
   protected readonly kpis = KPIS;
   protected readonly months = REVENUE_MONTHS;
   protected readonly revenueSeries = REVENUE_SERIES;
@@ -157,7 +172,7 @@ export class Overview {
   private readonly tourSteps: readonly NgbrTourStep[] = [
     {
       title: 'Welcome to your workspace',
-      body: 'This short tour shows where to find the main numbers. Use Next and Back, or press Escape to stop.',
+      body: 'This short tour shows where to find the main numbers. Use Next to move on, and Skip or Escape to stop.',
     },
     {
       target: '#kpis',
@@ -170,9 +185,9 @@ export class Overview {
       body: 'Tab to the chart and use the arrow keys to go through it month by month.',
     },
     {
-      target: '.cmdk',
+      target: '#command-palette-button',
       title: 'Search',
-      body: 'Press Ctrl+K, or Command+K on a Mac, to jump to any page or action.',
+      body: 'After the tour, select this button or press Ctrl+K (Command+K on a Mac) to jump to any page or action.',
     },
   ];
 
@@ -185,11 +200,12 @@ export class Overview {
   }
 
   protected showChartTip(): void {
+    this.onboarding.markTipSeen();
     this.tour.start([
       {
         target: '#revenue',
         title: 'New: read the chart with the keyboard',
-        body: 'Tab to the chart, then use ← and → to move between months and ↑ and ↓ to change series. Screen readers announce each value.',
+        body: 'Tab to the chart, then use ← and → to move between months and ↑ and ↓ to change series. Each value is also sent to screen readers as you move.',
       },
     ]);
   }
