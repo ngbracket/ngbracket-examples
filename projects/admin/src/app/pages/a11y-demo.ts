@@ -68,14 +68,15 @@ import { Router } from '@angular/router';
           serious · color-contrast: this text fails the minimum contrast ratio
         </p>
 
+        <!-- MODERATE (yellow): pointer only; the violating paragraph is at the end of the page -->
+        <p>
+          moderate · region: the yellow box is on the last paragraph of the page, the
+          only content outside a landmark
+        </p>
+
         <!-- MINOR (blue): empty heading → axe rule empty-heading -->
         <h2></h2>
         <p>minor · empty-heading: the &lt;h2&gt; above has no text</p>
-
-        <p>
-          moderate · region: see the last paragraph on the page, the only content
-          outside a landmark
-        </p>
       </div>
 
       <section aria-labelledby="kbd-title">
@@ -192,12 +193,13 @@ import { Router } from '@angular/router';
           />
         </div>
       </section>
+
+      <hr />
     </main>
 
     <!-- MODERATE (yellow): content outside any landmark → axe rule region.
          The only content on the page outside a landmark; everything above is in <main>. -->
     <div class="demo">
-      <hr />
       <p>moderate · region: this paragraph isn't inside any landmark</p>
     </div>
   `,
@@ -207,7 +209,7 @@ import { Router } from '@angular/router';
         display: block;
         max-width: 640px;
         margin: 40px auto;
-        padding: 0 24px;
+        padding: 0 24px 80px;
         font: 15px/1.6 system-ui, sans-serif;
       }
       h1 {
