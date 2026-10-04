@@ -302,7 +302,7 @@ export class FiltersDrawer {}
       .icon:focus-visible,
       .btn:focus-visible {
         outline: none;
-        box-shadow: var(--ngbr-focus-ring, 0 0 0 3px rgba(14, 116, 144, 0.4));
+        box-shadow: var(--ngbr-focus-ring, 0 0 0 2px var(--ngbr-color-surface, #ffffff), 0 0 0 4px var(--ngbr-color-accent, #0e7490));
       }
       .rows {
         list-style: none;
