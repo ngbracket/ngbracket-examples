@@ -25,6 +25,9 @@
   --ngbr-color-placeholder: #5b6675;
   --ngbr-color-border: #c4c7c9;
   --ngbr-color-border-hover: #94a3b8;
+  /* Form-control boundaries, >=3:1 (WCAG 1.4.11); same values as @ngbracket/themes 1.2. */
+  --ngbr-color-border-control: #717a86;
+  --ngbr-color-border-control-hover: #4f5864;
   --ngbr-color-accent: #0e7490;
   --ngbr-color-accent-contrast: #ffffff;
   --ngbr-color-error: #b91c1c;
@@ -56,6 +59,8 @@
   --ngbr-color-placeholder: #8e9194;
   --ngbr-color-border: #43474a;
   --ngbr-color-border-hover: #5f6266;
+  --ngbr-color-border-control: #7b8086;
+  --ngbr-color-border-control-hover: #a3a9af;
   --ngbr-color-accent: #22b8cf;
   --ngbr-color-accent-contrast: #08272d;
   --ngbr-color-error: #ffb4ab;
