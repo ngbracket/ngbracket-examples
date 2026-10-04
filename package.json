@@ -59,6 +59,7 @@
     "@ngbracket/data-table": "1.4.1",
     "@ngbracket/editor": "0.5.0",
     "@ngbracket/forms": "1.5.1",
+    "@ngbracket/guide": "0.2.1",
     "@ngbracket/marketing": "1.5.0",
     "@ngbracket/navigation": "0.3.1",
     "@ngbracket/overlays": "0.3.1",

@@ -5,6 +5,8 @@
 @use '@ngbracket/buttons/styles/buttons';
 /* @ngbracket/board — the Tickets work board (columns, cards, Move menu). */
 @use '@ngbracket/board/styles/board';
+/* @ngbracket/guide — the overview's tour, checklist and beacon. */
+@use '@ngbracket/guide/styles/guide';
 
 :root[data-theme='dark'] {
   /* The buttons pack ships no dark on-danger colour; white fails on the light
