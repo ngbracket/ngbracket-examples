@@ -146,12 +146,13 @@ import { Router } from '@angular/router';
                 <td>
                   {{ course.name }}
                   @if (first) {
-                    <!-- Healthy: a button, so focus opens the note too -->
+                    <!-- Healthy: a button, so focus opens the note too. The note is always
+                         in the DOM, so its description is there when focus arrives. -->
                     <button
                       type="button"
                       class="info"
                       [attr.aria-label]="'About ' + course.name"
-                      [attr.aria-describedby]="hint() === course.name ? 'hover-hint' : null"
+                      aria-describedby="hover-hint"
                       (mouseenter)="hint.set(course.name)"
                       (mouseleave)="hint.set(null)"
                       (focus)="hint.set(course.name)"
@@ -159,12 +160,15 @@ import { Router } from '@angular/router';
                     >
                       ⓘ
                     </button>
+                    <span id="hover-hint" role="tooltip" class="tip" [class.closed]="hint() !== course.name">
+                      {{ course.note }}
+                    </span>
                   } @else {
                     <!-- ngbr/hover-only-content: the note only opens for the mouse -->
                     <span class="info" (mouseenter)="hint.set(course.name)" (mouseleave)="hint.set(null)">ⓘ</span>
-                  }
-                  @if (hint() === course.name) {
-                    <span id="hover-hint" role="tooltip" class="tip">{{ course.note }}</span>
+                    @if (hint() === course.name) {
+                      <span role="tooltip" class="tip">{{ course.note }}</span>
+                    }
                   }
                 </td>
                 <td>
@@ -176,11 +180,11 @@ import { Router } from '@angular/router';
           </tbody>
         </table>
 
-        <!-- ngbr/hover-only-content: a disabled button can't take focus, so its note is mouse-only -->
+        <!-- ngbr/hover-only-content: a disabled button can't take focus, so its note is
+             mouse-only. The listener is on a wrapper because some browsers send no mouse
+             events to a disabled control. -->
         <p class="disabled-note">
-          <button type="button" disabled (mouseenter)="hint.set('submit')" (mouseleave)="hint.set(null)">
-            Submit
-          </button>
+          <span (mouseenter)="hint.set('submit')" (mouseleave)="hint.set(null)"><button type="button" disabled>Submit</button></span>
           @if (hint() === 'submit') {
             <span role="tooltip" class="tip">Finish every course first</span>
           }
@@ -335,6 +339,8 @@ import { Router } from '@angular/router';
       }
       .info {
         position: relative;
+        min-width: 24px;
+        min-height: 24px;
         margin-left: 6px;
         padding: 0 4px;
         border: 0;
@@ -350,6 +356,15 @@ import { Router } from '@angular/router';
         background: #1a1a1a;
         color: #fff;
         font-size: 13px;
+      }
+      /* Visually hidden while closed, but still in the DOM for aria-describedby. */
+      .tip.closed {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
       }
       .dot {
         display: inline-block;
