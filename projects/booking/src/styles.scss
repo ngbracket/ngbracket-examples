@@ -3,6 +3,8 @@
 /* @ngbracket/buttons — variant/size/state styling + split-button menu.
  * (CDK overlay-prebuilt.css is already imported by the shared theme.scss.) */
 @use '@ngbracket/buttons/styles/buttons';
+/* @ngbracket/form-kit — the guest field on the Details step. */
+@use '@ngbracket/form-kit/styles/form-kit';
 
 :root[data-theme='dark'] {
   /* The buttons pack ships no dark on-danger colour; white fails on the light

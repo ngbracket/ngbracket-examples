@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { form, required, email, FormField } from '@angular/forms/signals';
 import { NgbrPageHeader, NgbrCard } from '@ngbracket/dashboard';
 import {
@@ -9,6 +9,15 @@ import {
   NgbrErrorSummary,
 } from '@ngbracket/forms';
 import type { NgbrSelectOption, NgbrFieldError } from '@ngbracket/forms';
+import {
+  NgbrFieldArray,
+  NgbrArrayRow,
+  NgbrAutosaveStatusComponent,
+  ngbrAutosave,
+  type NgbrArrayMove,
+} from '@ngbracket/form-kit';
+
+import { TeamState } from '../team-state';
 import {
   NgbrButton,
   NgbrMenu,
@@ -46,6 +55,9 @@ const PLANS: NgbrSelectOption[] = [
     NgbrMenuDivider,
     NgbrSplitButton,
     NgbrSplitButtonPrimary,
+    NgbrFieldArray,
+    NgbrArrayRow,
+    NgbrAutosaveStatusComponent,
   ],
   template: `
     <ngbr-page-header heading="Settings" subtitle="Manage your workspace profile" />
@@ -89,6 +101,27 @@ const PLANS: NgbrSelectOption[] = [
         </ngbr-split-button>
       </form>
     </ngbr-card>
+
+    <ngbr-card class="team" heading="Team members" [headingLevel]="2">
+      <p class="team__intro">Changes save automatically. This demo keeps them in memory until you reload.</p>
+      <ngbr-field-array
+        label="Team member emails"
+        itemLabel="Team member"
+        addLabel="Add a team member"
+        reorderable
+        [items]="team()"
+        (add)="addMember()"
+        (remove)="removeMember($event)"
+        (move)="moveMember($event)"
+      >
+        <ng-template ngbrArrayRow let-i="index">
+          <ngbr-form-field [label]="'Email ' + (i + 1)">
+            <ngbr-input type="email" [(value)]="team()[i].email" />
+          </ngbr-form-field>
+        </ng-template>
+      </ngbr-field-array>
+      <ngbr-autosave-status [autosave]="teamAutosave" />
+    </ngbr-card>
   `,
   styles: [
     `
@@ -101,6 +134,14 @@ const PLANS: NgbrSelectOption[] = [
         flex-direction: column;
         gap: 1rem;
         margin-top: 1rem;
+      }
+      .team {
+        display: block;
+        margin-top: 20px;
+      }
+      .team__intro {
+        margin: 0 0 12px;
+        color: var(--ngbr-color-text-muted);
       }
       ngbr-split-button {
         align-self: flex-start;
@@ -138,6 +179,29 @@ export class Settings {
   });
 
   private readonly summary = viewChild.required(NgbrErrorSummary);
+
+  /** Team member emails, from a root store so they survive leaving the page. */
+  private readonly teamState = inject(TeamState);
+  protected readonly team = this.teamState.members;
+
+  // The list already lives in TeamState; the short wait stands in for a server round trip.
+  protected readonly teamAutosave = ngbrAutosave({
+    value: () => this.team().map((m) => m.email()),
+    save: () => new Promise<void>((resolve) => setTimeout(resolve, 400)),
+  });
+
+  protected addMember(): void {
+    this.teamState.add();
+  }
+
+  protected removeMember(index: number): void {
+    this.teamState.remove(index);
+  }
+
+  protected moveMember({ from, to }: NgbrArrayMove): void {
+    this.teamState.move(from, to);
+  }
+
 
   /** Mark submitted; if invalid, move focus to the error summary (GOV.UK pattern). */
   private validate(): boolean {
