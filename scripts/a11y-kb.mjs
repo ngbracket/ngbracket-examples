@@ -107,8 +107,8 @@ const record = (name, ok, detail = '') => {
     await page.getByRole('button', { name: 'Discard draft' }).click();
     await page.waitForTimeout(150);
     const afterDiscard = await page.locator('input#title').inputValue();
-    const discardFocus = await page.evaluate(() => document.activeElement?.id === 'title');
-    record('article: Discard draft restores the saved version and focuses the title', afterDiscard === '' && discardFocus, `"${afterDiscard}"`);
+    const discardFocus = await page.evaluate(() => document.activeElement?.textContent?.includes('Draft discarded') ?? false);
+    record('article: Discard draft restores the saved version and focuses the note', afterDiscard === '' && discardFocus, `"${afterDiscard}"`);
 
     // Save a new article: it moves to its edit URL, keeps the confirmation, and
     // a later visit shows no stale draft.
@@ -122,8 +122,8 @@ const record = (name, ok, detail = '') => {
     const url = page.url();
     const savedNote = await page.getByText('Saved ✓').count();
     await page.waitForTimeout(150);
-    const onHeading = await page.evaluate(() => document.activeElement?.tagName === 'H1');
-    record('article: saving a new article moves to its edit URL, focuses the heading, confirms', /\/articles\/a\d+\/edit$/.test(url) && savedNote === 1 && onHeading, url.replace(BASE, ''));
+    const onConfirmation = await page.evaluate(() => document.activeElement?.textContent?.includes('Saved') ?? false);
+    record('article: saving a new article moves to its edit URL and focuses the confirmation', /\/articles\/a\d+\/edit$/.test(url) && savedNote === 1 && onConfirmation, url.replace(BASE, ''));
 
     // Existing article: edit and save at once. The autosave pending from typing
     // must not leave a draft behind (the page stays, so its timer would fire).

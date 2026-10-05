@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Injector, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   form,
@@ -48,7 +48,9 @@ type ArticleFields = Omit<ArticleDraft, 'format'>;
       <h1 #heading tabindex="-1">{{ editId() ? 'Edit article' : 'New article' }}</h1>
 
       <!-- Present from the start and filled after render, so screen readers announce it. -->
-      <div class="restored" role="status">
+      <!-- A live region for the restore note; when it's the focus target (after
+           Discard) it drops the role, so the message is read once, from focus. -->
+      <div #restoredEl class="restored" tabindex="-1" [attr.role]="noteFocused() ? null : 'status'">
         @if (restoredNote()) {
           {{ restoredNote() }}
           @if (hasDraft()) {
@@ -58,7 +60,9 @@ type ArticleFields = Omit<ArticleDraft, 'format'>;
       </div>
 
       <!-- Always present and filled after the save, so screen readers announce it. -->
-      <div class="saved" role="status">
+      <!-- After creating an article, focus moves here and it's read from focus,
+           so it isn't a live region then (NVDA reads only one of the two). -->
+      <div #savedEl class="saved" tabindex="-1" [attr.role]="savedFocused() ? null : 'status'">
         @if (saved()) {
           Saved ✓. <a routerLink="/browse">Back to browse</a>.
         }
@@ -67,7 +71,7 @@ type ArticleFields = Omit<ArticleDraft, 'format'>;
       <!-- formRoot binds the FieldTree, sets novalidate, intercepts the native submit. -->
       <form [formRoot]="f" (submit)="save($event)" novalidate>
         <ngbr-form-field label="Title" hint="At least 3 characters.">
-          <ngbr-input #titleField id="title" [formField]="f.title" [forceShowErrors]="submitted()" />
+          <ngbr-input id="title" [formField]="f.title" [forceShowErrors]="submitted()" />
         </ngbr-form-field>
 
         <ngbr-form-field label="Slug" hint="Lowercase letters, numbers and hyphens.">
@@ -252,8 +256,14 @@ export class ArticleForm {
   protected readonly newTag = signal('');
   protected readonly restoredNote = signal('');
   protected readonly hasDraft = signal(false);
+  protected readonly noteFocused = signal(false);
+  protected readonly savedFocused = signal(false);
+  private readonly injector = inject(Injector);
+  private readonly restoredEl = viewChild.required<ElementRef<HTMLElement>>('restoredEl');
+  private readonly savedEl = viewChild.required<ElementRef<HTMLElement>>('savedEl');
+  /** The value the last autosave (or load, or save) dealt with: a newer one is pending. */
+  private lastAutosaved = '';
   private readonly heading = viewChild.required<ElementRef<HTMLElement>>('heading');
-  private readonly titleField = viewChild.required('titleField', { read: ElementRef });
   protected readonly tagHint = signal('Press Enter to add it.');
   private readonly tagInput = viewChild.required('tagInput', { read: ElementRef });
 
@@ -268,8 +278,14 @@ export class ArticleForm {
     save: (draft) => {
       // An autosave still pending when Save ran carries the saved content:
       // clear the draft rather than keep a copy of what's already saved.
-      if (JSON.stringify(draft) === this.lastCommitted) this.store.clearDraft(this.draftKey());
-      else this.store.saveDraft(this.draftKey(), draft);
+      this.lastAutosaved = JSON.stringify(draft);
+      if (this.lastAutosaved === this.lastCommitted) {
+        this.store.clearDraft(this.draftKey());
+        return;
+      }
+      // Editing again: "Draft discarded" no longer describes the page.
+      if (this.restoredNote().startsWith('Draft discarded')) this.restoredNote.set('');
+      this.store.saveDraft(this.draftKey(), draft);
     },
     messages: { saving: 'Saving draft…', saved: 'Draft saved', error: 'Draft not saved. Try again.' },
   });
@@ -305,20 +321,21 @@ export class ArticleForm {
     // Arriving here straight after creating the article: keep its confirmation.
     if (this.router.currentNavigation()?.extras.state?.['saved']) {
       // Arrived straight after creating this article. The Save button that had
-      // focus is gone, so focus the heading, then fill the status region.
-      afterNextRender(() => {
-        this.heading().nativeElement.focus();
-        this.saved.set(true);
-      });
+      // focus is gone: focus the confirmation itself, which is read from focus.
+      this.savedFocused.set(true);
+      this.saved.set(true);
+      afterNextRender(() => this.savedEl().nativeElement.focus());
     }
     this.loaded = { ...this.model(), format: this.bodyTab() };
     this.lastCommitted = JSON.stringify(this.loaded);
+    this.lastAutosaved = this.lastCommitted;
     const draft = this.store.draft(this.draftKey());
     if (draft) {
       const { format, ...fields } = draft;
       this.model.set(fields);
       this.bodyTab.set(format);
       this.hasDraft.set(true);
+      this.lastAutosaved = JSON.stringify(draft);
       afterNextRender(() => this.restoredNote.set('Your unsaved draft was restored.'));
     }
   }
@@ -332,13 +349,10 @@ export class ArticleForm {
       this.bodyTab.set(format);
     }
     this.hasDraft.set(false);
+    // The Discard button is gone: focus the note, which says what happened.
+    this.noteFocused.set(true);
     this.restoredNote.set('Draft discarded. Showing the saved version.');
-    // The Discard button is gone; continue from the title.
-    this.titleInput()?.focus();
-  }
-
-  private titleInput(): HTMLInputElement | null {
-    return (this.titleField().nativeElement as HTMLElement).querySelector('input');
+    afterNextRender(() => this.restoredEl().nativeElement.focus(), { injector: this.injector });
   }
 
   protected addTag(event: Event): void {
@@ -367,7 +381,9 @@ export class ArticleForm {
     this.submitted.set(true);
     // Write any pending draft now, so a debounced autosave can't land after
     // the article is saved.
-    this.autosave.saveNow();
+    if (JSON.stringify({ ...this.model(), format: this.bodyTab() }) !== this.lastAutosaved) {
+      this.autosave.saveNow();
+    }
     await submit(this.f, {
       action: async () => {
         const d = this.model();
