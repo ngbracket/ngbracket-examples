@@ -87,10 +87,14 @@ const record = (name, ok, detail = '') => {
     await page.waitForTimeout(150);
     const backOnInput = await page.evaluate(() => document.activeElement?.closest('ngbr-form-field')?.textContent?.includes('Add a tag') ?? false);
     record('article: removing the last tag returns focus to "Add a tag"', backOnInput);
+    // Wait for the tag edits' "Draft saved" to clear, so the next one is the title's.
+    await page.waitForFunction(() => !document.querySelector('ngbr-autosave-status')?.textContent?.trim(), null, { timeout: 5000 }).catch(() => {});
     await page.locator('input#title').fill('Draft about tags');
-    await page.waitForTimeout(1500);
-    const status = (await page.locator('ngbr-autosave-status').textContent())?.trim() ?? '';
-    record('article: edits autosave a draft', /Draft saved/.test(status), status);
+    const statusIs = (text) =>
+      page
+        .waitForFunction((t) => document.querySelector('ngbr-autosave-status')?.textContent?.includes(t), text, { timeout: 5000 })
+        .then(() => true, () => false);
+    record('article: edits autosave a draft', await statusIs('Draft saved'));
     await page.getByRole('link', { name: 'Browse', exact: true }).click();
     await page.waitForTimeout(300);
     await page.getByRole('link', { name: 'New', exact: true }).click();
@@ -98,6 +102,31 @@ const record = (name, ok, detail = '') => {
     const title = await page.locator('input#title').inputValue();
     const note = await page.getByText('Your unsaved draft was restored.').count();
     record('article: the draft is restored on return', title === 'Draft about tags' && note === 1, title);
+
+    // Discard draft goes back to the saved (empty) article.
+    await page.getByRole('button', { name: 'Discard draft' }).click();
+    await page.waitForTimeout(150);
+    const afterDiscard = await page.locator('input#title').inputValue();
+    record('article: Discard draft restores the saved version', afterDiscard === '', `"${afterDiscard}"`);
+
+    // Save a new article: it moves to its edit URL, keeps the confirmation, and
+    // a later visit shows no stale draft.
+    await page.locator('input#title').fill('Saved article');
+    await page.locator('ngbr-tree-select input').first().click();
+    await page.getByRole('treeitem').first().click();
+    await page.locator('.ngbr-rte__content').first().click();
+    await page.keyboard.type('Body text');
+    await page.getByRole('button', { name: 'Save article' }).click();
+    await page.waitForURL(/\/articles\/a\d+\/edit$/, { timeout: 5000 }).catch(() => {});
+    const url = page.url();
+    const savedNote = await page.getByText('Saved ✓').count();
+    record('article: saving a new article moves to its edit URL with the confirmation', /\/articles\/a\d+\/edit$/.test(url) && savedNote === 1, url.replace(BASE, ''));
+    await page.waitForTimeout(1200); // let any autosave pending from typing run
+    await page.getByRole('link', { name: 'Browse', exact: true }).click();
+    await page.goBack();
+    await page.waitForTimeout(300);
+    const stale = await page.getByText('Your unsaved draft was restored.').count();
+    record('article: no draft is left behind after saving', stale === 0);
   } catch (e) {
     record('article: interaction checks ran', false, String(e.message).split('\n')[0]);
   } finally {
@@ -108,15 +137,14 @@ const record = (name, ok, detail = '') => {
 await browser.close();
 
 console.log(`\nChecked ${checked} page/theme combinations across ${ROUTES.length} routes.`);
+const checksFailed = checks.some((c) => !c.ok);
 console.log(`Article form checks: ${checks.filter((c) => c.ok).length}/${checks.length} passed.`);
-if (checks.some((c) => !c.ok)) process.exitCode = 1;
 if (findings.length === 0) {
   console.log('✅ No WCAG A/AA violations in light or dark.');
-  process.exit(0);
+} else {
+  console.log(`\n❌ ${findings.length} finding(s):\n`);
+  for (const f of findings) {
+    console.log(`  [${f.theme}] ${f.route}  ${f.id} (${f.impact})  →  ${f.target}\n     ${f.help}`);
+  }
 }
-
-console.log(`\n❌ ${findings.length} finding(s):\n`);
-for (const f of findings) {
-  console.log(`  [${f.theme}] ${f.route}  ${f.id} (${f.impact})  →  ${f.target}\n     ${f.help}`);
-}
-process.exit(1);
+process.exit(findings.length > 0 || checksFailed ? 1 : 0);

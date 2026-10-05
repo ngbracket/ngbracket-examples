@@ -1,7 +1,7 @@
 # Booking (`booking`)
 
-An appointment-booking app for a salon, built with **`@ngbracket/scheduler`,
-`@ngbracket/forms`, `@ngbracket/form-kit` and `@ngbracket/auth`**. All data is hardcoded in
+An appointment-booking app for a salon, built with `@ngbracket/scheduler`,
+`@ngbracket/forms`, `@ngbracket/form-kit` and `@ngbracket/auth`. All data is hardcoded in
 [`src/app/data/booking-data.ts`](src/app/data/booking-data.ts).
 
 ## Run

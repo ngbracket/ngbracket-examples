@@ -33,6 +33,8 @@ export interface ArticleDraft {
   summary: string;
   body: string;
   tags: readonly string[];
+  /** Which body editor was in use. */
+  format: ArticleFormat;
 }
 
 const CATEGORIES: readonly Category[] = [
@@ -82,7 +84,7 @@ const SEED: readonly Article[] = [
     slug: 'accessible-by-default',
     categoryId: 'accessibility',
     summary: 'What the components do for keyboard and screen-reader users.',
-    body: '<h2>How accessibility works here</h2><p>The components use roving tabindex, <code>aria-*</code> states and managed focus, with AA colour contrast in light and dark. They are built to support WCAG 2.2 AA, and this app is checked with axe.</p>',
+    body: '<h2>How accessibility works here</h2><p>The components use roving tabindex, <code>aria-*</code> states and managed focus, and are built to support WCAG 2.2 AA. This app is checked with axe in light and dark.</p>',
     format: 'rich',
     status: 'published',
     updated: '2026-07-15',

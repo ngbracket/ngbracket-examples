@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal, viewChild, type WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { form, required, email, FormField } from '@angular/forms/signals';
 import { NgbrPageHeader, NgbrCard } from '@ngbracket/dashboard';
 import {
@@ -16,6 +16,8 @@ import {
   ngbrAutosave,
   type NgbrArrayMove,
 } from '@ngbracket/form-kit';
+
+import { TeamState } from '../team-state';
 import {
   NgbrButton,
   NgbrMenu,
@@ -32,12 +34,6 @@ const PLANS: NgbrSelectOption[] = [
   { value: 'team', label: 'Team' },
   { value: 'enterprise', label: 'Enterprise' },
 ];
-
-/** A team row. The email is its own signal so typing never replaces the row object. */
-interface TeamMember {
-  readonly id: number;
-  readonly email: WritableSignal<string>;
-}
 
 /** Workspace settings — a Signal-Forms form with an error summary + inline errors. */
 @Component({
@@ -107,7 +103,7 @@ interface TeamMember {
     </ngbr-card>
 
     <ngbr-card class="team" heading="Team members" [headingLevel]="2">
-      <p class="team__intro">Changes save automatically.</p>
+      <p class="team__intro">Changes save automatically. This demo keeps them in memory until you reload.</p>
       <ngbr-field-array
         label="Team member emails"
         itemLabel="Team member"
@@ -184,38 +180,26 @@ export class Settings {
 
   private readonly summary = viewChild.required(NgbrErrorSummary);
 
-  /** Team member emails. Each row keeps its object identity, so the field array's focus follows it. */
-  protected readonly team = signal<readonly TeamMember[]>([
-    { id: 1, email: signal('ada@helm.app') },
-    { id: 2, email: signal('grace@helm.app') },
-  ]);
-  private nextMemberId = 3;
-  /** The last list "saved" (in memory: this demo has no backend). */
-  private readonly savedTeam = signal<readonly string[]>([]);
+  /** Team member emails, from a root store so they survive leaving the page. */
+  private readonly teamState = inject(TeamState);
+  protected readonly team = this.teamState.members;
 
+  // The list already lives in TeamState; the short wait stands in for a server round trip.
   protected readonly teamAutosave = ngbrAutosave({
     value: () => this.team().map((m) => m.email()),
-    save: async (members) => {
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      this.savedTeam.set(members);
-    },
+    save: () => new Promise<void>((resolve) => setTimeout(resolve, 400)),
   });
 
   protected addMember(): void {
-    this.team.update((list) => [...list, { id: this.nextMemberId++, email: signal('') }]);
+    this.teamState.add();
   }
 
   protected removeMember(index: number): void {
-    this.team.update((list) => list.filter((_, i) => i !== index));
+    this.teamState.remove(index);
   }
 
   protected moveMember({ from, to }: NgbrArrayMove): void {
-    this.team.update((list) => {
-      const next = [...list];
-      const [row] = next.splice(from, 1);
-      next.splice(to, 0, row);
-      return next;
-    });
+    this.teamState.move(from, to);
   }
 
 

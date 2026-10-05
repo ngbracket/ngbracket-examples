@@ -214,14 +214,22 @@ if (app === 'admin') {
   });
   record('settings: Add moves focus into the new team row', newRow.tag === 'INPUT' && newRow.inLast, `${newRow.rows} rows`);
   await page.keyboard.type('lin@helm.app');
-  await page.waitForTimeout(1500);
-  const autosaved = (await page.locator('ngbr-autosave-status').textContent())?.trim() ?? '';
-  record('settings: team changes autosave', /Saved/.test(autosaved), autosaved);
+  const autosaved = await page
+    .waitForFunction(() => document.querySelector('ngbr-autosave-status')?.textContent?.includes('Saved'), null, { timeout: 5000 })
+    .then(() => true, () => false);
+  record('settings: team changes autosave', autosaved);
   const removeFirst = page.getByRole('button', { name: /^Remove/ }).first();
   await removeFirst.click();
   await page.waitForTimeout(200);
-  const afterRemove = await page.evaluate(() => document.activeElement?.tagName ?? 'none');
-  record('settings: Remove keeps focus in the list (not <body>)', afterRemove !== 'BODY', afterRemove);
+  const afterRemove = await page.evaluate(() => !!document.activeElement?.closest('ngbr-field-array'));
+  record('settings: Remove keeps focus in the team list', afterRemove);
+  // The list lives in a root store: it survives leaving the page.
+  await page.locator('ngbr-nav-item').filter({ hasText: 'Overview' }).first().click();
+  await page.getByRole('heading', { name: 'Overview', level: 1 }).waitFor();
+  await page.locator('ngbr-nav-item').filter({ hasText: 'Settings' }).first().click();
+  await page.getByRole('heading', { name: 'Settings', level: 1 }).waitFor();
+  const kept = await page.evaluate(() => [...document.querySelectorAll('ngbr-field-array input')].some((i) => i.value === 'lin@helm.app'));
+  record('settings: the team list is kept after leaving the page', kept);
 }
 
 if (app === 'booking') {
