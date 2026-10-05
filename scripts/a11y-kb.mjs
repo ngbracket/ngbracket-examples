@@ -107,7 +107,8 @@ const record = (name, ok, detail = '') => {
     await page.getByRole('button', { name: 'Discard draft' }).click();
     await page.waitForTimeout(150);
     const afterDiscard = await page.locator('input#title').inputValue();
-    record('article: Discard draft restores the saved version', afterDiscard === '', `"${afterDiscard}"`);
+    const discardFocus = await page.evaluate(() => document.activeElement?.id === 'title');
+    record('article: Discard draft restores the saved version and focuses the title', afterDiscard === '' && discardFocus, `"${afterDiscard}"`);
 
     // Save a new article: it moves to its edit URL, keeps the confirmation, and
     // a later visit shows no stale draft.
@@ -120,13 +121,25 @@ const record = (name, ok, detail = '') => {
     await page.waitForURL(/\/articles\/a\d+\/edit$/, { timeout: 5000 }).catch(() => {});
     const url = page.url();
     const savedNote = await page.getByText('Saved ✓').count();
-    record('article: saving a new article moves to its edit URL with the confirmation', /\/articles\/a\d+\/edit$/.test(url) && savedNote === 1, url.replace(BASE, ''));
-    await page.waitForTimeout(1200); // let any autosave pending from typing run
+    await page.waitForTimeout(150);
+    const onHeading = await page.evaluate(() => document.activeElement?.tagName === 'H1');
+    record('article: saving a new article moves to its edit URL, focuses the heading, confirms', /\/articles\/a\d+\/edit$/.test(url) && savedNote === 1 && onHeading, url.replace(BASE, ''));
+
+    // Existing article: edit and save at once. The autosave pending from typing
+    // must not leave a draft behind (the page stays, so its timer would fire).
     await page.getByRole('link', { name: 'Browse', exact: true }).click();
-    await page.goBack();
+    await page.locator('a.edit').first().click();
+    await page.locator('input#title').waitFor();
+    await page.locator('input#title').fill('Quick save title');
+    await page.getByRole('button', { name: 'Save article' }).click();
+    await page.waitForTimeout(1500);
+    // Back to the same article through the UI (a reload would reset the in-memory store).
+    await page.getByRole('link', { name: 'Browse', exact: true }).click();
+    await page.locator('a.edit').first().click();
+    await page.locator('input#title').waitFor();
     await page.waitForTimeout(300);
     const stale = await page.getByText('Your unsaved draft was restored.').count();
-    record('article: no draft is left behind after saving', stale === 0);
+    record('article: a quick save leaves no draft behind', stale === 0);
   } catch (e) {
     record('article: interaction checks ran', false, String(e.message).split('\n')[0]);
   } finally {

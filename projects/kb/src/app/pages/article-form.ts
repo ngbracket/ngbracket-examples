@@ -45,24 +45,29 @@ type ArticleFields = Omit<ArticleDraft, 'format'>;
   ],
   template: `
     <div class="wrap">
-      <h1>{{ editId() ? 'Edit article' : 'New article' }}</h1>
+      <h1 #heading tabindex="-1">{{ editId() ? 'Edit article' : 'New article' }}</h1>
 
       <!-- Present from the start and filled after render, so screen readers announce it. -->
       <div class="restored" role="status">
         @if (restoredNote()) {
           {{ restoredNote() }}
-          <button type="button" class="discard" (click)="discardDraft()">Discard draft</button>
+          @if (hasDraft()) {
+            <button type="button" class="discard" (click)="discardDraft()">Discard draft</button>
+          }
         }
       </div>
 
-      @if (saved()) {
-        <p class="saved" role="status">Saved ✓ — <a routerLink="/browse">back to browse</a>.</p>
-      }
+      <!-- Always present and filled after the save, so screen readers announce it. -->
+      <div class="saved" role="status">
+        @if (saved()) {
+          Saved ✓. <a routerLink="/browse">Back to browse</a>.
+        }
+      </div>
 
       <!-- formRoot binds the FieldTree, sets novalidate, intercepts the native submit. -->
       <form [formRoot]="f" (submit)="save($event)" novalidate>
         <ngbr-form-field label="Title" hint="At least 3 characters.">
-          <ngbr-input id="title" [formField]="f.title" [forceShowErrors]="submitted()" />
+          <ngbr-input #titleField id="title" [formField]="f.title" [forceShowErrors]="submitted()" />
         </ngbr-form-field>
 
         <ngbr-form-field label="Slug" hint="Lowercase letters, numbers and hyphens.">
@@ -158,6 +163,9 @@ type ArticleFields = Omit<ArticleDraft, 'format'>;
         color: var(--ngbr-color-error);
         font-size: 0.85rem;
       }
+      .saved:empty {
+        display: none;
+      }
       .saved {
         padding: 10px 14px;
         border-radius: var(--ngbr-radius);
@@ -243,6 +251,9 @@ export class ArticleForm {
   });
   protected readonly newTag = signal('');
   protected readonly restoredNote = signal('');
+  protected readonly hasDraft = signal(false);
+  private readonly heading = viewChild.required<ElementRef<HTMLElement>>('heading');
+  private readonly titleField = viewChild.required('titleField', { read: ElementRef });
   protected readonly tagHint = signal('Press Enter to add it.');
   private readonly tagInput = viewChild.required('tagInput', { read: ElementRef });
 
@@ -292,7 +303,14 @@ export class ArticleForm {
       }
     }
     // Arriving here straight after creating the article: keep its confirmation.
-    if (this.router.currentNavigation()?.extras.state?.['saved']) this.saved.set(true);
+    if (this.router.currentNavigation()?.extras.state?.['saved']) {
+      // Arrived straight after creating this article. The Save button that had
+      // focus is gone, so focus the heading, then fill the status region.
+      afterNextRender(() => {
+        this.heading().nativeElement.focus();
+        this.saved.set(true);
+      });
+    }
     this.loaded = { ...this.model(), format: this.bodyTab() };
     this.lastCommitted = JSON.stringify(this.loaded);
     const draft = this.store.draft(this.draftKey());
@@ -300,6 +318,7 @@ export class ArticleForm {
       const { format, ...fields } = draft;
       this.model.set(fields);
       this.bodyTab.set(format);
+      this.hasDraft.set(true);
       afterNextRender(() => this.restoredNote.set('Your unsaved draft was restored.'));
     }
   }
@@ -312,7 +331,14 @@ export class ArticleForm {
       this.model.set(fields);
       this.bodyTab.set(format);
     }
-    this.restoredNote.set('');
+    this.hasDraft.set(false);
+    this.restoredNote.set('Draft discarded. Showing the saved version.');
+    // The Discard button is gone; continue from the title.
+    this.titleInput()?.focus();
+  }
+
+  private titleInput(): HTMLInputElement | null {
+    return (this.titleField().nativeElement as HTMLElement).querySelector('input');
   }
 
   protected addTag(event: Event): void {
@@ -339,6 +365,9 @@ export class ArticleForm {
   protected async save(event: Event): Promise<void> {
     event.preventDefault();
     this.submitted.set(true);
+    // Write any pending draft now, so a debounced autosave can't land after
+    // the article is saved.
+    this.autosave.saveNow();
     await submit(this.f, {
       action: async () => {
         const d = this.model();
@@ -358,6 +387,7 @@ export class ArticleForm {
         this.lastCommitted = JSON.stringify({ ...d, format: this.bodyTab() });
         this.store.clearDraft(this.draftKey());
         this.restoredNote.set('');
+        this.hasDraft.set(false);
         this.saved.set(true);
         if (!this.editId()) {
           // A new article now has an id: carry on editing it at its own URL, so
