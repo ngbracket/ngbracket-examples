@@ -75,11 +75,62 @@ if (app === 'admin') {
   await chart.focus();
   const chartFocused = await page.evaluate(() => document.activeElement?.getAttribute('role') === 'application');
   record('overview: chart takes keyboard focus (role=application, tabindex=0)', chartFocused);
-  const liveBefore = await page.locator('[aria-live]').first().textContent().catch(() => '');
+  const liveBefore = await page.locator('.ngbr-chart-sr[aria-live]').first().textContent().catch(() => '');
   await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(150);
-  const liveAfter = await page.locator('[aria-live]').first().textContent().catch(() => '');
+  const liveAfter = await page.locator('.ngbr-chart-sr[aria-live]').first().textContent().catch(() => '');
   record('overview: ArrowRight announces a data point (live region updates)', liveAfter !== liveBefore, `"${(liveAfter || '').trim().slice(0, 48)}"`);
+
+  // Onboarding (@ngbracket/guide): tour from the page header, checklist, beacon.
+  const tourBtn = page.getByRole('button', { name: 'Take the tour', exact: true });
+  await tourBtn.focus();
+  await page.keyboard.press('Enter');
+  const step = page.getByRole('dialog');
+  await step.waitFor();
+  await page.waitForTimeout(200);
+  const stepInfo = await page.evaluate(() => {
+    const d = document.querySelector('[role="dialog"]');
+    const desc = (d?.getAttribute('aria-describedby') || '')
+      .split(' ')
+      .map((id) => document.getElementById(id)?.textContent?.trim() ?? '')
+      .join(' ');
+    return { name: d?.getAttribute('aria-labelledby') ? document.getElementById(d.getAttribute('aria-labelledby'))?.textContent?.trim() : '', desc, inside: !!d?.contains(document.activeElement) };
+  });
+  record('overview: Take the tour opens a step dialog with focus inside', stepInfo.inside, stepInfo.name);
+  record('overview: the step says where you are', /Step 1 of 4/.test(stepInfo.desc), stepInfo.desc.slice(0, 48));
+  await axeSweep('overview (tour open)');
+  await page.keyboard.press('Escape');
+  await step.waitFor({ state: 'detached' });
+  await page.waitForTimeout(150);
+  const backOnTrigger = await page.evaluate(() => document.activeElement?.textContent?.trim() === 'Take the tour');
+  record('overview: Escape ends the tour and focus returns to the trigger', backOnTrigger);
+  const afterSkip = (await page.locator('.ngbr-checklist__progress').textContent())?.trim() ?? '';
+  record('overview: skipping the tour leaves its checklist item open', /^0 of 3/.test(afterSkip), afterSkip);
+
+  // Finish the tour: the checklist's first task is marked done.
+  await tourBtn.click();
+  await step.waitFor();
+  const spotlit = [];
+  for (let i = 0; i < 4; i++) {
+    // Steps 2 to 4 point at #kpis, #revenue and the search button: the spotlight
+    // shows only when the target was found (a missing target centres the step).
+    if (i > 0) spotlit.push(await page.evaluate(() => document.querySelector('.ngbr-tour__spotlight')?.style.display === 'block'));
+    await page.getByRole('dialog').getByRole('button', { name: /^(Next|Done)$/ }).click();
+    await page.waitForTimeout(150);
+  }
+  record('overview: tour steps 2 to 4 find their targets', spotlit.length === 3 && spotlit.every(Boolean), spotlit.join(','));
+  await step.waitFor({ state: 'detached' });
+  const progress = (await page.locator('.ngbr-checklist__progress').textContent())?.trim() ?? '';
+  record('overview: finishing the tour completes its checklist item', /^1 of 3/.test(progress), progress);
+
+  // The beacon is a labelled button that opens a one-step tip.
+  const beacon = page.getByRole('button', { name: /What's new: read the chart/ });
+  await beacon.click();
+  await step.waitFor();
+  const tipTitle = (await page.getByRole('dialog').getByRole('heading').first().textContent())?.trim() ?? '';
+  record('overview: the beacon opens its tip', /read the chart/.test(tipTitle), tipTitle);
+  await page.keyboard.press('Escape');
+  await step.waitFor({ state: 'detached' });
 
   // Customers: arrow-key row navigation. Sidebar items are <ngbr-nav-item> buttons.
   await page.locator('ngbr-nav-item').filter({ hasText: 'Customers' }).first().click();
