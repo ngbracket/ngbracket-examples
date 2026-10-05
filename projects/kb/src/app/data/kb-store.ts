@@ -21,6 +21,18 @@ export interface Article {
   readonly status: ArticleStatus;
   /** ISO date (kept as a string so seed data is deterministic). */
   readonly updated: string;
+  /** Free-form tags, shown as chips in the editor. */
+  readonly tags?: readonly string[];
+}
+
+/** The article form's working copy, autosaved as a draft while you edit. */
+export interface ArticleDraft {
+  title: string;
+  slug: string;
+  category: string | null;
+  summary: string;
+  body: string;
+  tags: readonly string[];
 }
 
 const CATEGORIES: readonly Category[] = [
@@ -37,7 +49,7 @@ const SEED: readonly Article[] = [
     slug: 'welcome',
     categoryId: 'getting-started',
     summary: 'What this knowledge base is and how to get around it.',
-    body: '<h2>Welcome</h2><p>Almanac is an accessible knowledge base built with <strong>NgBracket</strong> — navigation, structure and editor packs, all WCAG AA.</p><p>Use the tree on the left to browse. Right-click a topic for actions.</p>',
+    body: '<h2>Welcome</h2><p>Almanac is an accessible knowledge base built with the <strong>NgBracket</strong> navigation, structure and editor packs, which are built to support WCAG 2.2 AA.</p><p>Use the tree on the left to browse. Right-click a topic for actions.</p>',
     format: 'rich',
     status: 'published',
     updated: '2026-07-18',
@@ -66,11 +78,11 @@ const SEED: readonly Article[] = [
   },
   {
     id: 'a4',
-    title: 'Accessible by default',
+    title: 'How accessibility works here',
     slug: 'accessible-by-default',
     categoryId: 'accessibility',
-    summary: 'How every component here meets WCAG AA.',
-    body: '<h2>Accessible by default</h2><p>Roving tabindex, <code>aria-*</code> states, focus management and AA contrast in both themes — nothing bolted on.</p>',
+    summary: 'What the components do for keyboard and screen-reader users.',
+    body: '<h2>How accessibility works here</h2><p>The components use roving tabindex, <code>aria-*</code> states and managed focus, with AA colour contrast in light and dark. They are built to support WCAG 2.2 AA, and this app is checked with axe.</p>',
     format: 'rich',
     status: 'published',
     updated: '2026-07-15',
@@ -131,6 +143,21 @@ export class KbStore {
       return next;
     });
     return article.id;
+  }
+
+  /** Autosaved drafts, keyed by article id ('new' for an unsaved article). In memory only. */
+  private readonly _drafts = signal<Readonly<Record<string, ArticleDraft>>>({});
+
+  draft(key: string): ArticleDraft | undefined {
+    return this._drafts()[key];
+  }
+
+  saveDraft(key: string, draft: ArticleDraft): void {
+    this._drafts.update((all) => ({ ...all, [key]: draft }));
+  }
+
+  clearDraft(key: string): void {
+    this._drafts.update(({ [key]: _, ...rest }) => rest);
   }
 
   remove(id: string): void {

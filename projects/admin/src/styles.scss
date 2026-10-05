@@ -7,6 +7,8 @@
 @use '@ngbracket/board/styles/board';
 /* @ngbracket/guide — the overview's tour, checklist and beacon. */
 @use '@ngbracket/guide/styles/guide';
+/* @ngbracket/form-kit — the settings page's team field array. */
+@use '@ngbracket/form-kit/styles/form-kit';
 
 :root[data-theme='dark'] {
   /* The buttons pack ships no dark on-danger colour; white fails on the light

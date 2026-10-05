@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, viewChild, type WritableSignal } from '@angular/core';
 import { form, required, email, FormField } from '@angular/forms/signals';
 import { NgbrPageHeader, NgbrCard } from '@ngbracket/dashboard';
 import {
@@ -9,6 +9,13 @@ import {
   NgbrErrorSummary,
 } from '@ngbracket/forms';
 import type { NgbrSelectOption, NgbrFieldError } from '@ngbracket/forms';
+import {
+  NgbrFieldArray,
+  NgbrArrayRow,
+  NgbrAutosaveStatusComponent,
+  ngbrAutosave,
+  type NgbrArrayMove,
+} from '@ngbracket/form-kit';
 import {
   NgbrButton,
   NgbrMenu,
@@ -25,6 +32,12 @@ const PLANS: NgbrSelectOption[] = [
   { value: 'team', label: 'Team' },
   { value: 'enterprise', label: 'Enterprise' },
 ];
+
+/** A team row. The email is its own signal so typing never replaces the row object. */
+interface TeamMember {
+  readonly id: number;
+  readonly email: WritableSignal<string>;
+}
 
 /** Workspace settings — a Signal-Forms form with an error summary + inline errors. */
 @Component({
@@ -46,6 +59,9 @@ const PLANS: NgbrSelectOption[] = [
     NgbrMenuDivider,
     NgbrSplitButton,
     NgbrSplitButtonPrimary,
+    NgbrFieldArray,
+    NgbrArrayRow,
+    NgbrAutosaveStatusComponent,
   ],
   template: `
     <ngbr-page-header heading="Settings" subtitle="Manage your workspace profile" />
@@ -89,6 +105,27 @@ const PLANS: NgbrSelectOption[] = [
         </ngbr-split-button>
       </form>
     </ngbr-card>
+
+    <ngbr-card class="team" heading="Team members" [headingLevel]="2">
+      <p class="team__intro">Changes save automatically.</p>
+      <ngbr-field-array
+        label="Team member emails"
+        itemLabel="Team member"
+        addLabel="Add a team member"
+        reorderable
+        [items]="team()"
+        (add)="addMember()"
+        (remove)="removeMember($event)"
+        (move)="moveMember($event)"
+      >
+        <ng-template ngbrArrayRow let-i="index">
+          <ngbr-form-field [label]="'Email ' + (i + 1)">
+            <ngbr-input type="email" [(value)]="team()[i].email" />
+          </ngbr-form-field>
+        </ng-template>
+      </ngbr-field-array>
+      <ngbr-autosave-status [autosave]="teamAutosave" />
+    </ngbr-card>
   `,
   styles: [
     `
@@ -101,6 +138,14 @@ const PLANS: NgbrSelectOption[] = [
         flex-direction: column;
         gap: 1rem;
         margin-top: 1rem;
+      }
+      .team {
+        display: block;
+        margin-top: 20px;
+      }
+      .team__intro {
+        margin: 0 0 12px;
+        color: var(--ngbr-color-text-muted);
       }
       ngbr-split-button {
         align-self: flex-start;
@@ -138,6 +183,41 @@ export class Settings {
   });
 
   private readonly summary = viewChild.required(NgbrErrorSummary);
+
+  /** Team member emails. Each row keeps its object identity, so the field array's focus follows it. */
+  protected readonly team = signal<readonly TeamMember[]>([
+    { id: 1, email: signal('ada@helm.app') },
+    { id: 2, email: signal('grace@helm.app') },
+  ]);
+  private nextMemberId = 3;
+  /** The last list "saved" (in memory: this demo has no backend). */
+  private readonly savedTeam = signal<readonly string[]>([]);
+
+  protected readonly teamAutosave = ngbrAutosave({
+    value: () => this.team().map((m) => m.email()),
+    save: async (members) => {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      this.savedTeam.set(members);
+    },
+  });
+
+  protected addMember(): void {
+    this.team.update((list) => [...list, { id: this.nextMemberId++, email: signal('') }]);
+  }
+
+  protected removeMember(index: number): void {
+    this.team.update((list) => list.filter((_, i) => i !== index));
+  }
+
+  protected moveMember({ from, to }: NgbrArrayMove): void {
+    this.team.update((list) => {
+      const next = [...list];
+      const [row] = next.splice(from, 1);
+      next.splice(to, 0, row);
+      return next;
+    });
+  }
+
 
   /** Mark submitted; if invalid, move focus to the error summary (GOV.UK pattern). */
   private validate(): boolean {

@@ -4,6 +4,10 @@
 /* @ngbracket/buttons — variant/size/state styling + menu-button dropdown.
  * (CDK overlay-prebuilt.css is already imported by the shared theme.scss.) */
 @use '@ngbracket/buttons/styles/buttons';
+/* @ngbracket/primitives — the tag chips in the article form. */
+@use '@ngbracket/primitives/styles/primitives';
+/* @ngbracket/form-kit — the draft autosave status. */
+@use '@ngbracket/form-kit/styles/form-kit';
 
 :root {
   color-scheme: light dark;

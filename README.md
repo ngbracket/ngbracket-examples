@@ -11,12 +11,12 @@ All data is **hardcoded** — there's no backend or API to run.
 
 | App | Port | Packs showcased | What it is |
 | --- | --- | --- | --- |
-| **admin** | 4301 | dashboard · data-table · board · forms · guide · auth | A SaaS back-office: KPI dashboard with a product tour, customers table, support-ticket work board, settings forms |
+| **admin** | 4301 | dashboard · data-table · board · forms · form-kit · guide · auth | A SaaS back-office: KPI dashboard with a product tour, customers table, support-ticket work board, settings forms with an autosaved team list |
 | **storefront** | 4302 | marketing · commerce · auth · forms | A DTC shop: marketing landing page, product catalogue, cart & checkout |
-| **booking** | 4303 | scheduler · forms · auth | An appointments app: booking wizard, calendar views, availability |
+| **booking** | 4303 | scheduler · forms · form-kit · auth | An appointments app: booking wizard (with an optional guest), calendar views, availability |
 | **editor** | 4304 | navigation | A document editor showcasing the navigation toolbar & menus |
 | **overlays** | 4306 | overlays | Project settings built from overlays: dialogs, confirm, toasts, drawer, tooltips, popover, banners |
-| **kb** | 4305 | navigation · structure · editor · forms | Almanac, a knowledge base: article tree, rich-text/markdown editors, editable grid, Signal Form (`formRoot` + `submit`) |
+| **kb** | 4305 | navigation · structure · editor · forms · primitives · form-kit | Almanac, a knowledge base: article tree, rich-text/markdown editors, tag chips, draft autosave, editable grid, Signal Form (`formRoot` + `submit`) |
 
 Built with Angular 22 (standalone, zoneless, signals).
 

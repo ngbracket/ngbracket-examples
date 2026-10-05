@@ -13,7 +13,8 @@ import {
 import { form, required, email, FormField } from '@angular/forms/signals';
 import { NgbrMiniCalendar, NgbrTimeSlots } from '@ngbracket/scheduler';
 import type { NgbrCalendarValue } from '@ngbracket/scheduler';
-import { NgbrFormField, NgbrInput } from '@ngbracket/forms';
+import { NgbrCheckbox, NgbrFormField, NgbrInput } from '@ngbracket/forms';
+import { NgbrConditionalField } from '@ngbracket/form-kit';
 import {
   NgbrButton,
   NgbrMenu,
@@ -37,6 +38,8 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
     NgbrTimeSlots,
     NgbrFormField,
     NgbrInput,
+    NgbrCheckbox,
+    NgbrConditionalField,
     FormField,
     NgbrButton,
     NgbrMenu,
@@ -101,6 +104,14 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
             <ngbr-form-field label="Phone" hint="So we can text a reminder.">
               <ngbr-input id="bk-phone" [formField]="f.phone" [forceShowErrors]="tried()" />
             </ngbr-form-field>
+            <ngbr-checkbox [checked]="model().bringGuest" (checkedChange)="setGuest($event)">
+              I'm bringing a guest
+            </ngbr-checkbox>
+            <ngbr-conditional-field [show]="model().bringGuest" label="Guest details">
+              <ngbr-form-field label="Guest's name">
+                <ngbr-input [id]="'bk-guest'" [formField]="f.guestName" [forceShowErrors]="tried()" />
+              </ngbr-form-field>
+            </ngbr-conditional-field>
           </div>
         }
         @case (4) {
@@ -108,6 +119,9 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
             <h2>You're booked! 🎉</h2>
             <p>
               {{ service()?.name }} on <strong>{{ dateLabel() }}</strong> at <strong>{{ slot() }}</strong>.
+              @if (model().bringGuest) {
+                Booked for you and {{ model().guestName }}.
+              }
               A confirmation is on its way to {{ model().email }}.
             </p>
             <button type="button" class="btn btn--primary" (click)="reset()">Book another</button>
@@ -285,12 +299,14 @@ export class Book {
   protected readonly slot = signal('');
   protected readonly tried = signal(false);
 
-  protected readonly model = signal({ name: '', email: '', phone: '' });
+  protected readonly model = signal({ name: '', email: '', phone: '', bringGuest: false, guestName: '' });
   protected readonly f = form(this.model, (p) => {
     required(p.name, { message: 'Enter your name' });
     required(p.email, { message: 'Enter your email' });
     email(p.email, { message: 'Enter a valid email' });
     required(p.phone, { message: 'Enter a phone number' });
+    // Only while the guest field is shown.
+    required(p.guestName, { message: "Enter your guest's name", when: ({ valueOf }) => valueOf(p.bringGuest) });
   });
 
   protected readonly dateLabel = computed(() => this.date()?.toLocaleDateString() ?? '—');
@@ -369,7 +385,8 @@ export class Book {
     const ok =
       this.f.name().errors().length === 0 &&
       this.f.email().errors().length === 0 &&
-      this.f.phone().errors().length === 0;
+      this.f.phone().errors().length === 0 &&
+      this.f.guestName().errors().length === 0;
     if (ok) {
       this.step.set(4);
       this.focusPanel();
@@ -392,9 +409,13 @@ export class Book {
     this.service.set(null);
     this.date.set(null);
     this.slot.set('');
-    this.model.set({ name: '', email: '', phone: '' });
+    this.model.set({ name: '', email: '', phone: '', bringGuest: false, guestName: '' });
     this.tried.set(false);
     this.step.set(0);
     this.focusPanel();
+  }
+
+  protected setGuest(bringGuest: boolean): void {
+    this.model.update((m) => ({ ...m, bringGuest, guestName: bringGuest ? m.guestName : '' }));
   }
 }

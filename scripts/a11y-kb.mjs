@@ -55,9 +55,61 @@ for (const route of ROUTES) {
   }
 }
 
+// Article form: tag chips (@ngbracket/primitives) and draft autosave (@ngbracket/form-kit).
+const checks = [];
+const record = (name, ok, detail = '') => {
+  checks.push({ name, ok });
+  console.log(`  ${ok ? '✓' : '✗'} ${name}${detail ? ' — ' + detail : ''}`);
+};
+{
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  try {
+    await page.goto(BASE + '/articles/new', { waitUntil: 'networkidle', timeout: 20000 });
+    const tagInput = page.getByRole('textbox', { name: 'Add a tag' });
+    await tagInput.fill('Keyboard');
+    await tagInput.press('Enter');
+    await page.waitForTimeout(150);
+    const chips = await page.locator('ngbr-input-chip').count();
+    const submitted = await page.getByText('Saved ✓').count();
+    record('article: Enter in "Add a tag" adds a chip and does not submit', chips === 1 && submitted === 0, `${chips} chip(s)`);
+    for (const theme of THEMES) {
+      await page.evaluate(setTheme, theme);
+      await page.waitForTimeout(200);
+      const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
+      checked++;
+      for (const v of violations)
+        for (const node of v.nodes)
+          findings.push({ theme, route: '/articles/new (with a tag)', id: v.id, impact: v.impact, target: node.target.join(' '), help: v.help });
+    }
+    await page.locator('ngbr-input-chip button').first().focus();
+    await page.keyboard.press('Delete');
+    await page.waitForTimeout(150);
+    const backOnInput = await page.evaluate(() => document.activeElement?.closest('ngbr-form-field')?.textContent?.includes('Add a tag') ?? false);
+    record('article: removing the last tag returns focus to "Add a tag"', backOnInput);
+    await page.locator('input#title').fill('Draft about tags');
+    await page.waitForTimeout(1500);
+    const status = (await page.locator('ngbr-autosave-status').textContent())?.trim() ?? '';
+    record('article: edits autosave a draft', /Draft saved/.test(status), status);
+    await page.getByRole('link', { name: 'Browse', exact: true }).click();
+    await page.waitForTimeout(300);
+    await page.getByRole('link', { name: 'New', exact: true }).click();
+    await page.waitForTimeout(300);
+    const title = await page.locator('input#title').inputValue();
+    const note = await page.getByText('Your unsaved draft was restored.').count();
+    record('article: the draft is restored on return', title === 'Draft about tags' && note === 1, title);
+  } catch (e) {
+    record('article: interaction checks ran', false, String(e.message).split('\n')[0]);
+  } finally {
+    await ctx.close();
+  }
+}
+
 await browser.close();
 
 console.log(`\nChecked ${checked} page/theme combinations across ${ROUTES.length} routes.`);
+console.log(`Article form checks: ${checks.filter((c) => c.ok).length}/${checks.length} passed.`);
+if (checks.some((c) => !c.ok)) process.exitCode = 1;
 if (findings.length === 0) {
   console.log('✅ No WCAG A/AA violations in light or dark.');
   process.exit(0);

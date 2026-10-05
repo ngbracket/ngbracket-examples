@@ -200,6 +200,28 @@ if (app === 'admin') {
     return col?.querySelectorAll('[data-card-id]').length;
   });
   record('tickets: Add a card respects the WIP limit', inProgress === 3 && wip.includes('at its limit'), `${inProgress} cards; "${wip}"`);
+
+  // Settings: the team field array (@ngbracket/form-kit) with autosave.
+  await page.locator('ngbr-nav-item').filter({ hasText: 'Settings' }).first().click();
+  await page.getByRole('heading', { name: 'Settings', level: 1 }).waitFor();
+  await axeSweep('settings');
+  await page.getByRole('button', { name: 'Add a team member' }).click();
+  await page.waitForTimeout(200);
+  const newRow = await page.evaluate(() => {
+    const el = document.activeElement;
+    const rows = document.querySelectorAll('.ngbr-field-array__row, [data-ngbr-array-row]');
+    return { tag: el?.tagName, inLast: !!rows.length && rows[rows.length - 1].contains(el), rows: rows.length };
+  });
+  record('settings: Add moves focus into the new team row', newRow.tag === 'INPUT' && newRow.inLast, `${newRow.rows} rows`);
+  await page.keyboard.type('lin@helm.app');
+  await page.waitForTimeout(1500);
+  const autosaved = (await page.locator('ngbr-autosave-status').textContent())?.trim() ?? '';
+  record('settings: team changes autosave', /Saved/.test(autosaved), autosaved);
+  const removeFirst = page.getByRole('button', { name: /^Remove/ }).first();
+  await removeFirst.click();
+  await page.waitForTimeout(200);
+  const afterRemove = await page.evaluate(() => document.activeElement?.tagName ?? 'none');
+  record('settings: Remove keeps focus in the list (not <body>)', afterRemove !== 'BODY', afterRemove);
 }
 
 if (app === 'booking') {
@@ -224,6 +246,24 @@ if (app === 'booking') {
     return !!el && el.classList.contains('panel');
   });
   record('book: Continue moves focus to the next step panel (not <body>)', onPanel);
+
+  // Details step: "I'm bringing a guest" reveals a required guest field (@ngbracket/form-kit).
+  await page.locator('section.panel [role="gridcell"]:not([aria-disabled="true"])').nth(20).click();
+  await page.getByRole('button', { name: /^continue$/i }).click();
+  await page.waitForTimeout(150);
+  await page.locator('.ngbr-slots [role="radio"]:not([aria-disabled="true"]):not([disabled])').first().click();
+  await page.getByRole('button', { name: /^continue$/i }).click();
+  await page.getByRole('heading', { name: 'Your details' }).waitFor();
+  await axeSweep('book details');
+  await page.getByText("I'm bringing a guest").click();
+  await page.waitForTimeout(250);
+  const onGuest = await page.evaluate(() => document.activeElement?.id === 'bk-guest');
+  record('book: ticking the guest box moves focus to the guest name', onGuest);
+  await axeSweep('book details (guest shown)');
+  await page.getByRole('button', { name: 'Confirm booking', exact: true }).click();
+  await page.waitForTimeout(150);
+  const guestInvalid = await page.locator('#bk-guest').getAttribute('aria-invalid');
+  record('book: the guest name is required while it is shown', guestInvalid === 'true');
 
   // The diary (month view) keyboard "add event".
   const diary = page.getByRole('link', { name: /diary|calendar/i });

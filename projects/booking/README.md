@@ -1,7 +1,7 @@
 # Booking (`booking`)
 
 An appointment-booking app for a salon, built with **`@ngbracket/scheduler`,
-`@ngbracket/forms` and `@ngbracket/auth`**. All data is hardcoded in
+`@ngbracket/forms`, `@ngbracket/form-kit` and `@ngbracket/auth`**. All data is hardcoded in
 [`src/app/data/booking-data.ts`](src/app/data/booking-data.ts).
 
 ## Run
@@ -17,7 +17,7 @@ npm run start:booking             # http://localhost:4303
 | Route | Packs | Highlights |
 | --- | --- | --- |
 | `/signin` | auth | `NgbrLoginForm` (any credentials sign you in) |
-| `/book` | scheduler · forms | Wizard: choose service → `NgbrMiniCalendar` date → `NgbrTimeSlots` time → Signal-Forms details → confirmation |
+| `/book` | scheduler · forms · form-kit | Wizard: choose service → `NgbrMiniCalendar` date → `NgbrTimeSlots` time → Signal-Forms details → confirmation. On the details step, "I'm bringing a guest" reveals a guest name field with `NgbrConditionalField`; focus moves to it, and it's required only while shown. |
 | `/calendar` | scheduler | `NgbrMonthView` / `NgbrWeekView` / `NgbrAgenda` over the day's appointments |
 | `/availability` | scheduler | `NgbrDateRangePicker` + `NgbrRecurrenceEditor` to set a recurring schedule |
 

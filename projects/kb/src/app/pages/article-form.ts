@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   form,
@@ -13,16 +13,10 @@ import { NgbrFormField, NgbrInput, NgbrTextarea } from '@ngbracket/forms';
 import { NgbrTreeSelect } from '@ngbracket/structure';
 import { NgbrRichText, NgbrMarkdownEditor } from '@ngbracket/editor';
 import { NgbrTabs, NgbrTabList, NgbrTab, NgbrTabPanel } from '@ngbracket/navigation';
+import { NgbrChipSet, NgbrInputChip } from '@ngbracket/primitives';
+import { NgbrAutosaveStatusComponent, ngbrAutosave } from '@ngbracket/form-kit';
 
-import { KbStore, type ArticleFormat } from '../data/kb-store';
-
-interface ArticleDraft {
-  title: string;
-  slug: string;
-  category: string | null;
-  summary: string;
-  body: string;
-}
+import { KbStore, type ArticleDraft, type ArticleFormat } from '../data/kb-store';
 
 /** Create / edit an article — Signal Forms with `formRoot` + `submit()` (the headline dogfood). */
 @Component({
@@ -42,10 +36,17 @@ interface ArticleDraft {
     NgbrTabList,
     NgbrTab,
     NgbrTabPanel,
+    NgbrChipSet,
+    NgbrInputChip,
+    NgbrAutosaveStatusComponent,
   ],
   template: `
     <div class="wrap">
       <h1>{{ editId() ? 'Edit article' : 'New article' }}</h1>
+
+      @if (restored()) {
+        <p class="restored" role="status">Your unsaved draft was restored.</p>
+      }
 
       @if (saved()) {
         <p class="saved" role="status">Saved ✓ — <a routerLink="/browse">back to browse</a>.</p>
@@ -79,6 +80,20 @@ interface ArticleDraft {
         </ngbr-form-field>
 
         <div class="field">
+          <span id="tags-label" class="field__label">Tags</span>
+          @if (model().tags.length) {
+            <div ngbrChipSet label="Tags" class="tags">
+              @for (tag of model().tags; track tag) {
+                <ngbr-input-chip [label]="tag" (removed)="removeTag(tag)" />
+              }
+            </div>
+          }
+          <ngbr-form-field label="Add a tag" hint="Press Enter to add it.">
+            <ngbr-input #tagInput [(value)]="newTag" (keydown.enter)="addTag($event)" />
+          </ngbr-form-field>
+        </div>
+
+        <div class="field">
           <span id="body-label" class="field__label">Body</span>
           <ngbr-tabs>
             <ngbr-tab-list [(selectedTab)]="bodyTab" aria-labelledby="body-label">
@@ -106,6 +121,7 @@ interface ArticleDraft {
             {{ f().submitting() ? 'Saving…' : 'Save article' }}
           </button>
           <a routerLink="/browse" class="cancel">Cancel</a>
+          <ngbr-autosave-status class="autosave" [autosave]="autosave" />
         </div>
       </form>
     </div>
@@ -140,6 +156,18 @@ interface ArticleDraft {
         border-radius: var(--ngbr-radius);
         background: color-mix(in srgb, var(--ngbr-color-success) 15%, transparent);
         color: var(--ngbr-color-text);
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .restored {
+        margin: 0 0 12px;
+        color: var(--ngbr-color-text-muted);
+      }
+      .autosave {
+        margin-left: auto;
       }
       .actions {
         display: flex;
@@ -191,6 +219,19 @@ export class ArticleForm {
     category: null,
     summary: '',
     body: '',
+    tags: [],
+  });
+  protected readonly newTag = signal('');
+  protected readonly restored = signal(false);
+  private readonly tagInput = viewChild.required('tagInput', { read: ElementRef });
+
+  /** Drafts are kept per article; a new article uses the 'new' slot. */
+  private readonly draftKey = computed(() => this.editId() ?? 'new');
+
+  protected readonly autosave = ngbrAutosave({
+    value: () => this.model(),
+    save: (draft) => this.store.saveDraft(this.draftKey(), draft),
+    messages: { saving: 'Saving draft…', saved: 'Draft saved', error: 'Draft not saved. Try again.' },
   });
 
   protected readonly f = form(this.model, (p) => {
@@ -217,9 +258,32 @@ export class ArticleForm {
           category: a.categoryId,
           summary: a.summary,
           body: a.body,
+          tags: a.tags ?? [],
         });
       }
     }
+    const draft = this.store.draft(this.draftKey());
+    if (draft) {
+      this.model.set(draft);
+      this.restored.set(true);
+    }
+  }
+
+  protected addTag(event: Event): void {
+    // Enter adds the tag; it mustn't submit the form.
+    event.preventDefault();
+    const tag = this.newTag().trim().toLowerCase();
+    if (tag && !this.model().tags.includes(tag)) {
+      this.model.update((m) => ({ ...m, tags: [...m.tags, tag] }));
+    }
+    this.newTag.set('');
+  }
+
+  protected removeTag(tag: string): void {
+    const remaining = this.model().tags.filter((t) => t !== tag);
+    this.model.update((m) => ({ ...m, tags: remaining }));
+    // The chip set moves focus to a neighbouring chip; with none left, go back to the input.
+    if (!remaining.length) this.tagInput().nativeElement.querySelector('input')?.focus();
   }
 
   protected async save(event: Event): Promise<void> {
@@ -239,7 +303,12 @@ export class ArticleForm {
           format: this.bodyTab(),
           status: 'draft',
           updated: this.savedDate,
+          tags: d.tags,
         });
+        this.store.clearDraft(this.draftKey());
+        // Later saves update this article rather than creating another.
+        this.editId.set(id);
+        this.restored.set(false);
         this.saved.set(true);
         return undefined; // no server-side validation errors
       },

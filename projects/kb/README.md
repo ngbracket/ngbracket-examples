@@ -1,8 +1,8 @@
 # Almanac — Knowledge Base (`kb`)
 
-A team knowledge base / docs CMS that composes **three NgBracket packs** in one
-believable product — **`@ngbracket/navigation`, `@ngbracket/structure` and
-`@ngbracket/editor`** — plus **Angular Signal Forms** with the new `formRoot`
+A team knowledge base / docs CMS built with **`@ngbracket/navigation`,
+`@ngbracket/structure`, `@ngbracket/editor`, `@ngbracket/primitives` and
+`@ngbracket/form-kit`**, plus **Angular Signal Forms** with the `formRoot`
 directive and `submit()`. All data is hardcoded in an in-memory signal store
 ([`src/app/data/kb-store.ts`](src/app/data/kb-store.ts)); there is no backend.
 
@@ -19,7 +19,7 @@ npm run start:kb                 # http://localhost:4305
 | Route | Packs | Highlights |
 | --- | --- | --- |
 | `/browse` | structure · navigation | `NgbrTree` sidebar with a right-click `ngbrContextMenu`; article reader; metadata `NgbrAccordion` |
-| `/articles/new`, `/articles/:id/edit` | **editor · structure · forms · navigation** | Signal Form via **`formRoot` + `submit()`**: `NgbrInput`/`NgbrTextarea`, `NgbrTreeSelect` category picker, and `NgbrTabs` switching `NgbrRichText` ⇄ `NgbrMarkdownEditor` for the body |
+| `/articles/new`, `/articles/:id/edit` | **editor · structure · forms · navigation · primitives · form-kit** | Signal Form via **`formRoot` + `submit()`**: `NgbrInput`/`NgbrTextarea`, `NgbrTreeSelect` category picker, tags as removable `NgbrInputChip`s in an `NgbrChipSet`, and `NgbrTabs` switching `NgbrRichText` ⇄ `NgbrMarkdownEditor` for the body. Edits autosave as a draft (`ngbrAutosave`) and the draft comes back when you return. |
 | `/manage` | structure · navigation | `NgbrToolbar` (New / Export CSV) over an editable `NgbrGrid` |
 | `/settings` | navigation · structure | `NgbrTabs` (General / Editor / Accessibility), each an `NgbrAccordion` of preference groups |
 
@@ -28,8 +28,8 @@ toggle; a `SkipLink` and a focusable `#main-content` landmark bracket the shell.
 
 ## Accessibility
 
-Built to the same WCAG AA / AXE bar as the packs. Automated sweep (light + dark,
-every route):
+Checked with axe (WCAG 2.0 and 2.1 A and AA rules) in light and dark on every
+route, plus keyboard checks of the article form's tags and draft autosave:
 
 ```bash
 npm run start:kb &               # serve on :4305
