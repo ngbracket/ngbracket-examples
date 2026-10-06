@@ -120,6 +120,77 @@ import { Router } from '@angular/router';
         </div>
       </section>
 
+      <section aria-labelledby="hover-title">
+        <hr />
+
+        <h2 id="hover-title">Content on hover</h2>
+        <p>
+          Each ⓘ icon shows a note when the mouse moves over it. Only the first one is a
+          tab stop, so its note is the only one a keyboard user can open. The other icons,
+          the status dots' titles and the disabled button's note raise
+          <code>ngbr/hover-only-content</code>. They're minor here because these notes are
+          built with <code>(mouseenter)</code>; a tooltip from a library such as Angular
+          Material is reported as moderate.
+        </p>
+
+        <table class="hints">
+          <thead>
+            <tr>
+              <th scope="col">Course</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (course of courses; track course.name; let first = $first) {
+              <tr>
+                <td>
+                  {{ course.name }}
+                  @if (first) {
+                    <!-- Healthy: a button, so focus opens the note too. The note is always
+                         in the DOM, so its description is there when focus arrives. -->
+                    <button
+                      type="button"
+                      class="info"
+                      [attr.aria-label]="'About ' + course.name"
+                      aria-describedby="hover-hint"
+                      (mouseenter)="hint.set(course.name)"
+                      (mouseleave)="hint.set(null)"
+                      (focus)="hint.set(course.name)"
+                      (blur)="hint.set(null)"
+                    >
+                      ⓘ
+                    </button>
+                    <span id="hover-hint" role="tooltip" class="tip" [class.closed]="hint() !== course.name">
+                      {{ course.note }}
+                    </span>
+                  } @else {
+                    <!-- ngbr/hover-only-content: the note only opens for the mouse -->
+                    <span class="info" (mouseenter)="hint.set(course.name)" (mouseleave)="hint.set(null)">ⓘ</span>
+                    @if (hint() === course.name) {
+                      <span role="tooltip" class="tip">{{ course.note }}</span>
+                    }
+                  }
+                </td>
+                <td>
+                  <!-- ngbr/hover-only-content (minor): the meaning is only in a title -->
+                  <span class="dot" [class.expired]="course.expired" [attr.title]="course.expired ? 'Expired' : 'Current'"></span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <!-- ngbr/hover-only-content: a disabled button can't take focus, so its note is
+             mouse-only. The listener is on a wrapper because some browsers send no mouse
+             events to a disabled control. -->
+        <p class="disabled-note">
+          <span (mouseenter)="hint.set('submit')" (mouseleave)="hint.set(null)"><button type="button" disabled>Submit</button></span>
+          @if (hint() === 'submit') {
+            <span role="tooltip" class="tip">Finish every course first</span>
+          }
+        </p>
+      </section>
+
       <section aria-labelledby="broken-modal-title">
         <hr />
 
@@ -257,6 +328,54 @@ import { Router } from '@angular/router';
         align-items: center;
         gap: 8px;
       }
+      .hints {
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .hints th,
+      .hints td {
+        padding: 6px 16px 6px 0;
+        text-align: left;
+      }
+      .info {
+        position: relative;
+        min-width: 24px;
+        min-height: 24px;
+        margin-left: 6px;
+        padding: 0 4px;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        cursor: help;
+      }
+      .tip {
+        margin-left: 8px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: #1a1a1a;
+        color: #fff;
+        font-size: 13px;
+      }
+      /* Visually hidden while closed, but still in the DOM for aria-describedby. */
+      .tip.closed {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      .dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #2e7d32;
+      }
+      .dot.expired {
+        background: #c62828;
+      }
       .dialog {
         margin-top: 16px;
         padding: 16px 20px;
@@ -299,6 +418,16 @@ import { Router } from '@angular/router';
   ],
 })
 export class A11yDemo {
+  /** Notes for the "Content on hover" table; only the first row's icon is a tab stop. */
+  readonly courses = [
+    { name: 'Accessible forms', note: 'Last reviewed in March', expired: false },
+    { name: 'Keyboard basics', note: 'Includes a short quiz', expired: true },
+    { name: 'Screen readers', note: 'Needs headphones', expired: false },
+  ];
+
+  /** Which hover note is open: a course name, 'submit', or none. */
+  readonly hint = signal<string | null>(null);
+
   /** Toggles the deliberately uncontained modal in the "doesn't keep focus in" section. */
   readonly dialogOpen = signal(false);
 
