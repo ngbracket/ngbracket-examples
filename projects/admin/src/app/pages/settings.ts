@@ -69,17 +69,13 @@ const PLANS: NgbrSelectOption[] = [
 
       <ngbr-error-summary [errors]="errorList()" heading="Please fix the following" />
 
-      <!-- NB: use [id]="'…'" (property binding), NOT id="…". A static id attribute is
-           reflected onto BOTH the <ngbr-input> host and its native <input>, so the error
-           summary's getElementById() returns the non-focusable host and Enter can't focus
-           the field. Property-binding puts the id only on the native input. See forms ticket. -->
       <form (submit)="onSubmit($event)" novalidate>
         <ngbr-form-field label="Workspace name" hint="Shown across the app.">
-          <ngbr-input [id]="'set-name'" [formField]="f.name" [forceShowErrors]="submitted()" />
+          <ngbr-input id="set-name" [formField]="f.name" [forceShowErrors]="submitted()" />
         </ngbr-form-field>
 
         <ngbr-form-field label="Billing email">
-          <ngbr-input [id]="'set-email'" type="email" [formField]="f.email" [forceShowErrors]="submitted()" />
+          <ngbr-input id="set-email" type="email" [formField]="f.email" [forceShowErrors]="submitted()" />
         </ngbr-form-field>
 
         <ngbr-form-field label="Plan">

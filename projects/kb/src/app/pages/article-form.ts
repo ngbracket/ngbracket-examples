@@ -98,15 +98,18 @@ type ArticleFields = Omit<ArticleDraft, 'format'>;
         <div class="field">
           <span class="field__label" aria-hidden="true">Tags</span>
           @if (model().tags.length) {
-            <div ngbrChipSet label="Tags" class="tags">
+            <!-- The set goes away with its last tag, so focus returns to the tag box. -->
+            <div ngbrChipSet label="Tags" class="tags" [focusWhenEmpty]="tagBox">
               @for (tag of model().tags; track tag) {
                 <ngbr-input-chip [label]="tag" (removed)="removeTag(tag)" />
               }
             </div>
           }
-          <ngbr-form-field label="Add a tag" [hint]="tagHint()">
-            <ngbr-input #tagInput [(value)]="newTag" (keydown.enter)="addTag($event)" />
-          </ngbr-form-field>
+          <div #tagBox>
+            <ngbr-form-field label="Add a tag" [hint]="tagHint()">
+              <ngbr-input [(value)]="newTag" (keydown.enter)="addTag($event)" />
+            </ngbr-form-field>
+          </div>
         </div>
 
         <div class="field">
@@ -265,7 +268,6 @@ export class ArticleForm {
   private lastAutosaved = '';
   private readonly heading = viewChild.required<ElementRef<HTMLElement>>('heading');
   protected readonly tagHint = signal('Press Enter to add it.');
-  private readonly tagInput = viewChild.required('tagInput', { read: ElementRef });
 
   /** Drafts are kept per article; a new article uses the 'new' slot. */
   protected readonly draftKey = computed(() => this.editId() ?? 'new');
@@ -372,8 +374,6 @@ export class ArticleForm {
   protected removeTag(tag: string): void {
     const remaining = this.model().tags.filter((t) => t !== tag);
     this.model.update((m) => ({ ...m, tags: remaining }));
-    // The chip set moves focus to a neighbouring chip; with none left, go back to the input.
-    if (!remaining.length) this.tagInput().nativeElement.querySelector('input')?.focus();
   }
 
   protected async save(event: Event): Promise<void> {
