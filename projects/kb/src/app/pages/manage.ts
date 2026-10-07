@@ -34,7 +34,7 @@ import { KbStore } from '../data/kb-store';
           </ng-template>
         </ngbr-menu-button>
         <ngbr-toolbar aria-label="Article actions">
-          <button ngbrToolbarButton value="export" (click)="exportCsv()">⬇ Export CSV</button>
+          <button ngbrToolbarButton (click)="exportCsv()"><span aria-hidden="true">⬇</span> Export CSV</button>
         </ngbr-toolbar>
       </div>
     </div>
