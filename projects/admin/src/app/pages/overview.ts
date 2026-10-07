@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Injector, afterNextRender, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   NgbrPageHeader,
@@ -42,7 +42,7 @@ import {
   template: `
     <ngbr-page-header heading="Overview" subtitle="Your workspace at a glance — last 30 days">
       <div ngbrPageActions class="ph-actions">
-        <button type="button" class="ph-btn ph-btn--quiet" (click)="startTour()">Take the tour</button>
+        <button #tourButton type="button" class="ph-btn ph-btn--quiet" (click)="startTour()">Take the tour</button>
         <button type="button" class="ph-btn">Export report</button>
       </div>
     </ngbr-page-header>
@@ -151,6 +151,8 @@ import {
 })
 export class Overview {
   private readonly tour = inject(NgbrTour);
+  private readonly injector = inject(Injector);
+  private readonly tourButton = viewChild.required<ElementRef<HTMLButtonElement>>('tourButton');
   private readonly router = inject(Router);
   protected readonly onboarding = inject(OnboardingState);
 
@@ -194,7 +196,13 @@ export class Overview {
   protected startTour(): void {
     this.tour.start(this.tourSteps, {
       onDone: (completed) => {
-        if (completed) this.onboarding.complete('tour');
+        if (!completed) return;
+        this.onboarding.complete('tour');
+        // Started from the checklist and that was the last task: the checklist
+        // goes away with the row focus just returned to. Use the header button.
+        if (this.onboarding.allDone()) {
+          afterNextRender(() => this.tourButton().nativeElement.focus(), { injector: this.injector });
+        }
       },
     });
   }

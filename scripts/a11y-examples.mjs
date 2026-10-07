@@ -205,6 +205,17 @@ if (app === 'admin') {
   await page.locator('ngbr-nav-item').filter({ hasText: 'Settings' }).first().click();
   await page.getByRole('heading', { name: 'Settings', level: 1 }).waitFor();
   await axeSweep('settings');
+  // A static id="set-name" must land only on the native input, or the error
+  // summary's link finds the host and can't move focus (forms 1.5.2).
+  const nameBox = page.getByRole('textbox', { name: 'Workspace name' });
+  const savedName = await nameBox.inputValue();
+  await nameBox.fill('');
+  await page.getByRole('button', { name: 'Save changes' }).click();
+  await page.locator('ngbr-error-summary a[href="#set-name"]').first().press('Enter');
+  await page.waitForTimeout(100);
+  const summaryTarget = await page.evaluate(() => `${document.activeElement?.tagName}#${document.activeElement?.id}`);
+  record('settings: the error summary link moves focus to the field', summaryTarget === 'INPUT#set-name', summaryTarget);
+  await nameBox.fill(savedName || 'Helm');
   await page.getByRole('button', { name: 'Add a team member' }).click();
   await page.waitForTimeout(200);
   const newRow = await page.evaluate(() => {
