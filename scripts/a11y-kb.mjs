@@ -140,6 +140,17 @@ const record = (name, ok, detail = '') => {
     await page.waitForTimeout(300);
     const stale = await page.getByText('Your unsaved draft was restored.').count();
     record('article: a quick save leaves no draft behind', stale === 0);
+
+    // A save that fails validation keeps the edits as a draft, even when the
+    // user leaves straight away (before the autosave debounce).
+    await page.locator('input#title').fill('');
+    await page.getByRole('button', { name: 'Save article' }).click();
+    await page.getByRole('link', { name: 'Browse', exact: true }).click();
+    await page.locator('a.edit').first().click();
+    await page.locator('input#title').waitFor();
+    await page.waitForTimeout(300);
+    const kept = await page.getByText('Your unsaved draft was restored.').count();
+    record('article: a save that fails validation keeps the draft', kept === 1);
   } catch (e) {
     record('article: interaction checks ran', false, String(e.message).split('\n')[0]);
   } finally {

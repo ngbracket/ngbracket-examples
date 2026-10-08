@@ -373,11 +373,13 @@ export class ArticleForm {
   protected async save(event: Event): Promise<void> {
     event.preventDefault();
     this.submitted.set(true);
+    // Write a draft still waiting on the debounce now: if validation fails and
+    // the user leaves at once, their edits are kept. A successful save clears it.
+    this.autosave.flush();
     await submit(this.f, {
       action: async () => {
-        // The article is being saved: drop any draft autosave still waiting, so
-        // it can't land afterwards. (If validation fails we never get here, and
-        // the pending draft is kept.)
+        // The article is being saved: drop any draft autosave queued since, so it
+        // can't land afterwards.
         this.autosave.cancel();
         const d = this.model();
         const id = this.editId() ?? this.store.nextId();

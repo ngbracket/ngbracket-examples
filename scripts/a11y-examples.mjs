@@ -195,13 +195,18 @@ if (app === 'admin') {
   await full.focus(); // aria-disabled stays focusable; Playwright won't click it
   await page.keyboard.press('Enter');
   await page.waitForTimeout(150);
+  const told = (await page.locator('[data-ngbr-live]').textContent())?.trim() ?? '';
   const inProgress = await page.evaluate(() => {
     const col = Array.from(document.querySelectorAll('.ngbr-board__column')).find(
       (c) => c.querySelector('.ngbr-board__col-title')?.textContent === 'In progress',
     );
     return col?.querySelectorAll('[data-card-id]').length;
   });
-  record('tickets: Add a card respects the WIP limit', inProgress === 3 && unavailable, `${inProgress} cards; full button unavailable: ${unavailable}`);
+  record(
+    'tickets: Add a card respects the WIP limit',
+    inProgress === 3 && unavailable && told.includes('No card added'),
+    `${inProgress} cards; unavailable: ${unavailable}; "${told}"`,
+  );
 
   // Settings: the team field array (@ngbracket/form-kit) with autosave.
   await page.locator('ngbr-nav-item').filter({ hasText: 'Settings' }).first().click();
