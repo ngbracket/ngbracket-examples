@@ -186,20 +186,22 @@ if (app === 'admin') {
   await key('Enter');
   const opened = (await page.locator('p.sel[role="status"]').textContent())?.trim() ?? '';
   record('tickets: Enter opens the ticket (status)', opened.startsWith('Opened TCK-1040'), opened);
-  // In progress is 2/3: one add fits, the next is refused at the WIP limit.
-  const addToInProgress = page.getByRole('button', { name: 'Add a card to In progress' });
-  await addToInProgress.click();
+  // In progress is 2/3: one add fits; then the button reads "(full)", is
+  // unavailable, and another press adds nothing (board 0.3.2).
+  await page.getByRole('button', { name: 'Add a card to In progress' }).click();
   await page.waitForTimeout(150); // the new card renders and moves the button down
-  await addToInProgress.click();
+  const full = page.getByRole('button', { name: 'Add a card (full) to In progress' });
+  const unavailable = (await full.getAttribute('aria-disabled')) === 'true';
+  await full.focus(); // aria-disabled stays focusable; Playwright won't click it
+  await page.keyboard.press('Enter');
   await page.waitForTimeout(150);
-  const wip = (await page.locator('p.sel[role="status"]').textContent())?.trim() ?? '';
   const inProgress = await page.evaluate(() => {
     const col = Array.from(document.querySelectorAll('.ngbr-board__column')).find(
       (c) => c.querySelector('.ngbr-board__col-title')?.textContent === 'In progress',
     );
     return col?.querySelectorAll('[data-card-id]').length;
   });
-  record('tickets: Add a card respects the WIP limit', inProgress === 3 && wip.includes('at its limit'), `${inProgress} cards; "${wip}"`);
+  record('tickets: Add a card respects the WIP limit', inProgress === 3 && unavailable, `${inProgress} cards; full button unavailable: ${unavailable}`);
 
   // Settings: the team field array (@ngbracket/form-kit) with autosave.
   await page.locator('ngbr-nav-item').filter({ hasText: 'Settings' }).first().click();
