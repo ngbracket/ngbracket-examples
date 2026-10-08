@@ -109,7 +109,7 @@ const STEP_LABELS = ['Service', 'Date', 'Time', 'Details', 'Done'];
             </ngbr-checkbox>
             <ngbr-conditional-field [show]="model().bringGuest" label="Guest details">
               <ngbr-form-field label="Guest's name">
-                <ngbr-input [id]="'bk-guest'" [formField]="f.guestName" [forceShowErrors]="tried()" />
+                <ngbr-input id="bk-guest" [formField]="f.guestName" [forceShowErrors]="tried()" />
               </ngbr-form-field>
             </ngbr-conditional-field>
           </div>
