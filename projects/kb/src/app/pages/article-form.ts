@@ -264,8 +264,6 @@ export class ArticleForm {
   private readonly injector = inject(Injector);
   private readonly restoredEl = viewChild.required<ElementRef<HTMLElement>>('restoredEl');
   private readonly savedEl = viewChild.required<ElementRef<HTMLElement>>('savedEl');
-  /** The value the last autosave (or load, or save) dealt with: a newer one is pending. */
-  private lastAutosaved = '';
   private readonly heading = viewChild.required<ElementRef<HTMLElement>>('heading');
   protected readonly tagHint = signal('Press Enter to add it.');
 
@@ -278,10 +276,8 @@ export class ArticleForm {
   protected readonly autosave = ngbrAutosave({
     value: (): ArticleDraft => ({ ...this.model(), format: this.bodyTab() }),
     save: (draft) => {
-      // An autosave still pending when Save ran carries the saved content:
-      // clear the draft rather than keep a copy of what's already saved.
-      this.lastAutosaved = JSON.stringify(draft);
-      if (this.lastAutosaved === this.lastCommitted) {
+      // A draft equal to what's saved (edits undone back to it) isn't worth keeping.
+      if (JSON.stringify(draft) === this.lastCommitted) {
         this.store.clearDraft(this.draftKey());
         return;
       }
@@ -330,14 +326,12 @@ export class ArticleForm {
     }
     this.loaded = { ...this.model(), format: this.bodyTab() };
     this.lastCommitted = JSON.stringify(this.loaded);
-    this.lastAutosaved = this.lastCommitted;
     const draft = this.store.draft(this.draftKey());
     if (draft) {
       const { format, ...fields } = draft;
       this.model.set(fields);
       this.bodyTab.set(format);
       this.hasDraft.set(true);
-      this.lastAutosaved = JSON.stringify(draft);
       afterNextRender(() => this.restoredNote.set('Your unsaved draft was restored.'));
     }
   }
@@ -379,13 +373,14 @@ export class ArticleForm {
   protected async save(event: Event): Promise<void> {
     event.preventDefault();
     this.submitted.set(true);
-    // Write any pending draft now, so a debounced autosave can't land after
-    // the article is saved.
-    if (JSON.stringify({ ...this.model(), format: this.bodyTab() }) !== this.lastAutosaved) {
-      this.autosave.saveNow();
-    }
+    // Write a draft still waiting on the debounce now: if validation fails and
+    // the user leaves at once, their edits are kept. A successful save clears it.
+    this.autosave.flush();
     await submit(this.f, {
       action: async () => {
+        // The article is being saved: drop any draft autosave queued since, so it
+        // can't land afterwards.
+        this.autosave.cancel();
         const d = this.model();
         const id = this.editId() ?? this.store.nextId();
         this.store.upsert({

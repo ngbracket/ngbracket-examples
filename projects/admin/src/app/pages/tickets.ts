@@ -144,18 +144,10 @@ export class Tickets {
     });
   }
 
-  /**
-   * "Add a card": the board shows the button in every column, so the WIP limit
-   * that keyboard, pointer and Move-menu moves respect is checked here.
-   */
+  /** "Add a card". The board doesn't emit it for a column at its WIP limit (board 0.3.2). */
   protected addTicket(columnId: string): void {
     const col = this.columns().find((c) => c.id === columnId);
     if (!col) return;
-    const count = this.tickets().filter((t) => t.columnId === columnId).length;
-    if (col.wipLimit != null && count >= col.wipLimit) {
-      this.status.set(`${col.title} is at its limit of ${col.wipLimit}. Ticket not added.`);
-      return;
-    }
     const id = `TCK-${this.nextId++}`;
     this.tickets.update((tickets) => [...tickets, ticket(id, columnId, 'New ticket', 'Normal', 'Unassigned')]);
     this.status.set(`Added ${id} to ${col.title}.`);
