@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  Injector,
+  signal,
+  viewChild,
+  type WritableSignal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 /**
@@ -18,6 +30,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'admin-a11y-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CdkDropList, CdkDrag, CdkDragHandle],
   template: `
     <main>
       <h1>&#64;ngbracket/a11y-devtools demo</h1>
@@ -189,6 +202,41 @@ import { Router } from '@angular/router';
             <span role="tooltip" class="tip">Finish every course first</span>
           }
         </p>
+      </section>
+
+      <section aria-labelledby="drag-title">
+        <hr />
+
+        <h2 id="drag-title">Reordering by drag and drop</h2>
+        <p>
+          Both lists reorder by dragging the ⠿ handle. In the first, that's the only way:
+          Tab never reaches the handles, so it raises <code>ngbr/drag-without-keyboard</code>.
+          The second adds Move up and Move down buttons, which work from the keyboard and with
+          a single click.
+        </p>
+
+        <h3 id="drag-mouse-title">Mouse only</h3>
+        <!-- ngbr/drag-without-keyboard (serious): CDK drag and drop has no keyboard support -->
+        <ol class="levels" cdkDropList aria-labelledby="drag-mouse-title" (cdkDropListDropped)="drop(mouseOnly, $event)">
+          @for (level of mouseOnly(); track level) {
+            <li cdkDrag>
+              <span class="handle" cdkDragHandle aria-hidden="true">⠿</span>
+              {{ level }}
+            </li>
+          }
+        </ol>
+
+        <h3 id="drag-buttons-title">With Move buttons</h3>
+        <ol class="levels" cdkDropList aria-labelledby="drag-buttons-title" (cdkDropListDropped)="drop(withButtons, $event)">
+          @for (level of withButtons(); track level; let i = $index, first = $first, last = $last) {
+            <li cdkDrag>
+              <span class="handle" cdkDragHandle aria-hidden="true">⠿</span>
+              <span class="name">{{ level }}</span>
+              <button type="button" [attr.data-move]="'up-' + level" [disabled]="first" [attr.aria-label]="'Move ' + level + ' up'" (click)="move(i, -1)">↑</button>
+              <button type="button" [attr.data-move]="'down-' + level" [disabled]="last" [attr.aria-label]="'Move ' + level + ' down'" (click)="move(i, 1)">↓</button>
+            </li>
+          }
+        </ol>
       </section>
 
       <section aria-labelledby="broken-modal-title">
@@ -407,6 +455,31 @@ import { Router } from '@angular/router';
       .modal img {
         margin: 8px 0;
       }
+      .levels {
+        padding: 0;
+        list-style: none;
+      }
+      .levels li {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 6px 8px;
+        margin: 4px 0;
+        border: 1px solid #767676;
+        border-radius: 6px;
+        background: #fff;
+        color: #1a1a1a;
+      }
+      .levels .handle {
+        cursor: grab;
+      }
+      .levels .name {
+        flex: 1;
+      }
+      .levels button {
+        min-width: 24px;
+        min-height: 24px;
+      }
       .trap {
         display: flex;
         gap: 12px;
@@ -427,6 +500,42 @@ export class A11yDemo {
 
   /** Which hover note is open: a course name, 'submit', or none. */
   readonly hint = signal<string | null>(null);
+
+  /** The "Reordering by drag and drop" lists: one mouse-only, one with Move buttons. */
+  readonly mouseOnly = signal(['Novice', 'Beginner', 'Adept', 'Expert']);
+  readonly withButtons = signal(['Novice', 'Beginner', 'Adept', 'Expert']);
+
+  private readonly announcer = inject(LiveAnnouncer);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
+
+  drop(list: WritableSignal<string[]>, event: CdkDragDrop<unknown>): void {
+    const items = [...list()];
+    moveItemInArray(items, event.previousIndex, event.currentIndex);
+    list.set(items);
+  }
+
+  /**
+   * Moves a level one place and says where it went. Focus stays on the button that
+   * was pressed; at the top or bottom that button is disabled, so focus goes to the
+   * row's other button.
+   */
+  move(index: number, by: -1 | 1): void {
+    const items = [...this.withButtons()];
+    const name = items[index];
+    moveItemInArray(items, index, index + by);
+    this.withButtons.set(items);
+    void this.announcer.announce(`${name} moved to position ${index + by + 1} of ${items.length}`);
+    afterNextRender(
+      () => {
+        const find = (dir: string) =>
+          this.host.nativeElement.querySelector<HTMLButtonElement>(`[data-move="${dir}-${name}"]`);
+        const pressed = find(by < 0 ? 'up' : 'down');
+        (pressed && !pressed.disabled ? pressed : find(by < 0 ? 'down' : 'up'))?.focus();
+      },
+      { injector: this.injector },
+    );
+  }
 
   /** Toggles the deliberately uncontained modal in the "doesn't keep focus in" section. */
   readonly dialogOpen = signal(false);
