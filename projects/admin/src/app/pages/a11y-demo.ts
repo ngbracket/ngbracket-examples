@@ -217,7 +217,7 @@ import { Router } from '@angular/router';
 
         <h3 id="drag-mouse-title">Mouse only</h3>
         <!-- ngbr/drag-without-keyboard (serious): CDK drag and drop has no keyboard support -->
-        <ol class="levels" cdkDropList aria-labelledby="drag-mouse-title" (cdkDropListDropped)="drop(mouseOnly, $event)">
+        <ol class="levels" role="list" cdkDropList aria-labelledby="drag-mouse-title" (cdkDropListDropped)="drop(mouseOnly, $event)">
           @for (level of mouseOnly(); track level) {
             <li cdkDrag>
               <span class="handle" cdkDragHandle aria-hidden="true">⠿</span>
@@ -227,13 +227,14 @@ import { Router } from '@angular/router';
         </ol>
 
         <h3 id="drag-buttons-title">With Move buttons</h3>
-        <ol class="levels" cdkDropList aria-labelledby="drag-buttons-title" (cdkDropListDropped)="drop(withButtons, $event)">
-          @for (level of withButtons(); track level; let i = $index, first = $first, last = $last) {
+        <ol class="levels" role="list" cdkDropList aria-labelledby="drag-buttons-title" (cdkDropListDropped)="drop(withButtons, $event)">
+          @for (level of withButtons(); track level; let i = $index, first = $first, last = $last, count = $count) {
             <li cdkDrag>
               <span class="handle" cdkDragHandle aria-hidden="true">⠿</span>
               <span class="name">{{ level }}</span>
-              <button type="button" [attr.data-move]="'up-' + level" [disabled]="first" [attr.aria-label]="'Move ' + level + ' up'" (click)="move(i, -1)">↑</button>
-              <button type="button" [attr.data-move]="'down-' + level" [disabled]="last" [attr.aria-label]="'Move ' + level + ' down'" (click)="move(i, 1)">↓</button>
+              <span class="visually-hidden" [id]="'pos-' + level">position {{ i + 1 }} of {{ count }}</span>
+              <button type="button" [attr.data-move]="'up-' + level" [disabled]="first" [attr.aria-label]="'Move ' + level + ' up'" [attr.aria-describedby]="'pos-' + level" (click)="move(i, -1)">↑</button>
+              <button type="button" [attr.data-move]="'down-' + level" [disabled]="last" [attr.aria-label]="'Move ' + level + ' down'" [attr.aria-describedby]="'pos-' + level" (click)="move(i, 1)">↓</button>
             </li>
           }
         </ol>
@@ -459,6 +460,14 @@ import { Router } from '@angular/router';
         padding: 0;
         list-style: none;
       }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
       .levels li {
         display: flex;
         gap: 8px;
@@ -516,22 +525,25 @@ export class A11yDemo {
   }
 
   /**
-   * Moves a level one place and says where it went. Focus stays on the button that
-   * was pressed; at the top or bottom that button is disabled, so focus goes to the
-   * row's other button.
+   * Moves a level one place and says where it went, once. Each Move button is
+   * described by its row's position. If moving the row cost the button focus, or
+   * the button is now disabled (top or bottom), focusing it, or the row's other
+   * button, reads the new position. If focus stayed, a live message says it: a
+   * screen reader may speak only one of a focus change and a live message.
    */
   move(index: number, by: -1 | 1): void {
     const items = [...this.withButtons()];
     const name = items[index];
     moveItemInArray(items, index, index + by);
     this.withButtons.set(items);
-    void this.announcer.announce(`${name} moved to position ${index + by + 1} of ${items.length}`);
     afterNextRender(
       () => {
         const find = (dir: string) =>
           this.host.nativeElement.querySelector<HTMLButtonElement>(`[data-move="${dir}-${name}"]`);
         const pressed = find(by < 0 ? 'up' : 'down');
-        (pressed && !pressed.disabled ? pressed : find(by < 0 ? 'down' : 'up'))?.focus();
+        const target = pressed && !pressed.disabled ? pressed : find(by < 0 ? 'down' : 'up');
+        if (target && this.host.nativeElement.ownerDocument.activeElement !== target) target.focus();
+        else void this.announcer.announce(`${name} moved to position ${index + by + 1} of ${items.length}`);
       },
       { injector: this.injector },
     );
