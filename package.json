@@ -82,11 +82,6 @@
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "vitest": "^4.1.11",
-    "wrangler": "^4.148.0"
-  },
-  "overrides": {
-    "miniflare": {
-      "sharp": "^0.35.5"
-    }
+    "wrangler": "^4.151.3"
   }
 }
