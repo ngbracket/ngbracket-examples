@@ -22,7 +22,7 @@ Built with Angular 22 (standalone, zoneless, signals).
 
 ## Prerequisites
 
-- Node 22+ (CI/dev uses 24.19.0).
+- Node 22.23.4+ (CI/dev uses 24.22.1).
 - An **NgBracket access token** (`ngbr_…`). You get one with any pack purchase —
   see your [account page](https://ngbracket.com/account). It is read from the
   `NGBRACKET_TOKEN` environment variable at install time.
