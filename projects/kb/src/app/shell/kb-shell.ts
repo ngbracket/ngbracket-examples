@@ -2,17 +2,17 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgbrAppMenubar } from '@ngbracket/navigation';
 import type { NgbrTopMenu } from '@ngbracket/navigation';
-import { SkipLink, ThemeToggle } from 'shared';
+import { SkipLink, StickyHeight, ThemeToggle } from 'shared';
 
 /** App chrome: navigation-pack menubar + primary links + theme toggle. */
 @Component({
   selector: 'kb-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgbrAppMenubar, ThemeToggle, SkipLink],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgbrAppMenubar, ThemeToggle, SkipLink, StickyHeight],
   template: `
     <app-skip-link />
 
-    <header class="topbar">
+    <header class="topbar" appStickyHeight>
       <a class="brand" routerLink="/browse">
         <span class="brand__mark" aria-hidden="true">❯_</span> Almanac
       </a>
@@ -54,6 +54,11 @@ import { SkipLink, ThemeToggle } from 'shared';
         position: sticky;
         top: 0;
         z-index: 20;
+      }
+      @media (max-height: 30rem) {
+        .topbar {
+          position: static;
+        }
       }
       .brand {
         display: inline-flex;

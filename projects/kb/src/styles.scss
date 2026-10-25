@@ -30,3 +30,16 @@ body {
   outline: 2px solid var(--ngbr-color-accent);
   outline-offset: 2px;
 }
+
+/* WCAG 2.4.11: keep a newly focused element clear of the sticky top bar. The
+   appStickyHeight directive writes its height to --app-sticky-h (64px before
+   the first measure). Below 30rem of viewport height (400% zoom) it stops being
+   sticky. */
+html {
+  scroll-padding-top: calc(var(--app-sticky-h, 64px) + 8px);
+}
+@media (max-height: 30rem) {
+  html {
+    scroll-padding-top: 8px;
+  }
+}
