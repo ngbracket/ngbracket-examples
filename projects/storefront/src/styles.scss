@@ -9,3 +9,14 @@
      dark-mode danger fill (#ffb4ab). Dark maroon reads at ~9:1. */
   --ngbr-color-danger-contrast: #3d0a09;
 }
+
+/* WCAG 2.4.11: keep a newly focused element clear of the sticky marketing header
+   (69px). Below 30rem of viewport height (400% zoom) it stops being sticky. */
+html {
+  scroll-padding-top: 77px;
+}
+@media (max-height: 30rem) {
+  html {
+    scroll-padding-top: 8px;
+  }
+}

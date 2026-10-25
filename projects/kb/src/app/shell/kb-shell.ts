@@ -55,6 +55,11 @@ import { SkipLink, ThemeToggle } from 'shared';
         top: 0;
         z-index: 20;
       }
+      @media (max-height: 30rem) {
+        .topbar {
+          position: static;
+        }
+      }
       .brand {
         display: inline-flex;
         align-items: center;
