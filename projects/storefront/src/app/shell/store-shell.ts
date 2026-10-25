@@ -8,7 +8,7 @@ import {
 import type { NgbrNavLink, NgbrFooterColumn } from '@ngbracket/marketing';
 import { NgbrCartStore, NgbrMiniCart, NgbrCartDrawer } from '@ngbracket/commerce';
 import type { NgbrCartQtyChange } from '@ngbracket/commerce';
-import { SkipLink, ThemeToggle } from 'shared';
+import { SkipLink, StickyHeight, ThemeToggle } from 'shared';
 
 const NAV: NgbrNavLink[] = [
   { label: 'Shop', href: '/shop' },
@@ -36,6 +36,7 @@ const FOOTER_COLS: NgbrFooterColumn[] = [
     NgbrCartDrawer,
     ThemeToggle,
     SkipLink,
+    StickyHeight,
   ],
   template: `
     <app-skip-link />
@@ -43,7 +44,7 @@ const FOOTER_COLS: NgbrFooterColumn[] = [
       Free UK delivery on orders over £40 — <a href="/shop">shop now</a>.
     </ngbr-announcement-bar>
 
-    <ngbr-marketing-header [links]="nav" ctaLabel="Sign in" ctaHref="/signin" brandHref="/">
+    <ngbr-marketing-header appStickyHeight [links]="nav" ctaLabel="Sign in" ctaHref="/signin" brandHref="/">
       <span ngbrBrand>Aurora</span>
       <app-theme-toggle ngbrHeaderActions />
       <ngbr-mini-cart ngbrHeaderActions [count]="store.count()" (open)="cartOpen.set(true)" />

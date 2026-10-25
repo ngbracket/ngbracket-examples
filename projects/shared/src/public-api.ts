@@ -8,3 +8,4 @@ export type { Theme } from './lib/theme.service';
 export { ThemeToggle } from './lib/theme-toggle';
 export { SkipLink } from './lib/skip-link';
 export { provideExampleA11y } from './lib/a11y';
+export { StickyHeight } from './lib/sticky-height';
