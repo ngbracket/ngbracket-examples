@@ -112,8 +112,11 @@ const COMMANDS: Record<string, string> = {
         background: var(--app-bg, #f6f8f9);
         color: var(--ngbr-color-text, #1a1c1e);
       }
+      /* The bar wraps at 400% zoom instead of widening the page. */
       .chrome {
         display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
         align-items: center;
         justify-content: space-between;
         padding: 10px 16px;
@@ -128,6 +131,7 @@ const COMMANDS: Record<string, string> = {
       }
       .chrome__actions {
         display: inline-flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 12px;
       }
