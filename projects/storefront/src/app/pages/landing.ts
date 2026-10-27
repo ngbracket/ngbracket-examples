@@ -177,6 +177,7 @@ const FAQS: NgbrFaqItem[] = [
       }
       .newsletter ngbr-newsletter {
         display: inline-block;
+        max-width: 100%;
         margin-top: 8px;
         text-align: start;
       }

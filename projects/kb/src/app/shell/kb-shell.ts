@@ -44,8 +44,10 @@ import { SkipLink, StickyHeight, ThemeToggle } from 'shared';
         min-height: 100dvh;
         background: var(--app-bg, var(--ngbr-color-surface));
       }
+      /* The bar wraps at 400% zoom instead of widening the page. */
       .topbar {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 20px;
         padding: 10px clamp(12px, 3vw, 24px);

@@ -3,8 +3,9 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { ThemeService } from './theme.service';
 
 /**
- * A single accessible button that toggles light/dark. `aria-pressed` conveys
- * the current state; the visible glyph is decorative.
+ * A switch named "Dark mode": `aria-checked` says whether dark mode is on, and
+ * the name stays the same so it matches the visible text (WCAG 2.5.3). The
+ * glyph is decorative.
  */
 @Component({
   selector: 'app-theme-toggle',
@@ -16,14 +17,12 @@ import { ThemeService } from './theme.service';
       class="tt"
       role="switch"
       [attr.aria-checked]="isDark()"
-      [attr.aria-label]="label()"
-      [title]="label()"
       (click)="theme.toggle()"
     >
       <span class="tt__track" aria-hidden="true">
         <span class="tt__thumb">{{ isDark() ? '🌙' : '☀️' }}</span>
       </span>
-      <span class="tt__label">{{ isDark() ? 'Dark mode' : 'Light mode' }}</span>
+      <span class="tt__label">Dark mode</span>
     </button>
   `,
   styles: [
@@ -84,7 +83,4 @@ import { ThemeService } from './theme.service';
 export class ThemeToggle {
   protected readonly theme = inject(ThemeService);
   protected readonly isDark = computed(() => this.theme.theme() === 'dark');
-  protected readonly label = computed(() =>
-    this.isDark() ? 'Switch to light theme' : 'Switch to dark theme',
-  );
 }
