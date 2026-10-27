@@ -1,30 +1,29 @@
-# NgBracket Examples
+# NgBracket examples
 
-> 🚀 **New to NgBracket?** Accessible Angular component packs, built to support WCAG 2.2 AA — see [ngbracket.com](https://ngbracket.com?utm_source=github&utm_medium=readme&utm_content=examples).
+> New to NgBracket? It's a set of Angular component packs built to support WCAG 2.2 AA. See [ngbracket.com](https://ngbracket.com?utm_source=github&utm_medium=readme&utm_content=examples).
 
-Close-to-real-world Angular applications that consume the **published
-[NgBracket](https://ngbracket.com) component packs** straight from the private
-registry. They exist to (1) prove the packages work in real apps, and (2) give you
-clone-and-go starter templates.
+Angular apps, close to real-world ones, that install the published
+[NgBracket](https://ngbracket.com) component packs from the private registry. They
+show the packages working in real apps, and you can clone one as a starter template.
 
-All data is **hardcoded** — there's no backend or API to run.
+All data is hardcoded. There's no backend or API to run.
 
-| App | Port | Packs showcased | What it is |
+| App | Port | Packs used | What it is |
 | --- | --- | --- | --- |
-| **admin** | 4301 | dashboard · data-table · board · forms · form-kit · guide · auth | A SaaS back-office: KPI dashboard with a product tour, customers table, support-ticket work board, settings forms with an autosaved team list |
-| **storefront** | 4302 | marketing · commerce · auth · forms | A DTC shop: marketing landing page, product catalogue, cart & checkout |
-| **booking** | 4303 | scheduler · forms · form-kit · auth | An appointments app: booking wizard (with an optional guest), calendar views, availability |
-| **editor** | 4304 | navigation | A document editor showcasing the navigation toolbar & menus |
-| **overlays** | 4306 | overlays | Project settings built from overlays: dialogs, confirm, toasts, drawer, tooltips, popover, banners |
-| **kb** | 4305 | navigation · structure · editor · forms · primitives · form-kit | Almanac, a knowledge base: article tree, rich-text/markdown editors, tag chips, draft autosave, editable grid, Signal Form (`formRoot` + `submit`) |
+| admin | 4301 | dashboard · data-table · board · forms · form-kit · guide · auth | A SaaS back-office: KPI dashboard with a product tour, customers table, support-ticket work board, settings forms with an autosaved team list |
+| storefront | 4302 | marketing · commerce · auth · forms | A DTC shop: marketing landing page, product catalogue, cart & checkout |
+| booking | 4303 | scheduler · forms · form-kit · auth | An appointments app: booking wizard (with an optional guest), calendar views, availability |
+| editor | 4304 | navigation | A document editor built on the navigation toolbar and menus |
+| overlays | 4306 | overlays | Project settings built from overlays: dialogs, confirm, toasts, drawer, tooltips, popover, banners |
+| kb | 4305 | navigation · structure · editor · forms · primitives · form-kit | Almanac, a knowledge base: article tree, rich-text/markdown editors, tag chips, draft autosave, editable grid, Signal Form (`formRoot` + `submit`) |
 
 Built with Angular 22 (standalone, zoneless, signals).
 
 ## Prerequisites
 
 - Node 22.23.4+ (CI/dev uses 24.22.1).
-- An **NgBracket access token** (`ngbr_…`). You get one with any pack purchase —
-  see your [account page](https://ngbracket.com/account). It is read from the
+- An NgBracket access token (`ngbr_…`). You get one with any pack purchase. See
+  your [account page](https://ngbracket.com/account). It is read from the
   `NGBRACKET_TOKEN` environment variable at install time.
 
 ## Getting started
@@ -33,7 +32,7 @@ Built with Angular 22 (standalone, zoneless, signals).
 # 1. Point npm at your NgBracket token (never commit this).
 export NGBRACKET_TOKEN=ngbr_your_token_here
 
-# 2. Install — pulls @ngbracket/* from registry.ngbracket.com.
+# 2. Install. This pulls @ngbracket/* from registry.ngbracket.com.
 npm install
 
 # 3. Run an app (pick one):
@@ -45,8 +44,8 @@ npm run start:overlays    # http://localhost:4306
 npm run start:kb          # http://localhost:4305
 ```
 
-The committed [`.npmrc`](./.npmrc) only references `${NGBRACKET_TOKEN}` — **no token
-is stored in this repo**. Without the variable set, `npm install` will fail with a
+The committed [`.npmrc`](./.npmrc) only references `${NGBRACKET_TOKEN}`. No token
+is stored in this repo. Without the variable set, `npm install` will fail with a
 401 on the `@ngbracket/*` packages.
 
 Apps with a route-by-route README:
@@ -56,22 +55,22 @@ Apps with a route-by-route README:
 
 ## How the packs are wired
 
-- Every app shares `projects/shared` — a small library with a `ThemeService`
+- Every app shares `projects/shared`, a small library with a `ThemeService`
   (light/dark), a `ThemeToggle` button, and the global design-token stylesheet
   (`projects/shared/src/styles/theme.scss`) that themes every pack via the
   `--ngbr-*` CSS custom properties.
 - Each app imports pack components directly, e.g.
   `import { NgbrDataTable } from '@ngbracket/data-table';`.
 
-## Accessibility & theming
+## Accessibility and theming
 
 - Every app has a light/dark toggle in its chrome. Theme tokens are defined once in
   `projects/shared/src/styles/theme.scss`; the pack components and the app shells both
-  read the `--ngbr-*` variables, so dark mode "just works" across packs.
-- The NgBracket components are built to support WCAG 2.2 AA; the example app
-  chrome (shells, nav, custom cells) is built to the same bar — semantic landmarks,
-  visible focus rings, `aria-pressed`/`aria-label` on toggles, and AA contrast in both
-  themes.
+  read the `--ngbr-*` variables, so dark mode applies across every pack.
+- The NgBracket components are built to support WCAG 2.2 AA. The example app
+  chrome (shells, nav, custom cells) is built to the same level: semantic landmarks,
+  visible focus rings, `aria-pressed` and `aria-label` on toggles, and AA contrast in
+  both themes.
 
 ## Building
 
@@ -108,5 +107,5 @@ npm run deploy:admin      # or one at a time
 
 ## Licence
 
-MIT — see [LICENSE](./LICENSE). The `@ngbracket/*` packages themselves are
+MIT. See [LICENSE](./LICENSE). The `@ngbracket/*` packages themselves are
 commercial and require a valid licence/token.
