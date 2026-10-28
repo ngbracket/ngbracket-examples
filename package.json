@@ -54,7 +54,7 @@
     "@ngbracket/buttons": "1.3.1",
     "@ngbracket/charts": "1.3.2",
     "@ngbracket/command": "1.0.0",
-    "@ngbracket/commerce": "1.5.3",
+    "@ngbracket/commerce": "1.6.0",
     "@ngbracket/dashboard": "1.6.2",
     "@ngbracket/data-table": "1.5.1",
     "@ngbracket/editor": "1.0.0",
