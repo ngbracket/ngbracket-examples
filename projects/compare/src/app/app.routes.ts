@@ -21,5 +21,10 @@ export const routes: Routes = [
     providers: [OrdersStore],
     loadComponent: () => import('./after/orders-after').then((m) => m.OrdersAfter),
   },
+  {
+    path: 'results',
+    title: 'Test results: before and after',
+    loadComponent: () => import('./results/results').then((m) => m.Results),
+  },
   { path: '**', redirectTo: '' },
 ];

@@ -42,9 +42,13 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
       <h2>What an automated check finds</h2>
       <p>
         axe finds some of the problems in Before, such as the buttons with no name and the low-contrast text. It can't
-        tell that the sort headers are out of reach of the Tab key, that the menu items can't be chosen, or that focus is
-        lost when the dialog closes. Automated checks cover roughly a third of WCAG, so a clean scan is where testing
-        starts.
+        tell that a keyboard user can't choose the menu items, or that focus is lost when the dialog closes.
+        &#64;ngbracket/a11y-devtools adds keyboard checks, and it found that Tab can't reach the sort headers. Automated
+        checks cover roughly a third of WCAG, so a clean scan is where testing starts.
+      </p>
+      <p>
+        <a routerLink="/results">The test results</a> show both scans and what NVDA said at each step of the task, for
+        both versions.
       </p>
 
       <h2>Source</h2>

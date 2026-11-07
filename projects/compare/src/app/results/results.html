@@ -1,0 +1,154 @@
+<article class="results">
+  <h1>Test results</h1>
+  <p class="lead">
+    The same checks, run on <a routerLink="/before">Before</a> and <a routerLink="/after">After</a>: an automated scan
+    with &#64;ngbracket/a11y-devtools, and NVDA working through the task on the About page. The raw reports are at the
+    end of this page.
+  </p>
+
+  <table class="glance">
+    <caption>Results at a glance</caption>
+    <thead>
+      <tr>
+        <th scope="col">Check</th>
+        <th scope="col">Before</th>
+        <th scope="col">After</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Automated scan, light and dark</th>
+        <td>{{ scanBefore.findings }} findings, {{ scanBefore.rules.length }} rules</td>
+        <td>No findings</td>
+      </tr>
+      <tr>
+        <th scope="row">Tab stops in the orders screen with no name</th>
+        <td>{{ unnamedBefore }} of {{ scanBefore.tabStops.length }}</td>
+        <td>{{ unnamedAfter }} of {{ scanAfter.tabStops.length }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Column headers reachable with Tab</th>
+        <td>No</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <th scope="row">NVDA: dialog name, error and focus return read out</th>
+        <td>None of them</td>
+        <td>All three</td>
+      </tr>
+      <tr>
+        <th scope="row">NVDA: "saved" message read out</th>
+        <td>No</td>
+        <td>No (see step 5)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Automated scan</h2>
+  <p>
+    &#64;ngbracket/a11y-devtools ran axe {{ axeVersion }} on both pages in light and dark themes on {{ scanDate }}.
+    It also ran its keyboard checks, which look for controls that Tab can't reach and for focus traps. In the
+    screenshots the overlay is on: each label is a finding, named after the component that rendered it, and the
+    numbered line is the Tab order.
+  </p>
+
+  <div class="pair">
+    <figure>
+      <img
+        ngSrc="evidence/before-scan.png"
+        width="1280"
+        height="900"
+        alt="The Before page with the a11y-devtools overlay on. Red and orange labels mark findings on the row menu buttons, the status filter, the email addresses, the status pills and the column headers. The badge reads a11y on 31. The numbered Tab path goes from the search box to the status filter and then down the row menu buttons, past the column headers."
+      />
+      <figcaption>Before: 31 findings. The Tab path skips the column headers.</figcaption>
+    </figure>
+    <figure>
+      <img
+        ngSrc="evidence/after-scan.png"
+        width="1280"
+        height="900"
+        alt="The After page with the a11y-devtools overlay on. There are no finding labels and the badge reads a11y on 0. The numbered Tab path goes from the status filter to the search box, across each column header, then down the row menu buttons."
+      />
+      <figcaption>After: no findings. The Tab path includes every column header.</figcaption>
+    </figure>
+  </div>
+
+  <h3 id="findings-before">Findings on Before</h3>
+  <table aria-labelledby="findings-before">
+    <thead>
+      <tr>
+        <th scope="col">Rule</th>
+        <th scope="col">Impact</th>
+        <th scope="col">What it found</th>
+        <th scope="col" class="num">Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (rule of scanBefore.rules; track rule.id) {
+        <tr>
+          <th scope="row"><code>{{ rule.id }}</code></th>
+          <td>{{ rule.impact }}</td>
+          <td>{{ rule.help }}</td>
+          <td class="num">{{ rule.count }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <p>The scan found nothing on After, in light or dark.</p>
+  <p>
+    Automated checks cover only part of WCAG. Here the scan found the sort headers that Tab can't reach. It didn't
+    find that a keyboard user can't choose the menu items, that the dialog and the error are silent, or that focus is
+    lost when the dialog closes. The NVDA run below shows those.
+  </p>
+
+  <h3>Tab stops in the orders screen</h3>
+  <p>The Tab order as the scan computed it, with each stop's role and name. A screen reader may word these differently.</p>
+  <div class="pair">
+    <section aria-labelledby="stops-before">
+      <h4 id="stops-before">Before</h4>
+      <ol class="stops">
+        @for (stop of scanBefore.tabStops; track $index) {
+          <li>{{ stop.role }} @if (stop.name) {"{{ stop.name }}"} @else {<em>no name</em>}</li>
+        }
+      </ol>
+    </section>
+    <section aria-labelledby="stops-after">
+      <h4 id="stops-after">After</h4>
+      <ol class="stops">
+        @for (stop of scanAfter.tabStops; track $index) {
+          <li>{{ stop.role }} @if (stop.name) {"{{ stop.name }}"} @else {<em>no name</em>}</li>
+        }
+      </ol>
+    </section>
+  </div>
+
+  <h2>NVDA</h2>
+  <p>
+    NVDA ran the task in CI on Windows on {{ nvdaDate }}, against the live pages, in {{ nvdaBrowser }}. The keys went
+    to NVDA through Guidepup {{ guidepup }}, which also recorded what NVDA said. Typing the email address and moving
+    to Save were scripted, so steps 4 and 5 show only what Enter on Save caused. Where Tab couldn't reach a control
+    on Before, the run switched to NVDA's browse mode and moved there with the arrow keys.
+  </p>
+
+  @for (step of steps; track step.number) {
+    <h3>{{ step.number }}. {{ step.name }}</h3>
+    <div class="pair">
+      @for (side of step.sides; track side.label) {
+        <div class="step">
+          <h4>{{ side.label }}</h4>
+          <p>{{ side.run.outcome }}</p>
+          <p class="keys">Keys: {{ side.run.keys }}</p>
+          <p class="said">NVDA said:</p>
+          <pre class="spoken">{{ side.run.spoken }}</pre>
+        </div>
+      }
+    </div>
+  }
+
+  <h2>Reports</h2>
+  <ul>
+    <li><a href="evidence/scan.html">Automated scan, full report</a> (HTML, also as <a href="evidence/scan.md">Markdown</a> and <a href="evidence/scan.json">JSON</a>)</li>
+    <li><a href="evidence/nvda-before.md">NVDA transcript for Before</a> (Markdown, also as <a href="evidence/nvda-before.json">JSON</a>)</li>
+    <li><a href="evidence/nvda-after.md">NVDA transcript for After</a> (Markdown, also as <a href="evidence/nvda-after.json">JSON</a>)</li>
+  </ul>
+</article>

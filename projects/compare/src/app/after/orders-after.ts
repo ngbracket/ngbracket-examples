@@ -6,6 +6,7 @@ import type { NgbrSelectOption } from '@ngbracket/forms';
 import { NgbrConfirm, NgbrDialog, NgbrToast } from '@ngbracket/overlays';
 
 import { OrdersStore, STATUSES, formatDate, formatTotal, type Order } from '../data/orders';
+import { ResultsNote } from '../results-note';
 import { EditOrderDialog, type OrderChanges } from './edit-order-dialog';
 
 /**
@@ -17,7 +18,7 @@ import { EditOrderDialog, type OrderChanges } from './edit-order-dialog';
 @Component({
   selector: 'app-orders-after',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgbrDataTable, NgbrCellDef, NgbrRowMenu, NgbrFormField, NgbrSelect],
+  imports: [NgbrDataTable, NgbrCellDef, NgbrRowMenu, NgbrFormField, NgbrSelect, ResultsNote],
   template: `
     <div class="head">
       <h1>Orders</h1>
@@ -61,6 +62,8 @@ import { EditOrderDialog, type OrderChanges } from './edit-order-dialog';
         <ngbr-row-menu [ariaLabel]="'Actions for order ' + row.id" [actions]="actions().get(row.id) ?? []" />
       </ng-template>
     </ngbr-data-table>
+
+    <app-results-note version="after" />
   `,
   styles: [
     `

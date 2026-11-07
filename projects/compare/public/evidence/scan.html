@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automated accessibility scan</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff; --fg: #1a1a1a; --muted: #555555; --line: #d9d9d9; --panel: #f6f6f6;
+  --critical: #a4001d; --serious: #9a4400; --moderate: #6b5300; --minor: #1f4e9c;
+  --new: #0b6b3a; --link: #0b57d0;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161616; --fg: #ececec; --muted: #b5b5b5; --line: #3a3a3a; --panel: #222222;
+    --critical: #ff8a9a; --serious: #ffb77a; --moderate: #f0d060; --minor: #9cc3ff;
+    --new: #7ee0a8; --link: #9cc3ff;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 960px; margin: 0 auto; padding: 32px 16px 64px; }
+h1 { font-size: 1.6rem; margin: 0 0 4px; }
+h2 { font-size: 1.25rem; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+h3 { font-size: 1.05rem; margin: 0 0 4px; }
+.meta { color: var(--muted); margin: 0 0 12px; }
+.scope { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  margin: 0 0 24px; padding: 10px 14px; }
+a { color: var(--link); }
+code { font: 0.9em/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0 16px; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+th[scope="col"]:not(:first-child), td:not(:first-child) { text-align: right; }
+tfoot th, tfoot td { font-weight: 700; }
+.table-wrap { overflow-x: auto; }
+.component { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  margin: 12px 0; padding: 12px 14px 0; }
+.count { color: var(--muted); font-weight: 400; }
+a:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+ul.findings { list-style: none; margin: 0 0 12px; padding: 0; }
+ul.findings > li { padding: 10px 0; border-top: 1px solid var(--line); }
+.impact { font-weight: 700; text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.04em; }
+.impact-critical { color: var(--critical); } .impact-serious { color: var(--serious); }
+.impact-moderate { color: var(--moderate); } .impact-minor { color: var(--minor); }
+.new { font-weight: 700; color: var(--new); }
+.rule { font-weight: 600; }
+.via, .detail { color: var(--muted); font-size: 0.92em; }
+.detail { margin: 4px 0 0; }
+.ok { color: var(--new); font-weight: 600; }
+.error { color: var(--critical); font-weight: 600; }
+.diff { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  margin-top: 32px; padding: 4px 16px; }
+.diff h2 { border-top: 0; margin-top: 12px; padding-top: 0; }
+.walkthrough { margin: 20px 0 0; }
+.walkthrough ol { margin: 8px 0 0; padding-left: 2.5em; }
+.walkthrough li { padding: 2px 0; overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<main>
+<h1>Automated accessibility scan</h1>
+<p class="meta">Generated <time datetime="2026-11-07T18:46:52.122Z">2026-11-07T18:46:52.122Z</time> · @ngbracket/a11y-devtools report-mode</p>
+<p class="scope">Automated checks cover only part of WCAG. This is not a conformance report or a VPAT/ACR: manual keyboard, screen-reader and content review is still required. <a href="https://ngbracket.com/tools/a11y-devtools/docs/coverage">What automated checks cover</a>.</p>
+<section aria-labelledby="summary">
+<h2 id="summary">Summary</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Page</th><th scope="col">Distinct rules</th><th scope="col">Node-instances</th><th scope="col">Components</th></tr></thead>
+<tbody>
+<tr><th scope="row">/before</th><td>5</td><td>31</td><td>1</td></tr>
+<tr><th scope="row">/before (dark)</th><td>0</td><td>0</td><td>0</td></tr>
+<tr><th scope="row">/after</th><td>0</td><td>0</td><td>0</td></tr>
+<tr><th scope="row">/after (dark)</th><td>0</td><td>0</td><td>0</td></tr>
+</tbody>
+<tfoot><tr><th scope="row">Total</th><td>5</td><td>31</td><td>1</td></tr></tfoot>
+</table></div>
+</section>
+<section aria-labelledby="page-1">
+<h2 id="page-1">/before <code>http://localhost:4317/before</code></h2>
+<p>31 node-instance(s) across 5 distinct rule(s).</p>
+<div class="component">
+<h3>OrdersBefore <span class="count">— 31 issue(s)</span></h3>
+<ul class="findings">
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">button-name</span>: Buttons must have discernible text
+<p class="detail"><code>tr:nth-child(1) &gt; .actions &gt; .kebab</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI">Rule reference<span class="visually-hidden"> for button-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">button-name</span>: Buttons must have discernible text
+<p class="detail"><code>tr:nth-child(2) &gt; .actions &gt; .kebab</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI">Rule reference<span class="visually-hidden"> for button-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">button-name</span>: Buttons must have discernible text
+<p class="detail"><code>tr:nth-child(3) &gt; .actions &gt; .kebab</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI">Rule reference<span class="visually-hidden"> for button-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">button-name</span>: Buttons must have discernible text
+<p class="detail"><code>tr:nth-child(4) &gt; .actions &gt; .kebab</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI">Rule reference<span class="visually-hidden"> for button-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">button-name</span>: Buttons must have discernible text
+<p class="detail"><code>tr:nth-child(5) &gt; .actions &gt; .kebab</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI">Rule reference<span class="visually-hidden"> for button-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">button-name</span>: Buttons must have discernible text
+<p class="detail"><code>tr:nth-child(6) &gt; .actions &gt; .kebab</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI">Rule reference<span class="visually-hidden"> for button-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">button-name</span>: Buttons must have discernible text
+<p class="detail"><code>tr:nth-child(7) &gt; .actions &gt; .kebab</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI">Rule reference<span class="visually-hidden"> for button-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">button-name</span>: Buttons must have discernible text
+<p class="detail"><code>tr:nth-child(8) &gt; .actions &gt; .kebab</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI">Rule reference<span class="visually-hidden"> for button-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-critical">critical</span> · <span class="rule">select-name</span>: Select element must have an accessible name
+<p class="detail"><code>.status-filter</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/select-name?application=axeAPI">Rule reference<span class="visually-hidden"> for select-name</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(1) &gt; td:nth-child(2) &gt; .email</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(1) &gt; td:nth-child(5) &gt; .pill[data-status=&quot;Shipped&quot;]</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(2) &gt; td:nth-child(2) &gt; .email</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(2) &gt; td:nth-child(5) &gt; .pill[data-status=&quot;Shipped&quot;]</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(3) &gt; td:nth-child(2) &gt; .email</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>span[data-status=&quot;Cancelled&quot;]</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(4) &gt; td:nth-child(2) &gt; .email</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(4) &gt; td:nth-child(5) &gt; .pill[data-status=&quot;Shipped&quot;]</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(5) &gt; td:nth-child(2) &gt; .email</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(5) &gt; td:nth-child(5) &gt; .pill[data-status=&quot;Paid&quot;]</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(6) &gt; td:nth-child(2) &gt; .email</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(6) &gt; td:nth-child(5) &gt; .pill[data-status=&quot;Shipped&quot;]</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(7) &gt; td:nth-child(2) &gt; .email</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(7) &gt; td:nth-child(5) &gt; .pill[data-status=&quot;Paid&quot;]</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(8) &gt; td:nth-child(2) &gt; .email</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">color-contrast</span>: Elements must meet minimum color contrast ratio thresholds
+<p class="detail"><code>tr:nth-child(8) &gt; td:nth-child(5) &gt; .pill[data-status=&quot;Shipped&quot;]</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI">Rule reference<span class="visually-hidden"> for color-contrast</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">ngbr/unreachable-control</span>: Keyboard users can&#39;t reach this control: it has a click handler, but it isn&#39;t a native control and has no tabindex=&quot;0&quot;, so Tab skips it. Use a &lt;button&gt; or &lt;a href&gt;, or add tabindex=&quot;0&quot; and Enter/Space handling.
+<p class="detail"><code>span.sort</code>
+ · <a href="https://ngbracket.com/tools/a11y-devtools/docs/unreachable-control">Rule reference<span class="visually-hidden"> for ngbr/unreachable-control</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">ngbr/unreachable-control</span>: Keyboard users can&#39;t reach this control: it has a click handler, but it isn&#39;t a native control and has no tabindex=&quot;0&quot;, so Tab skips it. Use a &lt;button&gt; or &lt;a href&gt;, or add tabindex=&quot;0&quot; and Enter/Space handling.
+<p class="detail"><code>span.sort</code>
+ · <a href="https://ngbracket.com/tools/a11y-devtools/docs/unreachable-control">Rule reference<span class="visually-hidden"> for ngbr/unreachable-control</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">ngbr/unreachable-control</span>: Keyboard users can&#39;t reach this control: it has a click handler, but it isn&#39;t a native control and has no tabindex=&quot;0&quot;, so Tab skips it. Use a &lt;button&gt; or &lt;a href&gt;, or add tabindex=&quot;0&quot; and Enter/Space handling.
+<p class="detail"><code>span.sort</code>
+ · <a href="https://ngbracket.com/tools/a11y-devtools/docs/unreachable-control">Rule reference<span class="visually-hidden"> for ngbr/unreachable-control</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">ngbr/unreachable-control</span>: Keyboard users can&#39;t reach this control: it has a click handler, but it isn&#39;t a native control and has no tabindex=&quot;0&quot;, so Tab skips it. Use a &lt;button&gt; or &lt;a href&gt;, or add tabindex=&quot;0&quot; and Enter/Space handling.
+<p class="detail"><code>span.sort</code>
+ · <a href="https://ngbracket.com/tools/a11y-devtools/docs/unreachable-control">Rule reference<span class="visually-hidden"> for ngbr/unreachable-control</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-serious">serious</span> · <span class="rule">ngbr/unreachable-control</span>: Keyboard users can&#39;t reach this control: it has a click handler, but it isn&#39;t a native control and has no tabindex=&quot;0&quot;, so Tab skips it. Use a &lt;button&gt; or &lt;a href&gt;, or add tabindex=&quot;0&quot; and Enter/Space handling.
+<p class="detail"><code>span.sort</code>
+ · <a href="https://ngbracket.com/tools/a11y-devtools/docs/unreachable-control">Rule reference<span class="visually-hidden"> for ngbr/unreachable-control</span></a>
+</p>
+</li>
+<li>
+<span class="impact impact-minor">minor</span> · <span class="rule">empty-table-header</span>: Table header text should not be empty
+<p class="detail"><code>th:nth-child(6)</code>
+ · <a href="https://dequeuniversity.com/rules/axe/4.13/empty-table-header?application=axeAPI">Rule reference<span class="visually-hidden"> for empty-table-header</span></a>
+</p>
+</li>
+</ul>
+</div>
+<div class="walkthrough">
+<h3>Tab order walkthrough</h3>
+<p class="meta">Each tab stop in order, with its computed role, name and states. A computed approximation, not what any one screen reader announces.</p>
+<ol>
+<li>link &quot;Skip to main content&quot; — SkipLink</li>
+<li>link &quot;Orders: before and after&quot; — App</li>
+<li>link &quot;About&quot; — App</li>
+<li>link &quot;Before&quot; (current page) — App</li>
+<li>link &quot;After&quot; — App</li>
+<li>switch &quot;Dark mode&quot; (not checked) — ThemeToggle</li>
+<li>searchbox &quot;Search orders…&quot; — OrdersBefore</li>
+<li>combobox (no accessible name) — OrdersBefore</li>
+<li>button (no accessible name) — OrdersBefore</li>
+<li>button (no accessible name) — OrdersBefore</li>
+<li>button (no accessible name) — OrdersBefore</li>
+<li>button (no accessible name) — OrdersBefore</li>
+<li>button (no accessible name) — OrdersBefore</li>
+<li>button (no accessible name) — OrdersBefore</li>
+<li>button (no accessible name) — OrdersBefore</li>
+<li>button (no accessible name) — OrdersBefore</li>
+<li>button &quot;›&quot; — OrdersBefore</li>
+</ol>
+</div>
+</section>
+<section aria-labelledby="page-2">
+<h2 id="page-2">/before (dark) <code>http://localhost:4317/before</code></h2>
+<p class="meta">Dark mode: lists only issues that don’t also appear in light mode on this route.</p>
+<p class="ok">No automated violations found.</p>
+</section>
+<section aria-labelledby="page-3">
+<h2 id="page-3">/after <code>http://localhost:4317/after</code></h2>
+<p class="ok">No automated violations found.</p>
+<div class="walkthrough">
+<h3>Tab order walkthrough</h3>
+<p class="meta">Each tab stop in order, with its computed role, name and states. A computed approximation, not what any one screen reader announces.</p>
+<ol>
+<li>link &quot;Skip to main content&quot; — SkipLink</li>
+<li>link &quot;Orders: before and after&quot; — App</li>
+<li>link &quot;About&quot; — App</li>
+<li>link &quot;Before&quot; — App</li>
+<li>link &quot;After&quot; (current page) — App</li>
+<li>switch &quot;Dark mode&quot; (not checked) — ThemeToggle</li>
+<li>combobox &quot;Status&quot; (collapsed, has listbox popup) — NgbrSelect</li>
+<li>searchbox &quot;Search orders&quot; — NgbrDataTable</li>
+<li>button &quot;Order&quot; — NgbrDataTable</li>
+<li>button &quot;Customer&quot; — NgbrDataTable</li>
+<li>button &quot;Placed&quot; — NgbrDataTable</li>
+<li>button &quot;Total&quot; — NgbrDataTable</li>
+<li>button &quot;Status&quot; — NgbrDataTable</li>
+<li>button &quot;Actions for order 1031&quot; (collapsed, has menu popup) — NgbrRowMenu</li>
+<li>button &quot;Actions for order 1032&quot; (collapsed, has menu popup) — NgbrRowMenu</li>
+<li>button &quot;Actions for order 1033&quot; (collapsed, has menu popup) — NgbrRowMenu</li>
+<li>button &quot;Actions for order 1034&quot; (collapsed, has menu popup) — NgbrRowMenu</li>
+<li>button &quot;Actions for order 1035&quot; (collapsed, has menu popup) — NgbrRowMenu</li>
+<li>button &quot;Actions for order 1036&quot; (collapsed, has menu popup) — NgbrRowMenu</li>
+<li>button &quot;Actions for order 1037&quot; (collapsed, has menu popup) — NgbrRowMenu</li>
+<li>button &quot;Actions for order 1038&quot; (collapsed, has menu popup) — NgbrRowMenu</li>
+<li>button &quot;Next page&quot; — NgbrPaginator</li>
+<li>button &quot;Last page&quot; — NgbrPaginator</li>
+</ol>
+</div>
+</section>
+<section aria-labelledby="page-4">
+<h2 id="page-4">/after (dark) <code>http://localhost:4317/after</code></h2>
+<p class="meta">Dark mode: lists only issues that don’t also appear in light mode on this route.</p>
+<p class="ok">No automated violations found.</p>
+</section>
+</main>
+</body>
+</html>
