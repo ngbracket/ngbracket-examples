@@ -60,7 +60,7 @@
     "@ngbracket/command": "1.0.0",
     "@ngbracket/commerce": "1.7.1",
     "@ngbracket/dashboard": "1.6.3",
-    "@ngbracket/data-table": "1.6.0",
+    "@ngbracket/data-table": "1.7.0",
     "@ngbracket/editor": "1.0.0",
     "@ngbracket/form-kit": "1.0.1",
     "@ngbracket/forms": "1.6.3",
