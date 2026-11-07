@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { SCAN_AFTER, SCAN_BEFORE } from './results/evidence';
+
 const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projects/compare/src/app';
 
 /** What the two versions are and how to compare them. */
@@ -11,6 +13,11 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
   template: `
     <article class="intro">
       <h1>One orders screen, built twice</h1>
+      <p class="result">
+        The automated scan found {{ beforeFindings }} problems on Before and {{ afterFindings }} on After. On Before,
+        Tab can't reach the sort headers, and NVDA says nothing when the edit dialog opens or when the error appears. On
+        After, NVDA reads both. <a routerLink="/results">See the test results</a>.
+      </p>
       <p>
         Both versions of this screen show the same 24 orders, do the same jobs and work with a mouse. The difference is
         what happens with a keyboard or a screen reader.
@@ -51,11 +58,41 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
         both versions.
       </p>
 
+      <h2>What After saves</h2>
+      <p>To work like After, Before still needs:</p>
+      <ul>
+        <li>sort headers that Tab can reach, with the sort order read out</li>
+        <li>a row menu that works with the arrow keys and Enter</li>
+        <li>focus held inside the dialog, and returned to the row's menu button when it closes</li>
+        <li>the error linked to its field and read out</li>
+        <li>a "saved" message in a live region</li>
+        <li>names for the icon buttons and the status filter, and text colours with enough contrast</li>
+      </ul>
+      <p>
+        After gets all of these from the packs. We estimate that a developer who knows Angular can build After in about
+        two hours. Nobody timed it, so treat that as our estimate.
+      </p>
+
       <h2>Source</h2>
       <p>
         <a [href]="source + '/before'">The Before code</a> and <a [href]="source + '/after'">the After code</a> are on
         GitHub.
         The packs are at <a href="https://ngbracket.com/">ngbracket.com</a>, with a live demo for each one.
+      </p>
+
+      <h2>Use it on your own app</h2>
+      <p>
+        This screen uses the Data Table, Forms and Overlays packs. <a href="https://ngbracket.com/packs">See all the
+        packs</a>.
+      </p>
+      <p>
+        To run the same scan on your own app, use
+        <a href="https://ngbracket.com/tools/a11y-devtools">&#64;ngbracket/a11y-devtools</a>. It is free and open
+        source, and also runs in CI as a GitHub Action.
+      </p>
+      <p>
+        Or send us two or three pages of your Angular app and we'll scan them for free:
+        <a href="mailto:duncan@ngbracket.com">duncan&#64;ngbracket.com</a>.
       </p>
     </article>
   `,
@@ -78,12 +115,23 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
         color: var(--ngbr-color-accent, #0e7490);
         font-weight: 600;
       }
-      ol {
+      ol,
+      ul {
         padding-inline-start: 1.4em;
+      }
+      .result {
+        padding: 12px 16px;
+        font-weight: 600;
+        background: var(--ngbr-color-surface, #fff);
+        border: 1px solid var(--ngbr-color-border, #c4c7c9);
+        border-inline-start: 4px solid var(--ngbr-color-accent, #0e7490);
+        border-radius: 8px;
       }
     `,
   ],
 })
 export class Intro {
   protected readonly source = SOURCE;
+  protected readonly beforeFindings = SCAN_BEFORE.findings;
+  protected readonly afterFindings = SCAN_AFTER.findings === 0 ? 'none' : SCAN_AFTER.findings;
 }
