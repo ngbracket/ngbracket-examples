@@ -1,0 +1,145 @@
+// Same look as the "after" screen, built from the same theme tokens.
+.head h1 { margin: 0; font-size: 1.6rem; }
+.sub { margin: 4px 0 18px; color: var(--ngbr-color-text-muted, #475569); }
+
+.tools { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+.search,
+.status-filter,
+.field input,
+.field select {
+  padding: 8px 10px;
+  font: inherit;
+  color: var(--ngbr-color-text, #0f172a);
+  background: var(--ngbr-color-surface, #fff);
+  border: 1px solid var(--ngbr-color-border-control, #8a8f94);
+  border-radius: 8px;
+}
+.search { flex: 1 1 240px; }
+
+.card {
+  background: var(--ngbr-color-surface, #fff);
+  border: 1px solid var(--ngbr-color-border, #c4c7c9);
+  border-radius: 14px;
+  overflow-x: auto;
+}
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th,
+.tbl td {
+  padding: 10px 14px;
+  text-align: start;
+  border-bottom: 1px solid var(--ngbr-color-border, #c4c7c9);
+}
+.tbl th { font-size: 0.85rem; background: color-mix(in srgb, var(--ngbr-color-text, #0f172a) 4%, transparent); }
+.tbl .num { text-align: end; }
+.sort { cursor: pointer; user-select: none; }
+.id { font-weight: 600; }
+.email { display: block; font-size: 0.82rem; color: #9ca3af; }
+.empty { text-align: center; }
+
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 999px;
+  background: #94a3b8;
+}
+.pill[data-status='Paid'] { background: #22c55e; }
+.pill[data-status='Pending'] { background: #f59e0b; }
+.pill[data-status='Shipped'] { background: #3b82f6; }
+
+.actions { position: relative; width: 1%; }
+.kebab {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.kebab:hover { background: color-mix(in srgb, var(--ngbr-color-text, #0f172a) 8%, transparent); }
+.menu {
+  position: absolute;
+  inset-inline-end: 14px;
+  top: 40px;
+  z-index: 10;
+  min-width: 170px;
+  padding: 4px;
+  background: var(--ngbr-color-surface, #fff);
+  border: 1px solid var(--ngbr-color-border, #c4c7c9);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
+}
+.menu-item { padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+.menu-item:hover { background: color-mix(in srgb, var(--ngbr-color-text, #0f172a) 8%, transparent); }
+.menu-item--danger { color: var(--ngbr-color-danger, #b91c1c); }
+
+.pager { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 10px 14px; }
+.pager button {
+  min-width: 32px;
+  height: 32px;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--ngbr-color-border, #c4c7c9);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 0.45);
+}
+.modal {
+  width: min(440px, 100%);
+  padding: 20px 22px;
+  background: var(--ngbr-color-surface, #fff);
+  border-radius: 14px;
+}
+.modal__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.modal__head h2 { margin: 0; font-size: 1.2rem; }
+.close { font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.field { margin-bottom: 14px; }
+.field label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.9rem; }
+.field input,
+.field select { width: 100%; box-sizing: border-box; }
+.field--error input { border-color: var(--ngbr-color-danger, #b91c1c); }
+.error { margin-top: 4px; font-size: 0.85rem; color: var(--ngbr-color-danger, #b91c1c); }
+.modal__actions { display: flex; justify-content: flex-end; gap: 8px; }
+.btn {
+  padding: 9px 16px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ngbr-color-text, #0f172a);
+  background: var(--ngbr-color-surface, #fff);
+  border: 1px solid var(--ngbr-color-border, #cbd5e1);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn--primary {
+  color: var(--ngbr-color-accent-contrast, #fff);
+  background: var(--ngbr-color-accent, #0e7490);
+  border-color: transparent;
+}
+
+.toast {
+  position: fixed;
+  inset-inline-end: 20px;
+  bottom: 20px;
+  z-index: 200;
+  padding: 12px 16px;
+  color: var(--ngbr-color-surface, #fff);
+  background: var(--ngbr-color-text, #0f172a);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+}
