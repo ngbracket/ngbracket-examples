@@ -14,9 +14,10 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
     <article class="intro">
       <h1>One orders screen, built twice</h1>
       <p class="result">
-        The automated scan found {{ beforeFindings }} problems on Before and {{ afterFindings }} on After. On Before,
-        Tab can't reach the sort headers, and NVDA says nothing when the edit dialog opens or when the error appears. On
-        After, NVDA reads both. <a routerLink="/results">See the test results</a>.
+        The automated scan had {{ beforeFindings }} findings across {{ beforeRules }} rules on Before and
+        {{ afterFindings }} on After. Automated checks cover only part of WCAG, so NVDA ran the task on both in CI. On
+        Before, Tab skips the sort headers, and NVDA says nothing when the edit dialog opens or when the error appears.
+        On After, NVDA reads both. <a routerLink="/results">See the test results</a>.
       </p>
       <p>
         Both versions of this screen show the same 24 orders, do the same jobs and work with a mouse. The difference is
@@ -65,12 +66,16 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
         <li>a row menu that works with the arrow keys and Enter</li>
         <li>focus held inside the dialog, and returned to the row's menu button when it closes</li>
         <li>the error linked to its field and read out</li>
-        <li>a "saved" message in a live region</li>
-        <li>names for the icon buttons and the status filter, and text colours with enough contrast</li>
+        <li>a "saved" message in a status region</li>
       </ul>
       <p>
-        After gets all of these from the packs. We estimate that a developer who knows Angular can build After in about
-        two hours. Nobody timed it, so treat that as our estimate.
+        After gets these from the packs. In the NVDA run, NVDA read the focus return and skipped the "saved" message
+        (step 5 of the results). The names for the icon buttons and the status filter, and the text colours, are written
+        in After's own template and styles.
+      </p>
+      <p>
+        Our estimate is two hours or less for a developer who knows Angular to build After, not counting testing or
+        design. Nobody timed it.
       </p>
 
       <h2>Source</h2>
@@ -133,5 +138,6 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
 export class Intro {
   protected readonly source = SOURCE;
   protected readonly beforeFindings = SCAN_BEFORE.findings;
+  protected readonly beforeRules = SCAN_BEFORE.rules.length;
   protected readonly afterFindings = SCAN_AFTER.findings === 0 ? 'none' : SCAN_AFTER.findings;
 }
