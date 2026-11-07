@@ -37,7 +37,7 @@
     "deploy:kb": "ng build kb && wrangler deploy -c wrangler.kb.jsonc",
     "deploy:compare": "ng build compare && wrangler deploy -c wrangler.compare.jsonc",
     "deploy:a11y-demo": "npm run build:a11y-demo && wrangler deploy -c wrangler.a11y-demo.jsonc",
-    "deploy": "npm run deploy:admin && npm run deploy:storefront && npm run deploy:booking && npm run deploy:editor && npm run deploy:overlays && npm run deploy:kb && npm run deploy:a11y-demo",
+    "deploy": "npm run deploy:admin && npm run deploy:storefront && npm run deploy:booking && npm run deploy:editor && npm run deploy:overlays && npm run deploy:kb && npm run deploy:compare && npm run deploy:a11y-demo",
     "test": "ng test",
     "test:a11y:kb": "node scripts/a11y-kb.mjs",
     "evidence:compare": "node scripts/compare-evidence.mjs"

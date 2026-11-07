@@ -74,8 +74,17 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                        so the menu opens but a keyboard user can't pick anything. -->
                   <div class="menu" (click)="$event.stopPropagation()">
                     <div class="menu-item" (click)="edit(o)">Edit</div>
-                    <div class="menu-item" (click)="ship(o)">Mark as shipped</div>
-                    <div class="menu-item menu-item--danger" (click)="cancel(o)">Cancel order</div>
+                    <!-- NOTE: greyed out with a class only; nothing tells a screen reader it's unavailable. -->
+                    <div class="menu-item" [class.menu-item--off]="!canShip(o)" (click)="canShip(o) && ship(o)">
+                      Mark as shipped
+                    </div>
+                    <div
+                      class="menu-item menu-item--danger"
+                      [class.menu-item--off]="o.status === 'Cancelled'"
+                      (click)="o.status !== 'Cancelled' && askCancel(o)"
+                    >
+                      Cancel order
+                    </div>
                   </div>
                 }
               </td>
@@ -95,7 +104,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     </div>
 
     @if (editing(); as o) {
-      <!-- NOTE: a div that looks like a dialog. Focus stays behind it on the menu, Tab walks
+      <!-- NOTE: a div that looks like a dialog. Focus stays on the page behind it, Tab walks
            into the page underneath, Escape does nothing, and on close focus is lost. -->
       <div class="backdrop">
         <div class="modal">
@@ -132,6 +141,20 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       </div>
     }
 
+    @if (cancelling(); as o) {
+      <!-- NOTE: the same div dialog again. Nothing reads the question out or moves focus to it. -->
+      <div class="backdrop">
+        <div class="modal">
+          <h2>Cancel order #{{ o.id }}?</h2>
+          <p>{{ o.customer }}'s order for {{ money(o.total) }} will be marked as cancelled.</p>
+          <div class="modal__actions">
+            <button type="button" class="btn" (click)="cancelling.set(null)">Keep order</button>
+            <button type="button" class="btn btn--danger" (click)="cancel(o)">Cancel order</button>
+          </div>
+        </div>
+      </div>
+    }
+
     @if (toast(); as message) {
       <!-- NOTE: appears and fades out, but isn't a live region, so a screen reader never hears it. -->
       <div class="toast">{{ message }}</div>
@@ -152,6 +175,7 @@ export class OrdersBefore {
   protected readonly toast = signal<string | null>(null);
 
   protected readonly editing = signal<Order | null>(null);
+  protected readonly cancelling = signal<Order | null>(null);
   protected readonly draftCustomer = signal('');
   protected readonly draftEmail = signal('');
   protected readonly draftStatus = signal<OrderStatus>('Pending');
@@ -234,6 +258,15 @@ export class OrdersBefore {
     this.flash(`Order #${o.id} saved`);
   }
 
+  protected canShip(o: Order): boolean {
+    return o.status !== 'Shipped' && o.status !== 'Cancelled';
+  }
+
+  protected askCancel(o: Order): void {
+    this.menuFor.set(null);
+    this.cancelling.set(o);
+  }
+
   protected ship(o: Order): void {
     this.menuFor.set(null);
     this.store.update(o.id, { status: 'Shipped' });
@@ -241,7 +274,7 @@ export class OrdersBefore {
   }
 
   protected cancel(o: Order): void {
-    this.menuFor.set(null);
+    this.cancelling.set(null);
     this.store.update(o.id, { status: 'Cancelled' });
     this.flash(`Order #${o.id} cancelled`);
   }

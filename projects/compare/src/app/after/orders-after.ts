@@ -10,7 +10,7 @@ import { EditOrderDialog, type OrderChanges } from './edit-order-dialog';
 
 /**
  * AFTER: the same orders screen on NgBracket packs. @ngbracket/data-table
- * gives the search, sortable headers and pager; NgbrRowMenu the actions menu;
+ * gives the labelled search box, sortable headers and pager; NgbrRowMenu the actions menu;
  * @ngbracket/forms the status filter and the edit form; @ngbracket/overlays
  * the dialog, the confirm and the toasts.
  */
@@ -35,9 +35,10 @@ import { EditOrderDialog, type OrderChanges } from './edit-order-dialog';
       [columns]="columns"
       [pageSize]="8"
       [searchable]="true"
+      searchLabel="Search orders"
       [rowLabel]="rowLabel"
       [rowKey]="rowKey"
-      caption="Orders"
+      caption="Orders this month"
       emptyText="No orders match."
     >
       <ng-template ngbrCellDef="id" [ngbrCellDefData]="rows()" let-row>
@@ -71,9 +72,11 @@ import { EditOrderDialog, type OrderChanges } from './edit-order-dialog';
         margin: 4px 0 18px;
         color: var(--ngbr-color-text-muted, #475569);
       }
+      /* Above the table's sticky header, so the status list isn't drawn under it. */
       .tools {
+        position: relative;
+        z-index: 200;
         max-width: 240px;
-        margin-bottom: 6px;
       }
       .id {
         font-weight: 600;
@@ -175,7 +178,7 @@ export class OrdersAfter {
   private async cancel(o: Order): Promise<void> {
     const ok = await this.confirm.confirm({
       title: `Cancel order #${o.id}?`,
-      message: `${o.customer} will be told the order is cancelled.`,
+      message: `${o.customer}'s order for ${formatTotal(o.total)} will be marked as cancelled.`,
       confirmText: 'Cancel order',
       cancelText: 'Keep order',
       tone: 'danger',

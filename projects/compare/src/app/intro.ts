@@ -12,17 +12,17 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
     <article class="intro">
       <h1>One orders screen, built twice</h1>
       <p>
-        Both versions of this screen look the same, show the same 24 orders and work with a mouse. The difference is
+        Both versions of this screen show the same 24 orders, do the same jobs and work with a mouse. The difference is
         what happens with a keyboard or a screen reader.
       </p>
       <p>
         <a routerLink="/before">Before</a> is written the way many of us write a screen under a deadline. Sorting is a
-        click handler on a span. The row menu is a list of divs. The edit dialog is a styled div, and the "saved"
-        message appears and fades. Each shortcut has a comment in the source that says what it costs.
+        click handler on a span. The row menu is a list of divs. The edit dialog and the cancel question are styled
+        divs, and the "saved" message appears and fades. Each shortcut has a comment in the source that says what it costs.
       </p>
       <p>
         <a routerLink="/after">After</a> is the same screen on NgBracket packs. &#64;ngbracket/data-table gives the
-        search, sorting, pages and row menu. &#64;ngbracket/forms gives the status filter and the edit form.
+        search box, sorting, pages and row menu. &#64;ngbracket/forms gives the status filter and the edit form.
         &#64;ngbracket/overlays gives the dialog, the confirm and the messages.
       </p>
 
@@ -49,7 +49,8 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
 
       <h2>Source</h2>
       <p>
-        The code for <a [href]="source + '/before'">Before</a> and <a [href]="source + '/after'">After</a> is on GitHub.
+        <a [href]="source + '/before'">The Before code</a> and <a [href]="source + '/after'">the After code</a> are on
+        GitHub.
         The packs are at <a href="https://ngbracket.com/">ngbracket.com</a>, with a live demo for each one.
       </p>
     </article>

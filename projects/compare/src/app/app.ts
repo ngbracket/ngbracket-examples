@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter, skip } from 'rxjs';
 import { SkipLink, ThemeToggle } from 'shared';
 
 /**
@@ -25,7 +27,7 @@ import { SkipLink, ThemeToggle } from 'shared';
       </nav>
       <app-theme-toggle />
     </header>
-    <main id="main-content" tabindex="-1" class="page">
+    <main #main id="main-content" tabindex="-1" class="page">
       <router-outlet />
     </main>
   `,
@@ -94,4 +96,18 @@ import { SkipLink, ThemeToggle } from 'shared';
     `,
   ],
 })
-export class App {}
+export class App {
+  private readonly main = viewChild.required<ElementRef<HTMLElement>>('main');
+
+  constructor() {
+    // After moving between versions, put focus on the new page's content so a
+    // keyboard or screen reader user starts there, not on the link they used.
+    inject(Router)
+      .events.pipe(
+        filter((e) => e instanceof NavigationEnd),
+        skip(1),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.main().nativeElement.focus());
+  }
+}

@@ -78,6 +78,7 @@
 .menu-item { padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
 .menu-item:hover { background: color-mix(in srgb, var(--ngbr-color-text, #0f172a) 8%, transparent); }
 .menu-item--danger { color: var(--ngbr-color-danger, #b91c1c); }
+.menu-item--off { opacity: 0.45; cursor: default; }
 
 .pager { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 10px 14px; }
 .pager button {
@@ -116,6 +117,7 @@
 .field--error input { border-color: var(--ngbr-color-danger, #b91c1c); }
 .error { margin-top: 4px; font-size: 0.85rem; color: var(--ngbr-color-danger, #b91c1c); }
 .modal__actions { display: flex; justify-content: flex-end; gap: 8px; }
+.modal h2 { margin: 0 0 8px; font-size: 1.2rem; }
 .btn {
   padding: 9px 16px;
   font: inherit;
@@ -129,6 +131,12 @@
 .btn--primary {
   color: var(--ngbr-color-accent-contrast, #fff);
   background: var(--ngbr-color-accent, #0e7490);
+  border-color: transparent;
+}
+
+.btn--danger {
+  color: var(--ngbr-color-danger-contrast, #fff);
+  background: var(--ngbr-color-danger, #b91c1c);
   border-color: transparent;
 }
 

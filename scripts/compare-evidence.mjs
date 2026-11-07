@@ -2,12 +2,17 @@
  * Evidence for the `compare` example: runs the same checks on /before and
  * /after and prints the results side by side.
  *
- *   1. axe (WCAG 2.x A + AA) on each page in light and dark, plus with the edit
- *      dialog open where the keyboard can open it.
- *   2. The keyboard task from the About page, done with keys only: sort by
- *      Placed, open order 1035's actions menu, choose Edit, save with an empty
- *      email, fix it, save. It records what each step reached and where focus
- *      ends up.
+ *   1. axe (WCAG 2.x A + AA) on each page in light and dark, and again in
+ *      light with the edit dialog open.
+ *   2. The task from the About page: sort by Placed, open order 1035's
+ *      actions menu, choose Edit, save with an empty email, fix it, save.
+ *      Moving around and pressing buttons uses keys (Tab, Enter); typing in
+ *      a field uses fill(). Where the keyboard can't open the dialog, the
+ *      script opens it with the mouse and says so, so the dialog checks still
+ *      run. It records what each step reached and where focus ends up.
+ *
+ * The "live region" check only looks for the message inside a live region.
+ * Whether a screen reader reads it out is a separate check (NVDA in CI).
  *
  * Serves nothing itself. Start the app, then point BASE at it:
  *   npm run start:compare &                 # http://localhost:4307
@@ -83,19 +88,18 @@ async function keyboardTask(page) {
   await page.waitForTimeout(300);
   step('Reach the row menu button and open it', reachedMenu, `button: ${trigger}`);
 
-  // 3. Choose Edit with the keyboard.
-  await page.keyboard.press('ArrowDown');
-  await page.keyboard.press('ArrowUp');
+  // 3. Choose Edit: the open menu should have put focus on its first item.
   const onItem = await focused(page);
   const itemFocused = /menuitem/.test(onItem) && /Edit/.test(onItem);
   if (itemFocused) await page.keyboard.press('Enter');
   await page.waitForTimeout(500);
   const dialog = await page.evaluate(() => !!document.querySelector('[role=dialog], .modal'));
-  step('Choose Edit from the menu', itemFocused && dialog, `focus after arrow keys: ${onItem}`);
+  step('Choose Edit from the menu', itemFocused && dialog, `focus after opening the menu: ${onItem}`);
   if (!dialog) {
     // The keyboard can't get there; open the dialog with the mouse so the rest can be checked.
     await page.keyboard.press('Escape');
-    await page.locator('h1').click(); // /before's menu ignores Escape; an outside click closes it
+    // /before's menu ignores Escape; a click on the document closes it without moving focus.
+    await page.evaluate(() => document.body.click());
     const row = page.locator('tbody tr', { hasText: '#' + ROW });
     await row.getByRole('button').click();
     await page.getByText('Edit', { exact: true }).click();
@@ -105,7 +109,10 @@ async function keyboardTask(page) {
 
   // 4. Save with an empty email.
   const focusInDialog = await page.evaluate(() => !!document.activeElement?.closest('[role=dialog], .modal'));
-  step('Focus moves into the dialog', focusInDialog, await focused(page));
+  step('Focus moves into the dialog', focusInDialog, focusInDialog ? await focused(page) : 'focus is outside the dialog');
+  const inDialog = await axe(page);
+  step('axe with the dialog open finds nothing', inDialog.length === 0,
+    inDialog.length ? inDialog.map((f) => `${f.id} ${f.count}`).join(', ') : 'no violations');
   // By name where the field has one; /before's inputs have none, so fall back to position.
   const named = page.getByRole('textbox', { name: /Email/ });
   const email = (await named.count()) ? named : page.locator('.modal input').nth(1);
