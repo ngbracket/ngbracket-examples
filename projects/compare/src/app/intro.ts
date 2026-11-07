@@ -96,8 +96,9 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
         source, and also runs in CI as a GitHub Action.
       </p>
       <p>
-        Or send us two or three pages of your Angular app and we'll scan them for free:
-        <a href="mailto:duncan@ngbracket.com">duncan&#64;ngbracket.com</a>.
+        For the free scan of your own pages, email
+        <a href="mailto:duncan@ngbracket.com">duncan&#64;ngbracket.com</a>. You get back a short list of what we found and
+        how to fix each one.
       </p>
     </article>
   `,
