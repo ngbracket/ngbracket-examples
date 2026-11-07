@@ -19,6 +19,9 @@ interface StepPair {
   sides: { label: 'Before' | 'After'; run: NvdaStep & { outcome: string } }[];
 }
 
+const NO_OUTCOME = 'No summary written for this step yet. The transcript is below.';
+const MISSING_STEP: NvdaStep = { name: '', keys: 'none', spoken: '(this step is not in the Before run)', focus: '' };
+
 const longDate = (iso: string) =>
   new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -42,12 +45,17 @@ export class Results {
   protected readonly unnamedBefore = SCAN_BEFORE.tabStops.filter((s) => !s.name).length;
   protected readonly unnamedAfter = SCAN_AFTER.tabStops.filter((s) => !s.name).length;
 
-  protected readonly steps: StepPair[] = NVDA_AFTER.steps.map((after, i) => ({
-    number: i + 1,
-    name: after.name,
-    sides: [
-      { label: 'Before', run: { ...NVDA_BEFORE.steps[i], outcome: STEP_OUTCOMES[i].before } },
-      { label: 'After', run: { ...after, outcome: STEP_OUTCOMES[i].after } },
-    ],
-  }));
+  /** Steps are paired by name, so a refreshed run with a changed step can't borrow another step's text. */
+  protected readonly steps: StepPair[] = NVDA_AFTER.steps.map((after, i) => {
+    const before = NVDA_BEFORE.steps.find((s) => s.name === after.name) ?? MISSING_STEP;
+    const outcome = STEP_OUTCOMES[after.name] ?? { before: NO_OUTCOME, after: NO_OUTCOME };
+    return {
+      number: i + 1,
+      name: after.name,
+      sides: [
+        { label: 'Before', run: { ...before, outcome: outcome.before } },
+        { label: 'After', run: { ...after, outcome: outcome.after } },
+      ],
+    };
+  });
 }

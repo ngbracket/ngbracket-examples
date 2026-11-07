@@ -10,7 +10,8 @@
  *                  (target=compare), compare-before/after renamed
  *   *-scan.png     dev build, 1280x900, a11y-devtools overlay on
  *
- * Then check the hand-written outcomes in STEP_OUTCOMES still match.
+ * Then check the hand-written outcomes in STEP_OUTCOMES still match. They are
+ * keyed by step name; a step with no outcome shows as such on the page.
  */
 import nvdaAfterJson from '../../../public/evidence/nvda-after.json';
 import nvdaBeforeJson from '../../../public/evidence/nvda-before.json';
@@ -94,7 +95,7 @@ function summarise(route: string): ScanSummary {
   );
   const light = pages.find((p) => p.colorScheme === 'light');
   const tabStops = (light?.walkthrough?.steps ?? [])
-    .filter((s) => !['App', 'SkipLink', 'ThemeToggle'].includes(s.component))
+    .filter((s) => !['App', 'SkipLink', 'ThemeToggle', 'ResultsNote'].includes(s.component))
     .map((s) => ({ role: s.role, name: s.name }));
   return { findings: rules.reduce((n, r) => n + r.count, 0), rules, tabStops };
 }
@@ -102,29 +103,29 @@ function summarise(route: string): ScanSummary {
 export const SCAN_BEFORE = summarise('/before');
 export const SCAN_AFTER = summarise('/after');
 
-/** What each NVDA step shows, in one sentence per version. Same order as the steps. */
-export const STEP_OUTCOMES: { before: string; after: string }[] = [
-  {
+/** What each NVDA step shows, in one sentence per version, keyed by step name. */
+export const STEP_OUTCOMES: Record<string, { before: string; after: string }> = {
+  'Sort by Placed': {
     before:
       'Tab skips the column headers. NVDA reached "Placed" only in browse mode, read it as "clickable" and said nothing about the sort order.',
     after: 'Tab reaches the "Placed" header. After Enter, NVDA said "sorted ascending".',
   },
-  {
+  'Open the menu for order 1035': {
     before: 'The row menu buttons have no name, so NVDA read each one as "button". Enter opened the menu and NVDA said nothing.',
     after: 'NVDA read "Actions for order 1035, menu button". Enter opened the menu and NVDA read "Edit, 1 of 3".',
   },
-  {
+  'Choose Edit': {
     before:
       'Focus stayed on the menu button. NVDA reached "Edit" only in browse mode. The dialog opened and NVDA said nothing.',
     after: 'NVDA read the dialog name, "Edit order number 1035", and then the first field.',
   },
-  {
+  'Save with an empty email': {
     before: 'Red text under the field says "Enter a valid email address". Focus stayed on Save and NVDA said nothing.',
     after: 'Focus moved to the error summary and NVDA read "Enter an email address".',
   },
-  {
+  'Fix the email and save': {
     before: 'The dialog closed, focus was lost to the page body and NVDA said nothing.',
     after:
       'Focus went back to "Actions for order 1035" and NVDA read it. NVDA did not read the "Order #1035 saved" message: it read the focus move instead.',
   },
-];
+};

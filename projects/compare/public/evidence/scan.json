@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T18:46:52.122Z",
+  "generatedAt": "2026-11-07T18:54:01.555Z",
   "scope": "Automated checks cover only part of WCAG. This is not a conformance report or a VPAT/ACR: manual keyboard, screen-reader and content review is still required. https://ngbracket.com/tools/a11y-devtools/docs/coverage",
   "checks": {
     "axeVersion": "4.13.0",
@@ -32,7 +32,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(1) > .actions > .kebab",
-          "html": "<button _ngcontent-ng-c3193042549=\"\" type=\"button\" class=\"kebab\">"
+          "html": "<button _ngcontent-ng-c1169495903=\"\" type=\"button\" class=\"kebab\">"
         },
         {
           "id": "button-name",
@@ -46,7 +46,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(2) > .actions > .kebab",
-          "html": "<button _ngcontent-ng-c3193042549=\"\" type=\"button\" class=\"kebab\">"
+          "html": "<button _ngcontent-ng-c1169495903=\"\" type=\"button\" class=\"kebab\">"
         },
         {
           "id": "button-name",
@@ -60,7 +60,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(3) > .actions > .kebab",
-          "html": "<button _ngcontent-ng-c3193042549=\"\" type=\"button\" class=\"kebab\">"
+          "html": "<button _ngcontent-ng-c1169495903=\"\" type=\"button\" class=\"kebab\">"
         },
         {
           "id": "button-name",
@@ -74,7 +74,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(4) > .actions > .kebab",
-          "html": "<button _ngcontent-ng-c3193042549=\"\" type=\"button\" class=\"kebab\">"
+          "html": "<button _ngcontent-ng-c1169495903=\"\" type=\"button\" class=\"kebab\">"
         },
         {
           "id": "button-name",
@@ -88,7 +88,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(5) > .actions > .kebab",
-          "html": "<button _ngcontent-ng-c3193042549=\"\" type=\"button\" class=\"kebab\">"
+          "html": "<button _ngcontent-ng-c1169495903=\"\" type=\"button\" class=\"kebab\">"
         },
         {
           "id": "button-name",
@@ -102,7 +102,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(6) > .actions > .kebab",
-          "html": "<button _ngcontent-ng-c3193042549=\"\" type=\"button\" class=\"kebab\">"
+          "html": "<button _ngcontent-ng-c1169495903=\"\" type=\"button\" class=\"kebab\">"
         },
         {
           "id": "button-name",
@@ -116,7 +116,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(7) > .actions > .kebab",
-          "html": "<button _ngcontent-ng-c3193042549=\"\" type=\"button\" class=\"kebab\">"
+          "html": "<button _ngcontent-ng-c1169495903=\"\" type=\"button\" class=\"kebab\">"
         },
         {
           "id": "button-name",
@@ -130,7 +130,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(8) > .actions > .kebab",
-          "html": "<button _ngcontent-ng-c3193042549=\"\" type=\"button\" class=\"kebab\">"
+          "html": "<button _ngcontent-ng-c1169495903=\"\" type=\"button\" class=\"kebab\">"
         },
         {
           "id": "color-contrast",
@@ -144,7 +144,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(1) > td:nth-child(2) > .email",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"email\">amara@northwind.co.uk</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"email\">amara@northwind.co.uk</span>"
         },
         {
           "id": "color-contrast",
@@ -158,7 +158,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(1) > td:nth-child(5) > .pill[data-status=\"Shipped\"]",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
         },
         {
           "id": "color-contrast",
@@ -172,7 +172,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(2) > td:nth-child(2) > .email",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"email\">ben.hartley@fieldline.io</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"email\">ben.hartley@fieldline.io</span>"
         },
         {
           "id": "color-contrast",
@@ -186,7 +186,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(2) > td:nth-child(5) > .pill[data-status=\"Shipped\"]",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
         },
         {
           "id": "color-contrast",
@@ -200,7 +200,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(3) > td:nth-child(2) > .email",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"email\">chloe@atelier-m.fr</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"email\">chloe@atelier-m.fr</span>"
         },
         {
           "id": "color-contrast",
@@ -214,7 +214,7 @@
           ],
           "directives": [],
           "target": "span[data-status=\"Cancelled\"]",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"pill\" data-status=\"Cancelled\">Cancelled</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"pill\" data-status=\"Cancelled\">Cancelled</span>"
         },
         {
           "id": "color-contrast",
@@ -228,7 +228,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(4) > td:nth-child(2) > .email",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"email\">dev@patelandco.com</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"email\">dev@patelandco.com</span>"
         },
         {
           "id": "color-contrast",
@@ -242,7 +242,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(4) > td:nth-child(5) > .pill[data-status=\"Shipped\"]",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
         },
         {
           "id": "color-contrast",
@@ -256,7 +256,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(5) > td:nth-child(2) > .email",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"email\">erin.walsh@corkcraft.ie</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"email\">erin.walsh@corkcraft.ie</span>"
         },
         {
           "id": "color-contrast",
@@ -270,7 +270,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(5) > td:nth-child(5) > .pill[data-status=\"Paid\"]",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"pill\" data-status=\"Paid\">Paid</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"pill\" data-status=\"Paid\">Paid</span>"
         },
         {
           "id": "color-contrast",
@@ -284,7 +284,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(6) > td:nth-child(2) > .email",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"email\">fatima@souklane.ma</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"email\">fatima@souklane.ma</span>"
         },
         {
           "id": "color-contrast",
@@ -298,7 +298,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(6) > td:nth-child(5) > .pill[data-status=\"Shipped\"]",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
         },
         {
           "id": "color-contrast",
@@ -312,7 +312,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(7) > td:nth-child(2) > .email",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"email\">gareth@lloydjoinery.wales</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"email\">gareth@lloydjoinery.wales</span>"
         },
         {
           "id": "color-contrast",
@@ -326,7 +326,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(7) > td:nth-child(5) > .pill[data-status=\"Paid\"]",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"pill\" data-status=\"Paid\">Paid</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"pill\" data-status=\"Paid\">Paid</span>"
         },
         {
           "id": "color-contrast",
@@ -340,7 +340,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(8) > td:nth-child(2) > .email",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"email\">hana.sato@kumo.jp</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"email\">hana.sato@kumo.jp</span>"
         },
         {
           "id": "color-contrast",
@@ -354,7 +354,7 @@
           ],
           "directives": [],
           "target": "tr:nth-child(8) > td:nth-child(5) > .pill[data-status=\"Shipped\"]",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"pill\" data-status=\"Shipped\">Shipped</span>"
         },
         {
           "id": "empty-table-header",
@@ -368,7 +368,7 @@
           ],
           "directives": [],
           "target": "th:nth-child(6)",
-          "html": "<th _ngcontent-ng-c3193042549=\"\"></th>"
+          "html": "<th _ngcontent-ng-c1169495903=\"\"></th>"
         },
         {
           "id": "select-name",
@@ -382,7 +382,7 @@
           ],
           "directives": [],
           "target": ".status-filter",
-          "html": "<select _ngcontent-ng-c3193042549=\"\" class=\"status-filter\">"
+          "html": "<select _ngcontent-ng-c1169495903=\"\" class=\"status-filter\">"
         },
         {
           "id": "ngbr/unreachable-control",
@@ -397,7 +397,7 @@
           "directives": [],
           "target": "span.sort",
           "locator": "th:nth-child(1) > span.sort:nth-child(1)",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"sort\">Order </span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"sort\">Order </span>"
         },
         {
           "id": "ngbr/unreachable-control",
@@ -412,7 +412,7 @@
           "directives": [],
           "target": "span.sort",
           "locator": "th:nth-child(2) > span.sort:nth-child(1)",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"sort\">Customer </span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"sort\">Customer </span>"
         },
         {
           "id": "ngbr/unreachable-control",
@@ -427,7 +427,7 @@
           "directives": [],
           "target": "span.sort",
           "locator": "th:nth-child(3) > span.sort:nth-child(1)",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"sort\">Placed </span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"sort\">Placed </span>"
         },
         {
           "id": "ngbr/unreachable-control",
@@ -442,7 +442,7 @@
           "directives": [],
           "target": "span.sort",
           "locator": "th.num:nth-child(4) > span.sort:nth-child(1)",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"sort\">Total </span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"sort\">Total </span>"
         },
         {
           "id": "ngbr/unreachable-control",
@@ -457,7 +457,7 @@
           "directives": [],
           "target": "span.sort",
           "locator": "th:nth-child(5) > span.sort:nth-child(1)",
-          "html": "<span _ngcontent-ng-c3193042549=\"\" class=\"sort\">Status </span>"
+          "html": "<span _ngcontent-ng-c1169495903=\"\" class=\"sort\">Status </span>"
         }
       ],
       "walkthrough": {
@@ -516,6 +516,16 @@
           },
           {
             "order": 6,
+            "role": "link",
+            "name": "Results",
+            "description": "",
+            "states": [],
+            "tag": "a",
+            "positive": false,
+            "component": "App"
+          },
+          {
+            "order": 7,
             "role": "switch",
             "name": "Dark mode",
             "description": "",
@@ -527,7 +537,7 @@
             "component": "ThemeToggle"
           },
           {
-            "order": 7,
+            "order": 8,
             "role": "searchbox",
             "name": "Search orders…",
             "description": "",
@@ -537,22 +547,12 @@
             "component": "OrdersBefore"
           },
           {
-            "order": 8,
+            "order": 9,
             "role": "combobox",
             "name": "",
             "description": "",
             "states": [],
             "tag": "select",
-            "positive": false,
-            "component": "OrdersBefore"
-          },
-          {
-            "order": 9,
-            "role": "button",
-            "name": "",
-            "description": "",
-            "states": [],
-            "tag": "button",
             "positive": false,
             "component": "OrdersBefore"
           },
@@ -629,15 +629,35 @@
           {
             "order": 17,
             "role": "button",
+            "name": "",
+            "description": "",
+            "states": [],
+            "tag": "button",
+            "positive": false,
+            "component": "OrdersBefore"
+          },
+          {
+            "order": 18,
+            "role": "button",
             "name": "›",
             "description": "",
             "states": [],
             "tag": "button",
             "positive": false,
             "component": "OrdersBefore"
+          },
+          {
+            "order": 19,
+            "role": "link",
+            "name": "See the scan, screenshots and NVDA transcripts",
+            "description": "",
+            "states": [],
+            "tag": "a",
+            "positive": false,
+            "component": "ResultsNote"
           }
         ],
-        "total": 17
+        "total": 19
       }
     },
     {
@@ -712,6 +732,16 @@
           },
           {
             "order": 6,
+            "role": "link",
+            "name": "Results",
+            "description": "",
+            "states": [],
+            "tag": "a",
+            "positive": false,
+            "component": "App"
+          },
+          {
+            "order": 7,
             "role": "switch",
             "name": "Dark mode",
             "description": "",
@@ -723,7 +753,7 @@
             "component": "ThemeToggle"
           },
           {
-            "order": 7,
+            "order": 8,
             "role": "combobox",
             "name": "Status",
             "description": "",
@@ -736,7 +766,7 @@
             "component": "NgbrSelect"
           },
           {
-            "order": 8,
+            "order": 9,
             "role": "searchbox",
             "name": "Search orders",
             "description": "",
@@ -746,7 +776,7 @@
             "component": "NgbrDataTable"
           },
           {
-            "order": 9,
+            "order": 10,
             "role": "button",
             "name": "Order",
             "description": "",
@@ -756,7 +786,7 @@
             "component": "NgbrDataTable"
           },
           {
-            "order": 10,
+            "order": 11,
             "role": "button",
             "name": "Customer",
             "description": "",
@@ -766,7 +796,7 @@
             "component": "NgbrDataTable"
           },
           {
-            "order": 11,
+            "order": 12,
             "role": "button",
             "name": "Placed",
             "description": "",
@@ -776,7 +806,7 @@
             "component": "NgbrDataTable"
           },
           {
-            "order": 12,
+            "order": 13,
             "role": "button",
             "name": "Total",
             "description": "",
@@ -786,7 +816,7 @@
             "component": "NgbrDataTable"
           },
           {
-            "order": 13,
+            "order": 14,
             "role": "button",
             "name": "Status",
             "description": "",
@@ -796,7 +826,7 @@
             "component": "NgbrDataTable"
           },
           {
-            "order": 14,
+            "order": 15,
             "role": "button",
             "name": "Actions for order 1031",
             "description": "",
@@ -809,7 +839,7 @@
             "component": "NgbrRowMenu"
           },
           {
-            "order": 15,
+            "order": 16,
             "role": "button",
             "name": "Actions for order 1032",
             "description": "",
@@ -822,7 +852,7 @@
             "component": "NgbrRowMenu"
           },
           {
-            "order": 16,
+            "order": 17,
             "role": "button",
             "name": "Actions for order 1033",
             "description": "",
@@ -835,7 +865,7 @@
             "component": "NgbrRowMenu"
           },
           {
-            "order": 17,
+            "order": 18,
             "role": "button",
             "name": "Actions for order 1034",
             "description": "",
@@ -848,7 +878,7 @@
             "component": "NgbrRowMenu"
           },
           {
-            "order": 18,
+            "order": 19,
             "role": "button",
             "name": "Actions for order 1035",
             "description": "",
@@ -861,7 +891,7 @@
             "component": "NgbrRowMenu"
           },
           {
-            "order": 19,
+            "order": 20,
             "role": "button",
             "name": "Actions for order 1036",
             "description": "",
@@ -874,7 +904,7 @@
             "component": "NgbrRowMenu"
           },
           {
-            "order": 20,
+            "order": 21,
             "role": "button",
             "name": "Actions for order 1037",
             "description": "",
@@ -887,7 +917,7 @@
             "component": "NgbrRowMenu"
           },
           {
-            "order": 21,
+            "order": 22,
             "role": "button",
             "name": "Actions for order 1038",
             "description": "",
@@ -900,7 +930,7 @@
             "component": "NgbrRowMenu"
           },
           {
-            "order": 22,
+            "order": 23,
             "role": "button",
             "name": "Next page",
             "description": "",
@@ -910,7 +940,7 @@
             "component": "NgbrPaginator"
           },
           {
-            "order": 23,
+            "order": 24,
             "role": "button",
             "name": "Last page",
             "description": "",
@@ -918,9 +948,19 @@
             "tag": "button",
             "positive": false,
             "component": "NgbrPaginator"
+          },
+          {
+            "order": 25,
+            "role": "link",
+            "name": "See the scan, screenshots and NVDA transcripts",
+            "description": "",
+            "states": [],
+            "tag": "a",
+            "positive": false,
+            "component": "ResultsNote"
           }
         ],
-        "total": 23
+        "total": 25
       }
     },
     {

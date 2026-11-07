@@ -21,7 +21,7 @@ import { SCAN_AFTER, SCAN_BEFORE } from './results/evidence';
         <p>
           The automated scan found {{ afterFound }}. NVDA read the
           sort order, the menu, the dialog name and the error, and focus went back to the row's menu button after
-          saving. NVDA did not read the "saved" message.
+          saving. NVDA did not read the "saved" message. Automated checks cover only part of WCAG.
         </p>
       }
       <p><a routerLink="/results">See the scan, screenshots and NVDA transcripts</a></p>

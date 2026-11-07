@@ -1,6 +1,6 @@
 # Automated accessibility scan
 
-_Generated 2026-11-07T18:46:52.122Z · @ngbracket/a11y-devtools report-mode_
+_Generated 2026-11-07T18:54:01.555Z · @ngbracket/a11y-devtools report-mode_
 
 > Automated checks cover only part of WCAG. This is not a conformance report or a VPAT/ACR: manual keyboard, screen-reader and content review is still required. [What automated checks cover](https://ngbracket.com/tools/a11y-devtools/docs/coverage).
 
@@ -123,10 +123,10 @@ _Each tab stop in order, with its computed role, name and states. A computed app
 3. link "About" — App
 4. link "Before" (current page) — App
 5. link "After" — App
-6. switch "Dark mode" (not checked) — ThemeToggle
-7. searchbox "Search orders…" — OrdersBefore
-8. combobox (no accessible name) — OrdersBefore
-9. button (no accessible name) — OrdersBefore
+6. link "Results" — App
+7. switch "Dark mode" (not checked) — ThemeToggle
+8. searchbox "Search orders…" — OrdersBefore
+9. combobox (no accessible name) — OrdersBefore
 10. button (no accessible name) — OrdersBefore
 11. button (no accessible name) — OrdersBefore
 12. button (no accessible name) — OrdersBefore
@@ -134,7 +134,9 @@ _Each tab stop in order, with its computed role, name and states. A computed app
 14. button (no accessible name) — OrdersBefore
 15. button (no accessible name) — OrdersBefore
 16. button (no accessible name) — OrdersBefore
-17. button "›" — OrdersBefore
+17. button (no accessible name) — OrdersBefore
+18. button "›" — OrdersBefore
+19. link "See the scan, screenshots and NVDA transcripts" — ResultsNote
 
 ## /before (dark) — `http://localhost:4317/before`
 
@@ -155,24 +157,26 @@ _Each tab stop in order, with its computed role, name and states. A computed app
 3. link "About" — App
 4. link "Before" — App
 5. link "After" (current page) — App
-6. switch "Dark mode" (not checked) — ThemeToggle
-7. combobox "Status" (collapsed, has listbox popup) — NgbrSelect
-8. searchbox "Search orders" — NgbrDataTable
-9. button "Order" — NgbrDataTable
-10. button "Customer" — NgbrDataTable
-11. button "Placed" — NgbrDataTable
-12. button "Total" — NgbrDataTable
-13. button "Status" — NgbrDataTable
-14. button "Actions for order 1031" (collapsed, has menu popup) — NgbrRowMenu
-15. button "Actions for order 1032" (collapsed, has menu popup) — NgbrRowMenu
-16. button "Actions for order 1033" (collapsed, has menu popup) — NgbrRowMenu
-17. button "Actions for order 1034" (collapsed, has menu popup) — NgbrRowMenu
-18. button "Actions for order 1035" (collapsed, has menu popup) — NgbrRowMenu
-19. button "Actions for order 1036" (collapsed, has menu popup) — NgbrRowMenu
-20. button "Actions for order 1037" (collapsed, has menu popup) — NgbrRowMenu
-21. button "Actions for order 1038" (collapsed, has menu popup) — NgbrRowMenu
-22. button "Next page" — NgbrPaginator
-23. button "Last page" — NgbrPaginator
+6. link "Results" — App
+7. switch "Dark mode" (not checked) — ThemeToggle
+8. combobox "Status" (collapsed, has listbox popup) — NgbrSelect
+9. searchbox "Search orders" — NgbrDataTable
+10. button "Order" — NgbrDataTable
+11. button "Customer" — NgbrDataTable
+12. button "Placed" — NgbrDataTable
+13. button "Total" — NgbrDataTable
+14. button "Status" — NgbrDataTable
+15. button "Actions for order 1031" (collapsed, has menu popup) — NgbrRowMenu
+16. button "Actions for order 1032" (collapsed, has menu popup) — NgbrRowMenu
+17. button "Actions for order 1033" (collapsed, has menu popup) — NgbrRowMenu
+18. button "Actions for order 1034" (collapsed, has menu popup) — NgbrRowMenu
+19. button "Actions for order 1035" (collapsed, has menu popup) — NgbrRowMenu
+20. button "Actions for order 1036" (collapsed, has menu popup) — NgbrRowMenu
+21. button "Actions for order 1037" (collapsed, has menu popup) — NgbrRowMenu
+22. button "Actions for order 1038" (collapsed, has menu popup) — NgbrRowMenu
+23. button "Next page" — NgbrPaginator
+24. button "Last page" — NgbrPaginator
+25. link "See the scan, screenshots and NVDA transcripts" — ResultsNote
 
 ## /after (dark) — `http://localhost:4317/after`
 

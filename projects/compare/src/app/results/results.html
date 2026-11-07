@@ -47,7 +47,8 @@
   <h2>Automated scan</h2>
   <p>
     &#64;ngbracket/a11y-devtools ran axe {{ axeVersion }} on both pages in light and dark themes on {{ scanDate }}.
-    It also ran its keyboard checks, which look for controls that Tab can't reach and for focus traps. In the
+    The dark pass lists only problems that light doesn't
+    already have, and found none on either page. It also ran its keyboard checks, which look for controls that Tab can't reach and for focus traps. In the
     screenshots the overlay is on: each label is a finding, named after the component that rendered it, and the
     numbered line is the Tab order.
   </p>
@@ -60,7 +61,7 @@
         height="900"
         alt="The Before page with the a11y-devtools overlay on. Red and orange labels mark findings on the row menu buttons, the status filter, the email addresses, the status pills and the column headers. The badge reads a11y on 31. The numbered Tab path goes from the search box to the status filter and then down the row menu buttons, past the column headers."
       />
-      <figcaption>Before: 31 findings. The Tab path skips the column headers.</figcaption>
+      <figcaption>Before: {{ scanBefore.findings }} findings. The Tab path skips the column headers.</figcaption>
     </figure>
     <figure>
       <img
@@ -73,8 +74,9 @@
     </figure>
   </div>
 
-  <h3 id="findings-before">Findings on Before</h3>
-  <table aria-labelledby="findings-before">
+  <h3>Findings on Before</h3>
+  <table>
+    <caption>Findings on Before, by rule</caption>
     <thead>
       <tr>
         <th scope="col">Rule</th>
@@ -125,7 +127,8 @@
   <h2>NVDA</h2>
   <p>
     NVDA ran the task in CI on Windows on {{ nvdaDate }}, against the live pages, in {{ nvdaBrowser }}. The keys went
-    to NVDA through Guidepup {{ guidepup }}, which also recorded what NVDA said. Typing the email address and moving
+    to NVDA through Guidepup {{ guidepup }}, which also recorded what NVDA said. The short summary under each version was added
+    after this run and sits below the table, so it doesn't change the steps. Typing the email address and moving
     to Save were scripted, so steps 4 and 5 show only what Enter on Save caused. Where Tab couldn't reach a control
     on Before, the run switched to NVDA's browse mode and moved there with the arrow keys.
   </p>
