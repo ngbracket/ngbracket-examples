@@ -19,3 +19,13 @@ body {
   margin: 0;
   font-family: var(--ngbr-font, system-ui, sans-serif);
 }
+
+/* The page heading takes focus after navigation (see app.ts). Show a ring when
+   that came from the keyboard. */
+#main-content h1:focus {
+  outline: none;
+}
+#main-content h1:focus-visible {
+  outline: 2px solid var(--ngbr-color-accent, #0e7490);
+  outline-offset: 4px;
+}

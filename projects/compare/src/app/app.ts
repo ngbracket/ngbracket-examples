@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Injector, afterNextRender, inject, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, skip } from 'rxjs';
@@ -98,16 +98,32 @@ import { SkipLink, ThemeToggle } from 'shared';
 })
 export class App {
   private readonly main = viewChild.required<ElementRef<HTMLElement>>('main');
+  private readonly injector = inject(Injector);
 
   constructor() {
-    // After moving between versions, put focus on the new page's content so a
-    // keyboard or screen reader user starts there, not on the link they used.
+    // After moving between versions, put focus on the new page's heading, so a
+    // screen reader reads "Orders, heading level 1" and the next Tab starts in
+    // the page, not on the link that was used. Falls back to <main>.
     inject(Router)
       .events.pipe(
         filter((e) => e instanceof NavigationEnd),
         skip(1),
         takeUntilDestroyed(),
       )
-      .subscribe(() => this.main().nativeElement.focus());
+      .subscribe(() =>
+        afterNextRender(
+          () => {
+            const main = this.main().nativeElement;
+            const heading = main.querySelector('h1');
+            if (heading) {
+              heading.setAttribute('tabindex', '-1');
+              heading.focus();
+            } else {
+              main.focus();
+            }
+          },
+          { injector: this.injector },
+        ),
+      );
   }
 }
