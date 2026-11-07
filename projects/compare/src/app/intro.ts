@@ -20,6 +20,10 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
         On After, NVDA reads both. <a routerLink="/results">See the test results</a>.
       </p>
       <p>
+        Want the same scan on two or three pages of your own Angular app? Email
+        <a href="mailto:duncan@ngbracket.com">duncan&#64;ngbracket.com</a> and we'll do it for free.
+      </p>
+      <p>
         Both versions of this screen show the same 24 orders, do the same jobs and work with a mouse. The difference is
         what happens with a keyboard or a screen reader.
       </p>
@@ -72,10 +76,6 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
         After gets these from the packs. In the NVDA run, NVDA read the focus return and skipped the "saved" message
         (step 5 of the results). The names for the icon buttons and the status filter, and the text colours, are written
         in After's own template and styles.
-      </p>
-      <p>
-        Our estimate is two hours or less for a developer who knows Angular to build After, not counting testing or
-        design. Nobody timed it.
       </p>
 
       <h2>Source</h2>
