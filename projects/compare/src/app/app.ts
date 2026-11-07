@@ -23,6 +23,7 @@ import { SkipLink, ThemeToggle } from 'shared';
           </li>
           <li><a routerLink="/before" routerLinkActive="is-active" ariaCurrentWhenActive="page">Before</a></li>
           <li><a routerLink="/after" routerLinkActive="is-active" ariaCurrentWhenActive="page">After</a></li>
+          <li><a routerLink="/results" routerLinkActive="is-active" ariaCurrentWhenActive="page">Results</a></li>
         </ul>
       </nav>
       <app-theme-toggle />

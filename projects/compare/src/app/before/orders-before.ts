@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 
+import { ResultsNote } from '../results-note';
 import { OrdersStore, STATUSES, formatDate, formatTotal, type Order, type OrderStatus } from '../data/orders';
 
 type SortKey = 'id' | 'customer' | 'placed' | 'total' | 'status';
@@ -17,6 +18,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 @Component({
   selector: 'app-orders-before',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ResultsNote],
   host: { '(document:click)': 'menuFor.set(null)' },
   template: `
     <div class="head">
@@ -154,6 +156,8 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         </div>
       </div>
     }
+
+    <app-results-note version="before" />
 
     @if (toast(); as message) {
       <!-- NOTE: appears and fades out, but isn't a live region, so a screen reader never hears it. -->

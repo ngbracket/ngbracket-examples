@@ -1,0 +1,39 @@
+{
+  "route": "/after",
+  "url": "https://compare.ngbracket.com/after",
+  "date": "2026-11-07",
+  "browser": "Chromium 156.0.8078.4",
+  "guidepup": "0.39.0",
+  "steps": [
+    {
+      "name": "Sort by Placed",
+      "keys": "Tab ×5, Enter",
+      "spoken": "Status, combo box, All statuses, collapsed, opens list\nSearch orders, edit, Search..., blank\nOrders this month, table, with 9 rows and 6 columns, row 1, column 1, Order, button\ncolumn 2, Customer, button\ncolumn 3, Placed, button\nsorted ascending",
+      "focus": "button text=\"Placed▲\""
+    },
+    {
+      "name": "Open the menu for order 1035",
+      "keys": "Tab ×7, Enter",
+      "spoken": "column 4, Total, button\ncolumn 5, Status, button\nrow 2, Actions, column 6, Actions for order 1031, menu button, collapsed, sub Menu\nrow 3, Actions for order 1032, menu button, collapsed, sub Menu\nrow 4, Actions for order 1033, menu button, collapsed, sub Menu\nrow 5, Actions for order 1034, menu button, collapsed, sub Menu\nrow 6, Actions for order 1035, menu button, collapsed, sub Menu\nEdit, 1 of 3",
+      "focus": "button role=menuitem text=\"Edit\""
+    },
+    {
+      "name": "Choose Edit",
+      "keys": "Enter",
+      "spoken": "Edit order number 1035, dialog. form landmark. Edit order number 1035, dialog. form landmark. Customer, edit, required, Erin Walsh",
+      "focus": "input"
+    },
+    {
+      "name": "Save with an empty email",
+      "keys": "Enter on Save",
+      "spoken": "Please fix the following, heading, level 2, list, bullet, Enter an email address. Please fix the following, alert. Please fix the following, heading, level 2. list. level 1, list item, 1 of 1. Enter an email address, link",
+      "focus": "div role=alert text=\"Please fix the followingEnter an email address\""
+    },
+    {
+      "name": "Fix the email and save",
+      "keys": "Enter on Save",
+      "spoken": "main landmark, Orders this month, table, with 9 rows and 6 columns, row 6, Actions, column 6, Actions for order 1035, menu button, collapsed, sub Menu",
+      "focus": "button role=button aria-label=\"Actions for order 1035\" text=\"⋮\""
+    }
+  ]
+}

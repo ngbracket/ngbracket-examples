@@ -1,0 +1,116 @@
+.results {
+  line-height: 1.6;
+}
+h1 {
+  margin: 0 0 12px;
+  font-size: 1.8rem;
+  line-height: 1.25;
+}
+h2 {
+  margin: 40px 0 8px;
+  font-size: 1.35rem;
+}
+h3 {
+  margin: 28px 0 8px;
+  font-size: 1.1rem;
+}
+h4 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+p,
+.lead {
+  max-width: 72ch;
+}
+a {
+  color: var(--ngbr-color-accent, #0e7490);
+  font-weight: 600;
+}
+
+table {
+  width: 100%;
+  margin: 12px 0;
+  border-collapse: collapse;
+  background: var(--ngbr-color-surface, #fff);
+}
+caption {
+  padding-bottom: 6px;
+  font-weight: 700;
+  text-align: start;
+}
+th,
+td {
+  padding: 8px 12px;
+  text-align: start;
+  vertical-align: top;
+  border-bottom: 1px solid var(--ngbr-color-border, #c4c7c9);
+}
+thead th {
+  font-size: 0.9rem;
+}
+tbody th {
+  font-weight: 600;
+}
+.num {
+  text-align: end;
+}
+/* Rule ids such as ngbr/unreachable-control would otherwise set the column width on a phone. */
+code {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 480px) {
+  th,
+  td {
+    padding: 6px 6px;
+  }
+}
+
+/* Before and After side by side; one column on narrow screens. */
+.pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 16px;
+}
+figure {
+  margin: 0;
+}
+figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--ngbr-color-border, #c4c7c9);
+  border-radius: 8px;
+}
+figcaption {
+  margin-top: 6px;
+  font-size: 0.95rem;
+}
+
+.stops {
+  margin: 0;
+  padding-inline-start: 2em;
+  font-size: 0.95rem;
+}
+
+.step {
+  padding: 12px 14px;
+  background: var(--ngbr-color-surface, #fff);
+  border: 1px solid var(--ngbr-color-border, #c4c7c9);
+  border-radius: 8px;
+}
+.step p {
+  margin: 0 0 8px;
+}
+.keys,
+.said {
+  font-size: 0.9rem;
+  color: var(--ngbr-color-text-muted, #475569);
+}
+.spoken {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: color-mix(in srgb, var(--ngbr-color-text, #1a1c1e) 5%, transparent);
+  border-radius: 6px;
+}
