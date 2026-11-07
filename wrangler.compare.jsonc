@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ngbr-example-compare",
+  "compatibility_date": "2026-06-14",
+  "assets": {
+    "directory": "dist/compare/browser",
+    "not_found_handling": "single-page-application",
+  },
+  "routes": [{ "pattern": "compare.ngbracket.com", "custom_domain": true }],
+}
