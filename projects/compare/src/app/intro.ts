@@ -21,7 +21,7 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
       </p>
       <p>
         Want the same scan on two or three pages of your own Angular app? Email
-        <a href="mailto:duncan@ngbracket.com">duncan&#64;ngbracket.com</a> and we'll do it for free.
+        <a href="mailto:support@ngbracket.com">support&#64;ngbracket.com</a> and we'll do it for free.
       </p>
       <p>
         Both versions of this screen show the same 24 orders, do the same jobs and work with a mouse. The difference is
@@ -97,7 +97,7 @@ const SOURCE = 'https://github.com/ngbracket/ngbracket-examples/tree/main/projec
       </p>
       <p>
         For the free scan of your own pages, email
-        <a href="mailto:duncan@ngbracket.com">duncan&#64;ngbracket.com</a>. You get back a short list of what we found and
+        <a href="mailto:support@ngbracket.com">support&#64;ngbracket.com</a>. You get back a short list of what we found and
         how to fix each one.
       </p>
     </article>
