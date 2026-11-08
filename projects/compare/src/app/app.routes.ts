@@ -11,7 +11,7 @@ export const routes: Routes = [
   },
   {
     path: 'before',
-    title: 'Before: its own table, menu and dialog',
+    title: 'Before: own table, menu and dialog',
     providers: [OrdersStore],
     loadComponent: () => import('./before/orders-before').then((m) => m.OrdersBefore),
   },
