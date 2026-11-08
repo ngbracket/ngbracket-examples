@@ -11,13 +11,13 @@ export const routes: Routes = [
   },
   {
     path: 'before',
-    title: 'Before: orders built by hand',
+    title: 'Before: its own table, menu and dialog',
     providers: [OrdersStore],
     loadComponent: () => import('./before/orders-before').then((m) => m.OrdersBefore),
   },
   {
     path: 'after',
-    title: 'After: orders built with NgBracket',
+    title: 'After: NgBracket components',
     providers: [OrdersStore],
     loadComponent: () => import('./after/orders-after').then((m) => m.OrdersAfter),
   },
