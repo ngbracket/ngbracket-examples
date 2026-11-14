@@ -75,10 +75,7 @@ import { EditOrderDialog, type OrderChanges } from './edit-order-dialog';
         margin: 4px 0 18px;
         color: var(--ngbr-color-text-muted, #475569);
       }
-      /* Above the table's sticky header, so the status list isn't drawn under it. */
       .tools {
-        position: relative;
-        z-index: 200;
         max-width: 240px;
       }
       .id {
