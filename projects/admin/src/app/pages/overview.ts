@@ -6,6 +6,7 @@ import {
   NgbrStatCard,
   NgbrSparkline,
   NgbrCard,
+  NgbrProgress,
 } from '@ngbracket/dashboard';
 // Interactive, keyboard-navigable charts (arrow keys across data points +
 // live-region announcements) — the dashboard pack's own charts are static.
@@ -21,6 +22,7 @@ import {
   SIGNUP_QUARTERS,
   SIGNUP_BARS,
   PLAN_BREAKDOWN,
+  MONTHLY_TARGETS,
 } from '../data/admin-data';
 
 /** Dashboard overview: KPI stat cards + line/bar/donut charts. */
@@ -33,6 +35,7 @@ import {
     NgbrStatCard,
     NgbrSparkline,
     NgbrCard,
+    NgbrProgress,
     NgbrLineChart,
     NgbrBarChart,
     NgbrDonutChart,
@@ -100,6 +103,18 @@ import {
           [data]="planBreakdown"
         />
       </ngbr-card>
+
+      <ngbr-card heading="Monthly targets" [headingLevel]="2">
+        <ul class="targets">
+          @for (t of targets; track t.label) {
+            <li>
+              <span class="targets__label" aria-hidden="true">{{ t.label }}</span>
+              <span class="targets__detail">{{ t.detail }}</span>
+              <ngbr-progress shape="wavy" [value]="t.value" [max]="t.max" [label]="t.label" [showValue]="true" />
+            </li>
+          }
+        </ul>
+      </ngbr-card>
     </div>
   `,
   styles: [
@@ -146,6 +161,28 @@ import {
       .charts ngbr-card:first-child {
         grid-column: 1 / -1;
       }
+      .targets {
+        display: grid;
+        gap: 16px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .targets li {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 4px 12px;
+      }
+      .targets__label {
+        font-weight: 600;
+      }
+      .targets__detail {
+        color: var(--ngbr-color-text-muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .targets ngbr-progress {
+        grid-column: 1 / -1;
+      }
     `,
   ],
 })
@@ -170,6 +207,7 @@ export class Overview {
   protected readonly quarters = SIGNUP_QUARTERS;
   protected readonly signupBars = SIGNUP_BARS;
   protected readonly planBreakdown = PLAN_BREAKDOWN;
+  protected readonly targets = MONTHLY_TARGETS;
 
   private readonly tourSteps: readonly NgbrTourStep[] = [
     {
