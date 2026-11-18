@@ -46,6 +46,21 @@ export const PLAN_BREAKDOWN: NgbrChartDatum[] = [
   { label: 'Enterprise', value: 54 },
 ];
 
+/** Progress towards this month's targets. */
+export interface MonthlyTarget {
+  label: string;
+  /** Shown beside the bar, e.g. "£48k of £60k". */
+  detail: string;
+  value: number;
+  max: number;
+}
+
+export const MONTHLY_TARGETS: MonthlyTarget[] = [
+  { label: 'Revenue', detail: '£48k of £60k', value: 48, max: 60 },
+  { label: 'New customers', detail: '57 of 120', value: 57, max: 120 },
+  { label: 'Tickets closed', detail: '186 of 200', value: 186, max: 200 },
+];
+
 const FIRST = ['Ada', 'Alan', 'Grace', 'Linus', 'Margaret', 'Dennis', 'Barbara', 'Ken', 'Radia', 'Tim', 'Anita', 'Guido', 'Katherine', 'Edsger', 'Hedy', 'James', 'Sophie', 'Omar', 'Priya', 'Marcus', 'Yara', 'Sven', 'Chen', 'Noah'];
 const LAST = ['Lovelace', 'Turing', 'Hopper', 'Torvalds', 'Hamilton', 'Ritchie', 'Liskov', 'Thompson', 'Perlman', 'Berners-Lee', 'Borg', 'van Rossum', 'Johnson', 'Dijkstra', 'Lamarr', 'Gosling', 'Wilson', 'Haddad', 'Patel', 'Cole', 'Nasser', 'Eriksson', 'Wei', 'Bennett'];
 const PLANS: Customer['plan'][] = ['Starter', 'Pro', 'Team', 'Enterprise'];
