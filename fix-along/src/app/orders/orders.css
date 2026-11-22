@@ -14,9 +14,18 @@
   background: var(--surface);
   color: var(--text);
   font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
-.filter {
+.field {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.filter-field {
   flex: 1 1 16rem;
 }
 

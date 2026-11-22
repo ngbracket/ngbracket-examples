@@ -1,27 +1,44 @@
 <h1 class="page-title">Orders</h1>
 
 <div class="toolbar">
-  <input
-    #filter
-    class="filter"
-    type="search"
-    placeholder="Filter by customer"
-    [value]="query()"
-    (input)="setQuery(filter.value)"
-  />
-  <select #sortSelect class="sort" [value]="sort()" (change)="setSort(sortSelect.value)">
-    <option value="newest">Newest first</option>
-    <option value="oldest">Oldest first</option>
-    <option value="total">Highest total</option>
-  </select>
+  <div class="field filter-field">
+    <label for="order-filter">Filter by customer</label>
+    <input
+      #filter
+      id="order-filter"
+      class="filter"
+      type="search"
+      [value]="query()"
+      (input)="setQuery(filter.value)"
+    />
+  </div>
+  <div class="field">
+    <label for="order-sort">Sort</label>
+    <select
+      #sortSelect
+      id="order-sort"
+      class="sort"
+      [value]="sort()"
+      (change)="setSort(sortSelect.value)"
+    >
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="total">Highest total</option>
+    </select>
+  </div>
 </div>
 
 <div class="table-wrap">
-  <table>
+  <table aria-label="Orders">
     <thead>
       <tr>
         <th class="select">
-          <input type="checkbox" [checked]="allSelected()" (change)="toggleAll()" />
+          <input
+            type="checkbox"
+            aria-label="Select all orders"
+            [checked]="allSelected()"
+            (change)="toggleAll()"
+          />
         </th>
         <th>Order</th>
         <th>Customer</th>
@@ -34,7 +51,12 @@
       @for (order of rows(); track order.id) {
         <tr>
           <td class="select">
-            <input type="checkbox" [checked]="selected().has(order.id)" (change)="toggle(order.id)" />
+            <input
+              type="checkbox"
+              [attr.aria-label]="'Select order ' + order.id"
+              [checked]="selected().has(order.id)"
+              (change)="toggle(order.id)"
+            />
           </td>
           <td>#{{ order.id }}</td>
           <td>{{ order.customer }}</td>

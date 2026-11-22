@@ -43,4 +43,22 @@ describe('Orders', () => {
     expect(rows.length).toBe(8);
     expect(rows.every((box) => box.checked)).toBe(true);
   });
+
+  it('labels the filter and the sort', () => {
+    const { el } = setup();
+    const filter = el.querySelector<HTMLInputElement>('input[type="search"]')!;
+    const sort = el.querySelector('select')!;
+    expect(filter.labels?.[0]?.textContent?.trim()).toBe('Filter by customer');
+    expect(sort.labels?.[0]?.textContent?.trim()).toBe('Sort');
+  });
+
+  it('names each checkbox after its row', () => {
+    const { el } = setup();
+    const boxes = Array.from(el.querySelectorAll('input[type="checkbox"]'));
+    expect(boxes.map((box) => box.getAttribute('aria-label')).slice(0, 3)).toEqual([
+      'Select all orders',
+      'Select order 1042',
+      'Select order 1041',
+    ]);
+  });
 });
