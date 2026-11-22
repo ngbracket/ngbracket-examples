@@ -5,7 +5,7 @@ import { CUSTOMERS } from '../data';
 @Component({
   selector: 'app-customers',
   template: `
-    <h2 class="page-title">Customers</h2>
+    <h1 class="page-title">Customers</h1>
     <ul class="list">
       @for (customer of customers; track customer.email) {
         <li>
