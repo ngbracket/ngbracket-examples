@@ -12,13 +12,13 @@ import { Icon } from './icon';
       <span>Ops</span>
     </a>
     <div class="actions">
-      <button type="button" class="icon-button">
+      <button type="button" class="icon-button" aria-label="Notifications">
         <app-icon name="bell" />
       </button>
-      <button type="button" class="icon-button">
+      <button type="button" class="icon-button" aria-label="Help">
         <app-icon name="help" />
       </button>
-      <button type="button" class="icon-button">
+      <button type="button" class="icon-button" aria-label="Settings">
         <app-icon name="settings" />
       </button>
     </div>

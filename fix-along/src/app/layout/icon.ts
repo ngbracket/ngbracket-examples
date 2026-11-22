@@ -13,11 +13,14 @@ const PATHS = {
 
 export type IconName = keyof typeof PATHS;
 
-/** Line icon drawn from a fixed set of paths. */
+/**
+ * Decorative line icon. Hidden from assistive technology, so the button or
+ * link around it must have its own name.
+ */
 @Component({
   selector: 'app-icon',
   template: `
-    <svg role="img" viewBox="0 0 24 24" width="20" height="20">
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20">
       <path [attr.d]="path()" />
     </svg>
   `,
