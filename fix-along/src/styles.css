@@ -1,15 +1,15 @@
 :root {
   --text: #1f2328;
-  --text-muted: #a3a3a3;
+  --text-muted: #5f6670;
   --surface: #ffffff;
   --surface-alt: #f6f7f9;
   --border: #d9dde3;
   --accent: #2f5bd3;
   --focus: #2f5bd3;
 
-  --status-shipped: #4caf50;
-  --status-pending: #ff9800;
-  --status-cancelled: #f44336;
+  --status-shipped: #2e7d32;
+  --status-pending: #b45309;
+  --status-cancelled: #c62828;
   --status-text: #ffffff;
 
   color-scheme: light;
