@@ -19,6 +19,10 @@ All data is hardcoded. There's no backend or API to run.
 
 Built with Angular 22 (standalone, zoneless, signals).
 
+[`fix-along/`](fix-along/README.md) is separate from the apps above. It's a small dashboard with common
+accessibility problems, fixed one git tag at a time, built for the Angular Space livestream. It uses only
+public packages, so it installs without a token.
+
 ## Prerequisites
 
 - Node 22.23.4+ (CI/dev uses 24.22.1).

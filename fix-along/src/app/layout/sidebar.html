@@ -1,0 +1,30 @@
+<ul class="nav">
+  <li>
+    <a class="nav-item" routerLink="/orders" routerLinkActive="active">
+      <app-icon name="orders" />
+      Orders
+    </a>
+  </li>
+  <li>
+    <a class="nav-item" routerLink="/customers" routerLinkActive="active">
+      <app-icon name="customers" />
+      Customers
+    </a>
+  </li>
+  <li>
+    <button type="button" class="nav-item" (click)="toggleReports()">
+      <app-icon name="reports" />
+      Reports
+      <app-icon name="chevron" class="chevron" [class.open]="reportsOpen()" />
+    </button>
+    <ul class="submenu" [class.open]="reportsOpen()">
+      @for (report of reports; track report.slug) {
+        <li>
+          <a class="sub-item" [routerLink]="['/reports', report.slug]" routerLinkActive="active">
+            {{ report.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  </li>
+</ul>
