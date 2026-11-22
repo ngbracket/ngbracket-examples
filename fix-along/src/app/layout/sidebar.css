@@ -48,17 +48,6 @@ ul {
   transform: rotate(180deg);
 }
 
-/* Collapsed: squashed to zero height. Open: tall enough for every report. */
-.submenu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 200ms;
-}
-
-.submenu.open {
-  max-height: 16rem;
-}
-
 .sub-item {
   padding-inline-start: 2.75rem;
 }
