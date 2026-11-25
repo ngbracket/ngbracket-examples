@@ -6,7 +6,7 @@
  *   3. exercises the specific keyboard interactions that were fixed and asserts them.
  *
  * Serve the built apps first (static, SPA boots at /), then:
- *   node scripts/a11y-examples.mjs admin   http://localhost:4310   (overview, customers, tickets)
+ *   node scripts/a11y-examples.mjs admin   http://localhost:4310   (overview, customers, audit log, tickets)
  *   node scripts/a11y-examples.mjs booking http://localhost:4311
  *
  * Exit code 1 on any axe violation or failed keyboard assertion.
@@ -149,6 +149,31 @@ if (app === 'admin') {
   await page.waitForTimeout(100);
   const status = await page.locator('p.sel[role="status"]').count();
   record('customers: Enter activates the row (status announced)', status > 0);
+
+  // Audit log: 5,000 rows with virtual scroll. Only a window of rows is in the
+  // page, each row carries its place in the whole table, and End reaches the last.
+  await page.locator('ngbr-nav-item').filter({ hasText: 'Audit log' }).first().click();
+  await page.getByRole('heading', { name: 'Audit log', level: 1 }).waitFor();
+  await axeSweep('audit-log');
+  const logRows = page.locator('tr.ngbr-table__row[aria-rowindex]');
+  await logRows.first().waitFor();
+  const rendered = await logRows.count();
+  const rowCount = await page.locator('table').first().getAttribute('aria-rowcount');
+  record('audit-log: renders a window of rows, not all 5,000', rendered > 0 && rendered < 100, `${rendered} rows in the page`);
+  record('audit-log: the table states its full size', rowCount === '5001', `aria-rowcount=${rowCount}`);
+  await logRows.first().focus();
+  await page.keyboard.press('End');
+  await page.waitForTimeout(300);
+  const endIndex = await page.evaluate(() => document.activeElement?.getAttribute('aria-rowindex'));
+  record('audit-log: End moves focus to the last row of the table', endIndex === '5001', `focused aria-rowindex=${endIndex}`);
+  await page.keyboard.press('Home');
+  await page.waitForTimeout(300);
+  const homeIndex = await page.evaluate(() => document.activeElement?.getAttribute('aria-rowindex'));
+  record('audit-log: Home moves focus back to the first row', homeIndex === '2', `focused aria-rowindex=${homeIndex}`);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(100);
+  const logStatus = (await page.locator('p.sel[role="status"]').textContent())?.trim() ?? '';
+  record('audit-log: Enter activates the row (status announced)', /event 5000/.test(logStatus), logStatus);
 
   // Tickets: the @ngbracket/board work board (keyboard move, Move menu, WIP).
   await page.locator('ngbr-nav-item').filter({ hasText: 'Tickets' }).first().click();

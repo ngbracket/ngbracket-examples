@@ -15,6 +15,7 @@ const ADMIN_NAV: NgbrNavSection[] = [
       { id: 'overview', label: 'Overview', icon: '◧' },
       { id: 'customers', label: 'Customers', icon: '☺' },
       { id: 'tickets', label: 'Tickets', icon: '▦' },
+      { id: 'audit-log', label: 'Audit log', icon: '☰' },
     ],
   },
   {
@@ -27,6 +28,7 @@ const HEADINGS: Record<string, string> = {
   overview: 'Overview',
   customers: 'Customers',
   tickets: 'Tickets',
+  'audit-log': 'Audit log',
   settings: 'Settings',
 };
 
@@ -155,6 +157,7 @@ export class AdminShell {
       { id: 'go-overview', label: 'Go to Overview', keywords: ['dashboard', 'home'], run: () => this.go('overview') },
       { id: 'go-customers', label: 'Go to Customers', keywords: ['users', 'people'], run: () => this.go('customers') },
       { id: 'go-tickets', label: 'Go to Tickets', keywords: ['support', 'board', 'kanban'], run: () => this.go('tickets') },
+      { id: 'go-audit-log', label: 'Go to Audit log', keywords: ['activity', 'history', 'events'], run: () => this.go('audit-log') },
       { id: 'go-settings', label: 'Go to Settings', keywords: ['preferences', 'account'], run: () => this.go('settings') },
       { id: 'sign-out', label: 'Sign out', keywords: ['logout', 'log out'], run: () => this.signOut() },
     ]);
