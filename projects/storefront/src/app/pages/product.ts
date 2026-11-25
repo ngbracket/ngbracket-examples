@@ -17,6 +17,7 @@ import {
   NgbrSplitButton,
   NgbrSplitButtonPrimary,
 } from '@ngbracket/buttons';
+import { NgbrBreadcrumb, NgbrBreadcrumbs } from '@ngbracket/navigation';
 
 import { productById, REVIEWS } from '../data/shop-data';
 
@@ -38,11 +39,17 @@ import { productById, REVIEWS } from '../data/shop-data';
     NgbrMenuPanel,
     NgbrSplitButton,
     NgbrSplitButtonPrimary,
+    NgbrBreadcrumbs,
+    NgbrBreadcrumb,
   ],
   template: `
     @if (product(); as p) {
       <div class="pd">
-        <a class="back" routerLink="/shop">← Back to shop</a>
+        <ngbr-breadcrumbs class="crumbs">
+          <ngbr-breadcrumb><a routerLink="/">Home</a></ngbr-breadcrumb>
+          <ngbr-breadcrumb><a routerLink="/shop">Shop</a></ngbr-breadcrumb>
+          <ngbr-breadcrumb>{{ p.title }}</ngbr-breadcrumb>
+        </ngbr-breadcrumbs>
 
         <div class="pd__top">
           <ngbr-product-gallery [images]="p.gallery" [alt]="p.title" />
@@ -92,6 +99,9 @@ import { productById, REVIEWS } from '../data/shop-data';
         max-width: 1120px;
         margin-inline: auto;
         padding: clamp(20px, 4vw, 40px) clamp(16px, 5vw, 32px) 64px;
+      }
+      .crumbs {
+        margin-bottom: 20px;
       }
       .back {
         display: inline-block;

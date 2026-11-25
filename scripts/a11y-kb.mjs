@@ -95,7 +95,7 @@ const record = (name, ok, detail = '') => {
         .waitForFunction((t) => document.querySelector('ngbr-autosave-status')?.textContent?.includes(t), text, { timeout: 5000 })
         .then(() => true, () => false);
     record('article: edits autosave a draft', await statusIs('Draft saved'));
-    await page.getByRole('link', { name: 'Browse', exact: true }).click();
+    await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Browse', exact: true }).click();
     await page.waitForTimeout(300);
     await page.getByRole('link', { name: 'New', exact: true }).click();
     await page.waitForTimeout(300);
@@ -127,14 +127,14 @@ const record = (name, ok, detail = '') => {
 
     // Existing article: edit and save at once. The autosave pending from typing
     // must not leave a draft behind (the page stays, so its timer would fire).
-    await page.getByRole('link', { name: 'Browse', exact: true }).click();
+    await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Browse', exact: true }).click();
     await page.locator('a.edit').first().click();
     await page.locator('input#title').waitFor();
     await page.locator('input#title').fill('Quick save title');
     await page.getByRole('button', { name: 'Save article' }).click();
     await page.waitForTimeout(1500);
     // Back to the same article through the UI (a reload would reset the in-memory store).
-    await page.getByRole('link', { name: 'Browse', exact: true }).click();
+    await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Browse', exact: true }).click();
     await page.locator('a.edit').first().click();
     await page.locator('input#title').waitFor();
     await page.waitForTimeout(300);
@@ -145,7 +145,7 @@ const record = (name, ok, detail = '') => {
     // user leaves straight away (before the autosave debounce).
     await page.locator('input#title').fill('');
     await page.getByRole('button', { name: 'Save article' }).click();
-    await page.getByRole('link', { name: 'Browse', exact: true }).click();
+    await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Browse', exact: true }).click();
     await page.locator('a.edit').first().click();
     await page.locator('input#title').waitFor();
     await page.waitForTimeout(300);
