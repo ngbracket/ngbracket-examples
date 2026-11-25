@@ -66,6 +66,14 @@ const record = (name, ok, detail = '') => {
   const page = await ctx.newPage();
   try {
     await page.goto(BASE + '/articles/new', { waitUntil: 'networkidle', timeout: 20000 });
+    const trail = page.getByRole('navigation', { name: 'Breadcrumb' });
+    const crumbCurrent = (await trail.locator('[aria-current="page"]').allTextContents()).map((t) => t.trim());
+    const crumbLinks = await trail.getByRole('link').allTextContents();
+    record(
+      'article: breadcrumb is Browse > New article, with New article as the current page',
+      crumbLinks.join() === 'Browse' && crumbCurrent.join() === 'New article',
+      `links ${crumbLinks.join(', ')}; current ${crumbCurrent.join(', ')}`,
+    );
     const tagInput = page.getByRole('textbox', { name: 'Add a tag' });
     await tagInput.fill('Keyboard');
     await tagInput.press('Enter');
