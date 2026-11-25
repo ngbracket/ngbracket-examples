@@ -61,8 +61,8 @@ export const MONTHLY_TARGETS: MonthlyTarget[] = [
   { label: 'Tickets closed', detail: '186 of 200', value: 186, max: 200 },
 ];
 
-const FIRST = ['Ada', 'Alan', 'Grace', 'Linus', 'Margaret', 'Dennis', 'Barbara', 'Ken', 'Radia', 'Tim', 'Anita', 'Guido', 'Katherine', 'Edsger', 'Hedy', 'James', 'Sophie', 'Omar', 'Priya', 'Marcus', 'Yara', 'Sven', 'Chen', 'Noah'];
-const LAST = ['Lovelace', 'Turing', 'Hopper', 'Torvalds', 'Hamilton', 'Ritchie', 'Liskov', 'Thompson', 'Perlman', 'Berners-Lee', 'Borg', 'van Rossum', 'Johnson', 'Dijkstra', 'Lamarr', 'Gosling', 'Wilson', 'Haddad', 'Patel', 'Cole', 'Nasser', 'Eriksson', 'Wei', 'Bennett'];
+export const FIRST = ['Ada', 'Alan', 'Grace', 'Linus', 'Margaret', 'Dennis', 'Barbara', 'Ken', 'Radia', 'Tim', 'Anita', 'Guido', 'Katherine', 'Edsger', 'Hedy', 'James', 'Sophie', 'Omar', 'Priya', 'Marcus', 'Yara', 'Sven', 'Chen', 'Noah'];
+export const LAST = ['Lovelace', 'Turing', 'Hopper', 'Torvalds', 'Hamilton', 'Ritchie', 'Liskov', 'Thompson', 'Perlman', 'Berners-Lee', 'Borg', 'van Rossum', 'Johnson', 'Dijkstra', 'Lamarr', 'Gosling', 'Wilson', 'Haddad', 'Patel', 'Cole', 'Nasser', 'Eriksson', 'Wei', 'Bennett'];
 const PLANS: Customer['plan'][] = ['Starter', 'Pro', 'Team', 'Enterprise'];
 const STATUSES: Customer['status'][] = ['Active', 'Active', 'Active', 'Trialing', 'Past due', 'Churned'];
 const MRR_BY_PLAN: Record<Customer['plan'], number> = { Starter: 0, Pro: 12, Team: 29, Enterprise: 240 };
