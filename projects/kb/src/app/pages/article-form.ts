@@ -12,7 +12,7 @@ import {
 import { NgbrFormField, NgbrInput, NgbrTextarea } from '@ngbracket/forms';
 import { NgbrTreeSelect } from '@ngbracket/structure';
 import { NgbrRichText, NgbrMarkdownEditor } from '@ngbracket/editor';
-import { NgbrTabs, NgbrTabList, NgbrTab, NgbrTabPanel } from '@ngbracket/navigation';
+import { NgbrTabs, NgbrTabList, NgbrTab, NgbrTabPanel, NgbrBreadcrumbs, NgbrBreadcrumb } from '@ngbracket/navigation';
 import { NgbrChipSet, NgbrInputChip } from '@ngbracket/primitives';
 import { NgbrAutosaveStatusComponent, ngbrAutosave } from '@ngbracket/form-kit';
 
@@ -39,13 +39,19 @@ type ArticleFields = Omit<ArticleDraft, 'format'>;
     NgbrTabList,
     NgbrTab,
     NgbrTabPanel,
+    NgbrBreadcrumbs,
+    NgbrBreadcrumb,
     NgbrChipSet,
     NgbrInputChip,
     NgbrAutosaveStatusComponent,
   ],
   template: `
     <div class="wrap">
-      <h1 #heading tabindex="-1">{{ editId() ? 'Edit article' : 'New article' }}</h1>
+      <ngbr-breadcrumbs class="crumbs">
+        <ngbr-breadcrumb><a routerLink="/browse">Browse</a></ngbr-breadcrumb>
+        <ngbr-breadcrumb>{{ pageTitle() }}</ngbr-breadcrumb>
+      </ngbr-breadcrumbs>
+      <h1 #heading tabindex="-1">{{ pageTitle() }}</h1>
 
       <!-- Present from the start and filled after render, so screen readers announce it. -->
       <!-- A live region for the restore note; when it's the focus target (after
@@ -149,6 +155,9 @@ type ArticleFields = Omit<ArticleDraft, 'format'>;
     `
       .wrap {
         max-width: 720px;
+      }
+      .crumbs {
+        margin-bottom: 8px;
       }
       h1 {
         font-size: clamp(1.4rem, 3vw, 1.9rem);
@@ -269,6 +278,7 @@ export class ArticleForm {
 
   /** Drafts are kept per article; a new article uses the 'new' slot. */
   protected readonly draftKey = computed(() => this.editId() ?? 'new');
+  protected readonly pageTitle = computed(() => (this.editId() ? 'Edit article' : 'New article'));
   /** What was last loaded or saved; a draft equal to it isn't kept. */
   private lastCommitted = '';
   private loaded: ArticleDraft | null = null;
