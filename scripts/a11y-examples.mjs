@@ -173,7 +173,7 @@ if (app === 'admin') {
   await page.keyboard.press('Enter');
   await page.waitForTimeout(100);
   const logStatus = (await page.locator('p.sel[role="status"]').textContent())?.trim() ?? '';
-  record('audit-log: Enter activates the row (status announced)', /event 5000/.test(logStatus), logStatus);
+  record('audit-log: Enter fills the status message', /event 5000/.test(logStatus), logStatus);
 
   // Tickets: the @ngbracket/board work board (keyboard move, Move menu, WIP).
   await page.locator('ngbr-nav-item').filter({ hasText: 'Tickets' }).first().click();

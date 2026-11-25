@@ -3,7 +3,7 @@ import { NgbrPageHeader } from '@ngbracket/dashboard';
 import { NgbrDataTable } from '@ngbracket/data-table';
 import type { NgbrColumnDef } from '@ngbracket/data-table';
 
-import { AUDIT_LOG, type AuditEvent } from '../data/admin-data';
+import { AUDIT_LOG, type AuditEvent } from '../data/audit-log-data';
 
 /** Audit log: 5,000 events in one data-table with virtual scroll instead of pages. */
 @Component({
@@ -13,11 +13,13 @@ import { AUDIT_LOG, type AuditEvent } from '../data/admin-data';
   template: `
     <ngbr-page-header heading="Audit log" subtitle="{{ count }} events, newest first" />
 
-    @if (selected(); as e) {
-      <p class="sel" role="status">
+    <p class="hint">Arrow keys, Home and End move between rows, and Enter selects one.</p>
+    <!-- Always in the page, so screen readers announce each new selection. -->
+    <p class="sel" role="status">
+      @if (selected(); as e) {
         Selected: event <strong>{{ e.id }}</strong>, {{ e.action }} by {{ e.actor }} at {{ e.time }}
-      </p>
-    }
+      }
+    </p>
 
     <ngbr-data-table
       [data]="events"
@@ -29,11 +31,15 @@ import { AUDIT_LOG, type AuditEvent } from '../data/admin-data';
       (rowActivate)="selected.set($event)"
       searchLabel="Search events"
       exportFilename="audit-log.csv"
-      caption="Audit log. Arrow keys, Home and End move between rows, and Enter selects one."
+      caption="Audit log"
     />
   `,
   styles: [
     `
+      .hint {
+        margin: 0 0 8px;
+        color: var(--ngbr-color-text-muted);
+      }
       .sel {
         margin: 0 0 14px;
         color: var(--ngbr-color-accent);

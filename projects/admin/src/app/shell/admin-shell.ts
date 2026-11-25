@@ -15,7 +15,7 @@ const ADMIN_NAV: NgbrNavSection[] = [
       { id: 'overview', label: 'Overview', icon: '◧' },
       { id: 'customers', label: 'Customers', icon: '☺' },
       { id: 'tickets', label: 'Tickets', icon: '▦' },
-      { id: 'audit-log', label: 'Audit log', icon: '☰' },
+      { id: 'audit-log', label: 'Audit log', icon: '◷' },
     ],
   },
   {
