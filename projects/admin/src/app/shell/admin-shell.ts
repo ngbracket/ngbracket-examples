@@ -39,7 +39,13 @@ const HEADINGS: Record<string, string> = {
   imports: [RouterOutlet, NgbrAppShell, NgbrSidebarNav, NgbrTopbar, ThemeToggle, SkipLink],
   template: `
     <app-skip-link />
-    <ngbr-app-shell [(drawerOpen)]="drawerOpen" [(collapsed)]="collapsed" style="--ngbr-shell-min-height: 100dvh;">
+    <!-- The app has its own skip link above, so the shell's one is turned off. -->
+    <ngbr-app-shell
+      [(drawerOpen)]="drawerOpen"
+      [(collapsed)]="collapsed"
+      skipLinkLabel=""
+      style="--ngbr-shell-min-height: 100dvh;"
+    >
       <strong ngbrBrand>Helm</strong>
 
       <ngbr-sidebar-nav
