@@ -67,7 +67,7 @@
     "@ngbracket/guide": "1.1.0",
     "@ngbracket/marketing": "1.8.8",
     "@ngbracket/navigation": "1.1.0",
-    "@ngbracket/overlays": "1.1.1",
+    "@ngbracket/overlays": "1.2.0",
     "@ngbracket/primitives": "1.1.0",
     "@ngbracket/scheduler": "1.11.0",
     "@ngbracket/structure": "1.0.0",
