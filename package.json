@@ -55,7 +55,7 @@
     "@angular/router": "^22.2.1",
     "@ngbracket/auth": "1.4.6",
     "@ngbracket/board": "1.0.1",
-    "@ngbracket/buttons": "1.3.1",
+    "@ngbracket/buttons": "1.4.0",
     "@ngbracket/charts": "1.6.0",
     "@ngbracket/command": "1.0.0",
     "@ngbracket/commerce": "1.7.4",
